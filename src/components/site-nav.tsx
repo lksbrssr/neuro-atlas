@@ -4,19 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 // The atlas plates. Methodology is structurally different (how the atlas is
-// made, not a plate of it), so it sits apart: pinned at the bottom of the
-// vertical nav, after a divider in the horizontal fallback.
+// made, not a plate of it), so it sits apart: after a divider at the bottom of
+// the nav.
 const TABS: { href: string; label: string; status?: "live" | "partial" | "planned" }[] = [
   { href: "/", label: "Overview" },
-  { href: "/milestones", label: "Milestones", status: "live" },
-  { href: "/landscape", label: "Landscape", status: "live" },
-  { href: "/velocity", label: "Velocity", status: "live" },
   { href: "/capital", label: "Capital", status: "partial" },
-  { href: "/pipeline", label: "Pipeline", status: "partial" },
-  { href: "/geopolitics", label: "Geopolitics", status: "partial" },
-  { href: "/expectations", label: "Expectations", status: "partial" },
-  { href: "/people", label: "People", status: "planned" },
-  { href: "/access", label: "Access", status: "planned" },
+  { href: "/velocity", label: "Velocity", status: "live" },
+  { href: "/deployment", label: "Deployment", status: "partial" },
+  { href: "/policy", label: "Policy", status: "partial" },
 ];
 const METHODOLOGY = { href: "/methodology", label: "Methodology" };
 
@@ -40,8 +35,10 @@ function Item({
     <Link
       href={tab.href}
       aria-current={active ? "page" : undefined}
-      className={`relative flex items-center gap-1.5 text-[13px] font-medium transition-colors ${
-        vertical ? "w-full rounded-lg px-3 py-1.5" : "rounded-full px-3 py-1.5"
+      className={`relative flex items-center gap-2 font-medium transition-colors ${
+        vertical
+          ? "w-full rounded-lg px-3 py-2 text-[15px]"
+          : "rounded-full px-3 py-1.5 text-sm"
       } ${active ? "bg-foreground text-background" : "text-muted hover:bg-surface hover:text-foreground"}`}
     >
       {vertical ? (
@@ -59,19 +56,18 @@ function Item({
   );
 }
 
-// Vertical sidebar (lg+): plates top-to-bottom, Methodology pinned at the bottom.
+// Vertical sidebar (lg+): a distinct grey panel, all items always visible
+// (no scroll), Methodology pinned below a divider.
 export function SideNav() {
   const pathname = usePathname();
   return (
-    <aside className="sticky top-0 hidden h-[calc(100vh-0rem)] max-h-screen w-44 shrink-0 flex-col self-start py-10 lg:flex">
-      <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
+    <aside className="sticky top-6 hidden h-fit w-52 shrink-0 self-start lg:block">
+      <nav className="flex flex-col gap-1 rounded-2xl border border-nav-border bg-nav p-2">
         {TABS.map((t) => (
           <Item key={t.href} tab={t} active={pathname === t.href} vertical />
         ))}
-        <div className="mt-auto pt-4">
-          <div className="mb-1 border-t border-border" />
-          <Item tab={METHODOLOGY} active={pathname === METHODOLOGY.href} vertical />
-        </div>
+        <div className="my-1 border-t border-nav-border" />
+        <Item tab={METHODOLOGY} active={pathname === METHODOLOGY.href} vertical />
       </nav>
     </aside>
   );
@@ -81,8 +77,8 @@ export function SideNav() {
 export function SiteNav() {
   const pathname = usePathname();
   return (
-    <nav className="border-b border-border bg-background/80 backdrop-blur-md lg:hidden">
-      <div className="mx-auto w-full max-w-6xl overflow-x-auto px-4 sm:px-6">
+    <nav className="border-b border-nav-border bg-nav lg:hidden">
+      <div className="mx-auto w-full max-w-[88rem] overflow-x-auto px-4 sm:px-6">
         <div className="flex min-w-max items-center gap-1 py-1.5">
           {TABS.map((t) => (
             <Item key={t.href} tab={t} active={pathname === t.href} vertical={false} />

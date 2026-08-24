@@ -7,15 +7,10 @@ const PLATES: {
   status: "live" | "partial" | "planned";
   blurb: string;
 }[] = [
-  { href: "/milestones", title: "Milestones", status: "live", blurb: "The 2026 timeline — every tracked deal, first-in-human, and approval on one axis." },
-  { href: "/landscape", title: "Landscape", status: "live", blurb: "363 neurotech companies, faceted like a shop: category, stage, country, modality." },
-  { href: "/velocity", title: "Velocity", status: "live", blurb: "Is the field speeding up? Five instruments, read honestly — including what's unwired." },
-  { href: "/capital", title: "Capital", status: "partial", blurb: "Funding flows: venture vs. non-dilutive vs. public vs. strategic." },
-  { href: "/pipeline", title: "Pipeline", status: "partial", blurb: "Trials, first-in-human events, and the regulatory clock from IDE to approval." },
-  { href: "/geopolitics", title: "Geopolitics", status: "partial", blurb: "US / China / EU: where capital, trials, approvals, and IP are forming." },
-  { href: "/expectations", title: "Expectations", status: "partial", blurb: "What forecast markets imply about when BCI milestones arrive." },
-  { href: "/people", title: "People", status: "planned", blurb: "Talent stock, AI↔neuro flows, and the field's founder genealogy." },
-  { href: "/access", title: "Access", status: "planned", blurb: "Patients reached vs. addressable — the field's most damning gap." },
+  { href: "/capital", title: "Capital", status: "partial", blurb: "The money & market view: the 2026 milestone timeline, the faceted company landscape, and funding flows." },
+  { href: "/velocity", title: "Velocity", status: "live", blurb: "Is the field speeding up? Five instruments read honestly, plus what forecast markets expect." },
+  { href: "/deployment", title: "Deployment", status: "partial", blurb: "Is it reaching humans? Trials, first-in-human events, and the regulatory clock from IDE to approval." },
+  { href: "/policy", title: "Policy", status: "partial", blurb: "Geopolitics and regulation: where the field forms — US / China / EU — and under what rules." },
   { href: "/methodology", title: "Methodology", status: "live", blurb: "How this is built, what each reading means, and how to contribute." },
 ];
 

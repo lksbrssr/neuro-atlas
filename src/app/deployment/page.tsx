@@ -4,17 +4,17 @@ import { PlaceholderPanel } from "@/components/placeholder-panel";
 import { FirmLogo } from "@/components/firm-logo";
 import MILESTONES from "@/data/milestones.json";
 
-export const metadata: Metadata = { title: "Pipeline — Neuro Atlas" };
+export const metadata: Metadata = { title: "Deployment — Neuro Atlas" };
 
-export default function PipelinePage() {
+export default function DeploymentPage() {
   const clinical = MILESTONES.filter((m) => m.stage === "clinical");
   return (
     <>
       <PlateHeader
-        title="Clinical pipeline"
-        question="How fast is the clinic moving?"
+        title="Deployment"
+        question="Is it reaching humans?"
         status="partial"
-        description="Trials, first-in-human events, and the regulatory clock from IDE to approval. Live: the 2026 clinical-event cluster. Next: the full trial registry by phase and indication (ClinicalTrials.gov), and per-company IDE→FIH→pivotal elapsed times."
+        description="How fast devices move from bench into people and, ultimately, the market — trials, first-in-human events, and the regulatory clock from IDE to approval. Live: the 2026 clinical-event cluster. Next: the full trial registry by phase and indication, and per-company IDE→FIH→pivotal elapsed times."
       />
 
       <div className="card mb-4 p-5">
