@@ -69,12 +69,16 @@ export function SideNav() {
         <BrandMark />
         <ThemeToggle />
       </div>
-      <nav className="flex flex-1 flex-col gap-0.5 px-2">
-        {TABS.map((t) => (
-          <VItem key={t.href} tab={t} active={pathname === t.href} />
-        ))}
-        <div className="mx-3 my-2 border-t border-border" />
-        <VItem tab={METHODOLOGY} active={pathname === METHODOLOGY.href} />
+      <nav className="flex flex-1 flex-col px-2">
+        <div className="flex flex-col gap-0.5">
+          {TABS.map((t) => (
+            <VItem key={t.href} tab={t} active={pathname === t.href} />
+          ))}
+        </div>
+        <div className="mt-auto">
+          <div className="mx-3 my-2 border-t border-border" />
+          <VItem tab={METHODOLOGY} active={pathname === METHODOLOGY.href} />
+        </div>
       </nav>
     </aside>
   );

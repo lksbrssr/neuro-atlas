@@ -41,10 +41,10 @@
     "activity": "partner",
     "stage": "commercial",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "Partnership with Science Corp (Q1 2026)",
-    "sourceUrl": "https://www.massdevice.com/science-neurosoft-partner-on-bci-tech/",
+    "date": "2026-02-20",
+    "datePrecision": "day",
+    "note": "BCI ecosystem partnership: Science Corp's full BCI stack supports Neurosoft's neural-data platform",
+    "sourceUrl": "https://www.businesswire.com/news/home/20260220875211/en/Science-Corp.-and-Neurosoft-Bioelectronics-Announce-Novel-BCI-Ecosystem-Partnership",
     "logo": "/logos/neurosoft-bioelectronics.jpg"
   },
   {
@@ -65,10 +65,10 @@
     "activity": "$73m",
     "stage": "capital",
     "amountUsdM": 73,
-    "date": null,
-    "datePrecision": "window",
-    "note": "RMB 500m (~$72.8m) strategic round led by Alibaba; Tencent, FountainBridge, OrbiMed, Oriza Seed, Qiming, Source Code participating — part of China BCI investment crossing $100m",
-    "sourceUrl": "https://www.massdevice.com/chinese-bci-startup-stairmed-72m-financing/",
+    "date": "2026-04-02",
+    "datePrecision": "day",
+    "note": "RMB 500m (~$72.8m) strategic round led by Alibaba; Tencent, FountainBridge, OrbiMed, Oriza Seed, Qiming, LAV, Source Code participating — part of China BCI investment crossing $100m",
+    "sourceUrl": "https://www.prnewswire.com/news-releases/stairmed-secures-rmb-500-million-financing-led-by-alibaba-joined-by-tencent-302732525.html",
     "logo": "/logos/stairmed.jpg"
   },
   {
@@ -127,7 +127,7 @@
     "amountUsdM": null,
     "date": null,
     "datePrecision": "window",
-    "note": "Pivotal trial kicking off in 2026, following $200m Series D (Nov 2025, outside memo window)",
+    "note": "Pivotal trial planned for 2026 following the $200m Series D that closed Nov 6, 2025 (out of window); the concrete pivotal-trial news broke June 2026, so no Jan–Apr announcement date to anchor to",
     "sourceUrl": "https://www.forbes.com/sites/naveenrao/2025/11/15/full-circle-synchrons-200-million-signals-revolution-by-evolution/",
     "logo": "/logos/synchron.jpg"
   },
@@ -137,10 +137,10 @@
     "activity": "$21m",
     "stage": "capital",
     "amountUsdM": 21,
-    "date": null,
-    "datePrecision": "window",
-    "note": "Part of China BCI investment crossing $100m in the period",
-    "sourceUrl": null,
+    "date": "2026-03-11",
+    "datePrecision": "day",
+    "note": "~$21.6m angel round at a $100–200m valuation — the largest early-stage BCI round in China's history; Guosheng Capital and Dalton Venture led. Non-invasive ultrasound BCI",
+    "sourceUrl": "https://techcrunch.com/2026/03/11/bci-startup-gestala-raises-21-million-for-non-invasive-ultrasound-brain-tech/",
     "logo": "/logos/gestala.jpg"
   },
   {
@@ -149,10 +149,10 @@
     "activity": "$10m",
     "stage": "capital",
     "amountUsdM": 10,
-    "date": null,
-    "datePrecision": "window",
-    "note": null,
-    "sourceUrl": null,
+    "date": "2026-01-13",
+    "datePrecision": "day",
+    "note": "$10.3m Series B1 led by Genesys Capital; Cleveland Clinic spinout advancing DBS-enabled stroke rehabilitation",
+    "sourceUrl": "https://www.prnewswire.com/news-releases/enspire-dbs-therapy-announces-10-3-million-series-b1-financing-to-advance-pivotal-development-of-dbs-enabled-stroke-rehabilitation-302659081.html",
     "logo": "/logos/enspire-dbs.jpg"
   },
   {
@@ -161,10 +161,10 @@
     "activity": "spinout",
     "stage": "commercial",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": null,
-    "sourceUrl": null,
+    "date": "2026-04-02",
+    "datePrecision": "day",
+    "note": "Epia Neuro launched out of stealth (founder Michel Maharbiz, ex-iota Biosciences); minimally-invasive implant for post-stroke rehabilitation, FIH planned later in 2026 at Lenox Hill",
+    "sourceUrl": "https://www.businesswire.com/news/home/20260402282679/en/Epia-Neuro-Launches-to-Develop-Intent-Driven-Neural-Technology-to-Restore-Function-After-Stroke-and-Address-Cognitive-Decline",
     "logo": null
   },
   {
@@ -173,10 +173,10 @@
     "activity": "$5m",
     "stage": "capital",
     "amountUsdM": 5,
-    "date": null,
-    "datePrecision": "window",
-    "note": null,
-    "sourceUrl": null,
+    "date": "2026-02-25",
+    "datePrecision": "day",
+    "note": "$5m strategic investment from Ottobock to advance the RESTORE neuromuscular interface",
+    "sourceUrl": "https://www.businesswire.com/news/home/20260225970384/en/Blue-Arbor-Technologies-Announces-Strategic-Partnership-with-Ottobock-and-%245-Million-Investment-to-Advance-RESTORE-Neuromuscular-Interface-System",
     "logo": "/logos/blue-arbor-technologies.jpg"
   },
   {
@@ -185,10 +185,10 @@
     "activity": "FIH",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "First in Human",
-    "sourceUrl": null,
+    "date": "2026-02-25",
+    "datePrecision": "day",
+    "note": "RESTORE first-in-human implant performed Dec 2025 at the Medical University of Vienna; announced Feb 25, 2026 alongside the Ottobock partnership",
+    "sourceUrl": "https://www.businesswire.com/news/home/20260225970384/en/Blue-Arbor-Technologies-Announces-Strategic-Partnership-with-Ottobock-and-%245-Million-Investment-to-Advance-RESTORE-Neuromuscular-Interface-System",
     "logo": "/logos/blue-arbor-technologies.jpg"
   },
   {
@@ -197,10 +197,10 @@
     "activity": "$2m",
     "stage": "capital",
     "amountUsdM": 2,
-    "date": null,
-    "datePrecision": "window",
-    "note": null,
-    "sourceUrl": null,
+    "date": "2026-03-17",
+    "datePrecision": "day",
+    "note": "$2m round; Japanese-founded startup developing an invasive BMI (Swallow Autopilot) for dysphagia",
+    "sourceUrl": "https://ohyashima.com/technology/ruten-raises-2-million-to-develop-bmi-for-swallowing-disorders/",
     "logo": "/logos/ruten-neuro.jpg"
   },
   {
@@ -209,10 +209,10 @@
     "activity": "grant",
     "stage": "capital",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": null,
-    "sourceUrl": null,
+    "date": "2026-04-21",
+    "datePrecision": "day",
+    "note": "Selected as a performer team for ARPA-H's EVIDENT initiative (a $139.4m behavioral-health program)",
+    "sourceUrl": "https://arpa-h.gov/news-and-events/arpa-h-announces-first-research-teams-139-million-initiative-transform-behavioral",
     "logo": "/logos/motif-neurotech.jpg"
   },
   {
@@ -221,10 +221,10 @@
     "activity": "IDE",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "Investigational Device Exemption; first-in-human depression implant trial",
-    "sourceUrl": "https://www.wired.com/story/a-brain-implant-for-depression-is-about-to-be-tested-in-humans/",
+    "date": "2026-04-27",
+    "datePrecision": "day",
+    "note": "FDA IDE approval to begin the first-in-patient trial of DOT, a mm-scale wireless stimulator, for treatment-resistant depression",
+    "sourceUrl": "https://www.businesswire.com/news/home/20260427361988/en/Motif-Neurotech-Receives-FDA-Approval-to-Begin-First-Clinical-Trial-of-its-Therapeutic-BCI-for-Treatment-Resistant-Depression",
     "logo": "/logos/motif-neurotech.jpg"
   },
   {
@@ -245,10 +245,10 @@
     "activity": "BDD/TAP",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "FDA Breakthrough Device Designation / Total Product Life Cycle program",
-    "sourceUrl": null,
+    "date": "2026-04-23",
+    "datePrecision": "day",
+    "note": "FDA Breakthrough Device Designation (Apr 8) then acceptance into the Total Product Life Cycle Advisory Program (Apr 23) — first BCI designated for stroke motor rehabilitation",
+    "sourceUrl": "https://www.globenewswire.com/news-release/2026/04/23/3279854/0/en/CorTec-s-Brain-Interchange-Accepted-into-FDA-Total-Product-Life-Cycle-Advisory-Program-TAP.html",
     "logo": "/logos/cortec.jpg"
   },
   {
@@ -257,10 +257,10 @@
     "activity": "FIH",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "First in Human",
-    "sourceUrl": null,
+    "date": "2026-04-20",
+    "datePrecision": "day",
+    "note": "Completed enrolment of the world's first-in-human study of graphene neural interfaces for brain decoding & mapping (tumour-resection surgery, Manchester)",
+    "sourceUrl": "https://www.businesswire.com/news/home/20260420000990/en/INBRAIN-Neuroelectronics-Completes-Enrolment-of-Worlds-First-in-Human-Study-of-Graphene-Neural-Interfaces-for-Brain-Decoding-Mapping",
     "logo": "/logos/inbrain-neuroelectronics.jpg"
   },
   {
@@ -269,10 +269,10 @@
     "activity": "FIH",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "First in Human",
-    "sourceUrl": null,
+    "date": "2026-04-15",
+    "datePrecision": "day",
+    "note": "FDA approval to begin the CYBORG first-in-human trial of Phantom X, a subcutaneous EMG sensor array (Cabrini Health, Melbourne)",
+    "sourceUrl": "https://insidebci.com/news/2026-04-15-phantom-neuro-gets-green-light-for-first-human-trial-of-its-subcutaneous-prosthetic-sensor/",
     "logo": "/logos/phantom-neuro.jpg"
   },
   {
@@ -281,10 +281,10 @@
     "activity": "FIH",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "First in Human",
-    "sourceUrl": null,
+    "date": "2026-04-23",
+    "datePrecision": "day",
+    "note": "Second fully-implanted 'three-full' BCI clinical case (BCI-FES restored self-feeding/painting in a paralyzed patient); the first battery-integrated implant was Dec 2025",
+    "sourceUrl": "https://www.neuroxess.com/news/kejixiangshan/",
     "logo": "/logos/neuroxess.jpg"
   },
   {
@@ -293,10 +293,10 @@
     "activity": "FIH/partner",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "First in Human plus APEX partnership program launch",
-    "sourceUrl": "https://www.paradromics.com/news/paradromics-launches-apex-partnership-program-to-boost-neurotechnology-discovery",
+    "date": "2026-03-17",
+    "datePrecision": "day",
+    "note": "APEX academic partnership program launched (Stanford, Mass General, Pitt, UC Davis, Michigan); the first Connexus human implant followed on June 17, 2026",
+    "sourceUrl": "https://paradromics.com/news/paradromics-launches-apex-partnership-program-to-boost-neurotechnology-discovery/",
     "logo": "/logos/paradromics.jpg"
   },
   {
@@ -305,10 +305,10 @@
     "activity": "BDD",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "FDA Breakthrough Device Designation",
-    "sourceUrl": null,
+    "date": "2026-03-13",
+    "datePrecision": "day",
+    "note": "FDA Breakthrough Device Designation for its Smart Neurostimulation System — first neurostim device designated for TBI-related memory loss",
+    "sourceUrl": "https://www.businesswire.com/news/home/20260313678930/en/Nia-Therapeutics-Receives-FDA-Breakthrough-Device-Designation-for-AI-Guided-Brain-Implant-to-Treat-Memory-Loss",
     "logo": "/logos/nia-therapeutics.jpg"
   },
   {
@@ -317,10 +317,10 @@
     "activity": "BDD",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "FDA Breakthrough Device Designation",
-    "sourceUrl": null,
+    "date": "2026-03-16",
+    "datePrecision": "day",
+    "note": "FDA Breakthrough Device Designation for the Occular visual cortical prosthesis; also grants access to the FDA's TAP pilot",
+    "sourceUrl": "https://insidebci.com/news/2026-03-16-revision-implant-secures-fda-breakthrough-device-designation-for-visual-cortical-prosthesis/",
     "logo": "/logos/revision-implant.jpg"
   },
   {
@@ -331,7 +331,7 @@
     "amountUsdM": null,
     "date": "2026-05-01",
     "datePrecision": "day",
-    "note": "MintNeuro partnership to advance miniature BCI therapy for mental health — noted by memo author as omitted from the visual (out of window); included for completeness",
+    "note": "MintNeuro partnership to advance miniature BCI therapy for mental health — noted by memo author as omitted from the visual (just out of window); included for completeness",
     "sourceUrl": "https://www.prnewswire.com/news-releases/mintneuro-and-motif-neurotech-partner-to-advance-miniature-brain-computer-interface-therapy-for-mental-health-302758663.html",
     "logo": "/logos/motif-neurotech.jpg"
   }
