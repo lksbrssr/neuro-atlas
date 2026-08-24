@@ -7,7 +7,7 @@ const PLATES: {
   status: "live" | "partial" | "planned";
   blurb: string;
 }[] = [
-  { href: "/milestones", title: "Milestones", status: "live", blurb: "The 2026 Zeitstrahl — every tracked deal, first-in-human, and approval on one axis." },
+  { href: "/milestones", title: "Milestones", status: "live", blurb: "The 2026 timeline — every tracked deal, first-in-human, and approval on one axis." },
   { href: "/landscape", title: "Landscape", status: "live", blurb: "363 neurotech companies, faceted like a shop: category, stage, country, modality." },
   { href: "/velocity", title: "Velocity", status: "live", blurb: "Is the field speeding up? Five instruments, read honestly — including what's unwired." },
   { href: "/capital", title: "Capital", status: "partial", blurb: "Funding flows: venture vs. non-dilutive vs. public vs. strategic." },

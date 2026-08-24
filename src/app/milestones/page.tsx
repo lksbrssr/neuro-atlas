@@ -11,7 +11,7 @@ export default function MilestonesPage() {
         title="2026 milestone timeline"
         question="What just happened?"
         status="live"
-        description="Every tracked deal, partnership, first-in-human event, and approval in the implanted-BCI field, Jan–Apr 2026, on one time axis. Toggle the stage lanes, hover any event for details, click to open the primary source. Events without a confirmed date sit in the 'date TBD' shelf rather than being faked onto the axis."
+        description="Every tracked deal, partnership, first-in-human event, and approval in the implanted-BCI field, Jan–Apr 2026, on one shared time axis — color marks the stage. Click a stage in the legend to expand its subcategories and filter by any subset; hover any logo for details; click to open the primary source. Events without a confirmed date sit in the 'date TBD' shelf rather than being faked onto the axis."
       />
       <MilestoneTimeline />
       <p className="mt-4 text-xs leading-relaxed text-faint">
