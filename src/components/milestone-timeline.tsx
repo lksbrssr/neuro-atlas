@@ -2,12 +2,14 @@
 
 // Timeline of the Q1+ 2026 BCI milestones (rebuild of the Neurotech Futures ×
 // PL Neuro market-memo right column). ONE shared time axis — stage is encoded
-// by marker color only (no separate lanes, no double encoding). Markers are
-// logo-only; all detail lives in the hover card (fixed-positioned so it can
-// never be clipped by the card frame). The legend's stage pills expand into
-// their subcategories (FIH, IDE, pivotal, …) so you can filter by stage OR by
-// any subset of subcategories. Undated milestones sit honestly in a "date TBD"
-// shelf instead of being faked onto the axis.
+// by marker color only. Markers are logo-only; detail lives in the hover card.
+//
+// Legend: each stage is a group pill. Click one and it expands *inline, in the
+// same row* into its subcategory pills (FIH, IDE, pivotal, …), separated from
+// the group name by a vertical divider — only one stage open at a time; opening
+// another collapses the first. Clicking an already-open group toggles all of its
+// subcategories on/off. Hovering the plot magnifies nearby logos like the macOS
+// dock. Undated milestones sit in a "date TBD" shelf instead of on the axis.
 
 import { useMemo, useState } from "react";
 import MILESTONES from "@/data/milestones.json";
@@ -33,10 +35,14 @@ const STAGES = [
 ] as const;
 type StageKey = (typeof STAGES)[number]["key"];
 
-const PLOT_TOP = 26; // month label row
-const ROW_H = 40; // stagger row height
-const MARKER = 26; // logo marker diameter
-const MIN_GAP_PCT = 4.2; // min horizontal distance (in % of plot) before wrapping to a new row
+const PLOT_TOP = 26;
+const ROW_H = 40;
+const MARKER = 26;
+const MIN_GAP_PCT = 4.2;
+
+// Dock magnification
+const DOCK_RADIUS = 88; // px of influence on either side of the cursor
+const DOCK_MAX = 0.55; // up to +55% size at the cursor
 
 function pct(dateStr: string): number {
   const t = new Date(dateStr + "T00:00:00Z").getTime();
@@ -52,16 +58,12 @@ function fmtDate(dateStr: string): string {
   });
 }
 
-// "FIH/partner" → [["FIH","First in Human"],["partner",null]]
 function expandActivity(activity: string): [string, string | null][] {
   return activity
     .split("/")
     .map((tok) => [tok, lookupAcronym(tok.trim())?.expansion ?? null]);
 }
 
-// Subcategory bucket for an activity token: dollar amounts collapse into one
-// "$" bucket (individual raise sizes aren't categories); everything else is
-// its own token (FIH, IDE, pivotal, JV, grant, …).
 function subcatOf(token: string): string {
   return token.trim().startsWith("$") ? "$" : token.trim();
 }
@@ -83,14 +85,13 @@ const ALL_SUBCATS: Record<StageKey, string[]> = (() => {
 })();
 
 export function MilestoneTimeline() {
-  // Selected subcategories per stage (default: everything). A stage with an
-  // empty selection is hidden entirely — that's how you switch a stage off.
   const [sel, setSel] = useState<Record<StageKey, Set<string>>>({
     capital: new Set(ALL_SUBCATS.capital),
     clinical: new Set(ALL_SUBCATS.clinical),
     commercial: new Set(ALL_SUBCATS.commercial),
   });
-  const [expanded, setExpanded] = useState<Set<StageKey>>(new Set());
+  const [openStage, setOpenStage] = useState<StageKey | null>(null);
+  const [dock, setDock] = useState<{ x: number; w: number } | null>(null);
   const [tip, setTip] = useState<{ m: Milestone; x: number; y: number; below: boolean } | null>(null);
 
   const matches = (m: Milestone) =>
@@ -100,7 +101,6 @@ export function MilestoneTimeline() {
     const list = MILESTONES.filter((m) => m.date && matches(m)).sort((a, b) =>
       a.date! < b.date! ? -1 : 1,
     );
-    // Greedy stagger: place each marker on the first row with enough horizontal room.
     const rowLast: number[] = [];
     return list.map((m) => {
       const left = pct(m.date!);
@@ -119,15 +119,20 @@ export function MilestoneTimeline() {
   const undated = useMemo(() => MILESTONES.filter((m) => !m.date && matches(m)), [sel]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nRows = Math.max(1, ...dated.map((d) => d.row + 1));
-  const plotH = PLOT_TOP + nRows * ROW_H + 26; // + baseline zone
+  const plotH = PLOT_TOP + nRows * ROW_H + 26;
 
-  const toggleExpand = (key: StageKey) =>
-    setExpanded((v) => {
-      const next = new Set(v);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+  // Click a group pill: expand it if collapsed; if already open, toggle all of
+  // its subcategories on/off. Opening a group collapses any other open one.
+  const clickGroup = (key: StageKey) => {
+    if (openStage !== key) {
+      setOpenStage(key);
+      return;
+    }
+    setSel((v) => ({
+      ...v,
+      [key]: v[key].size === ALL_SUBCATS[key].length ? new Set<string>() : new Set(ALL_SUBCATS[key]),
+    }));
+  };
 
   const toggleSub = (stage: StageKey, sub: string) =>
     setSel((v) => {
@@ -137,14 +142,6 @@ export function MilestoneTimeline() {
       return { ...v, [stage]: next };
     });
 
-  const toggleAll = (stage: StageKey) =>
-    setSel((v) => ({
-      ...v,
-      [stage]: v[stage].size === ALL_SUBCATS[stage].length ? new Set<string>() : new Set(ALL_SUBCATS[stage]),
-    }));
-
-  // Fixed-position hover card (viewport coordinates) — escapes the card frame
-  // and the horizontal scroll container, so it can never be clipped.
   const showTip = (e: React.MouseEvent<HTMLElement>, m: Milestone) => {
     const r = e.currentTarget.getBoundingClientRect();
     const vw = window.innerWidth;
@@ -155,88 +152,88 @@ export function MilestoneTimeline() {
 
   const stageColor = (key: string) => STAGES.find((s) => s.key === key)?.color;
 
+  // macOS-dock scale for a marker at `leftPct`, given the cursor position.
+  const dockScale = (leftPct: number) => {
+    if (!dock) return 1;
+    const mx = (leftPct / 100) * dock.w;
+    const dist = Math.abs(mx - dock.x);
+    return 1 + DOCK_MAX * Math.max(0, 1 - dist / DOCK_RADIUS);
+  };
+
   return (
     <div className="card p-5">
-      {/* Legend: stage pills expand into their subcategories */}
-      <div className="mb-1 flex flex-wrap items-center gap-2">
+      {/* Legend: group pills that expand inline into their subcategories */}
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
         {STAGES.map((s) => {
+          const subs = ALL_SUBCATS[s.key];
+          const selected = sel[s.key];
           const total = MILESTONES.filter((m) => m.stage === s.key).length;
-          const on = sel[s.key].size > 0;
-          const open = expanded.has(s.key);
+          const open = openStage === s.key;
+          const noneOn = selected.size === 0;
           return (
-            <button
-              key={s.key}
-              type="button"
-              onClick={() => toggleExpand(s.key)}
-              aria-expanded={open}
-              className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all ${
-                open ? "border-border-strong bg-surface-raised" : on ? "border-border-strong" : "border-border opacity-40"
-              }`}
-            >
-              <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
-              {s.label}
-              <span className="tnum text-faint">{total}</span>
-              <span className={`text-[9px] text-faint transition-transform duration-300 ${open ? "rotate-90" : ""}`} aria-hidden>
-                ▸
-              </span>
-            </button>
+            <div key={s.key} className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => clickGroup(s.key)}
+                aria-expanded={open}
+                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+                  open
+                    ? "border-border-strong bg-surface-raised"
+                    : noneOn
+                      ? "border-border opacity-40"
+                      : "border-border-strong"
+                }`}
+              >
+                <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
+                {s.label}
+                <span className="tnum text-faint">{total}</span>
+                {!open && (
+                  <span className="text-[9px] text-faint" aria-hidden>▸</span>
+                )}
+              </button>
+
+              {/* Inline expansion — unfolds to the right, in the same row */}
+              <div
+                className={`grid transition-all duration-300 ease-out ${
+                  open ? "grid-cols-[1fr] opacity-100" : "grid-cols-[0fr] opacity-0"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="flex items-center gap-1.5 pr-1">
+                    <span className="mx-0.5 h-5 w-px shrink-0 bg-border-strong" aria-hidden />
+                    {subs.map((sub) => {
+                      const on = selected.has(sub);
+                      const count = MILESTONES.filter(
+                        (m) => m.stage === s.key && subcatsOf(m).includes(sub),
+                      ).length;
+                      const expansion = lookupAcronym(sub)?.expansion;
+                      return (
+                        <button
+                          key={sub}
+                          type="button"
+                          onClick={() => toggleSub(s.key, sub)}
+                          aria-pressed={on}
+                          title={expansion ?? undefined}
+                          className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-all ${
+                            on ? "border-border-strong" : "border-border opacity-40"
+                          }`}
+                          style={on ? { borderColor: s.color } : undefined}
+                        >
+                          {subcatLabel(sub)}
+                          <span className="tnum text-faint">{count}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
           );
         })}
         <span className="ml-auto hidden text-[11px] text-faint sm:block">
           click a stage for subcategories · hover a logo for details · click to open source
         </span>
       </div>
-
-      {/* Subcategory chips (animated expand/collapse per stage) */}
-      {STAGES.map((s) => {
-        const open = expanded.has(s.key);
-        const allOn = sel[s.key].size === ALL_SUBCATS[s.key].length;
-        return (
-          <div
-            key={s.key}
-            inert={!open}
-            className={`grid transition-all duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
-          >
-            <div className="overflow-hidden">
-              <div className="flex flex-wrap items-center gap-1.5 py-1.5 pl-1">
-                <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: s.color }}>
-                  {s.label}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => toggleAll(s.key)}
-                  className={`rounded-full border px-2 py-0.5 text-[11px] font-medium transition-all ${
-                    allOn ? "border-border-strong bg-surface-raised" : "border-border text-muted"
-                  }`}
-                >
-                  all
-                </button>
-                {ALL_SUBCATS[s.key].map((sub) => {
-                  const on = sel[s.key].has(sub);
-                  const count = MILESTONES.filter((m) => m.stage === s.key && subcatsOf(m).includes(sub)).length;
-                  const expansion = lookupAcronym(sub)?.expansion;
-                  return (
-                    <button
-                      key={sub}
-                      type="button"
-                      onClick={() => toggleSub(s.key, sub)}
-                      aria-pressed={on}
-                      title={expansion ?? undefined}
-                      className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-all ${
-                        on ? "border-border-strong" : "border-border opacity-40"
-                      }`}
-                      style={on ? { borderColor: s.color } : undefined}
-                    >
-                      {subcatLabel(sub)}
-                      <span className="tnum text-faint">{count}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        );
-      })}
 
       <div className="mt-3 overflow-x-auto pb-2">
         <div className="relative min-w-[860px]">
@@ -257,9 +254,16 @@ export function MilestoneTimeline() {
               </div>
             </div>
 
-            {/* Plot — one shared axis; color encodes stage */}
-            <div className="relative flex-1" style={{ height: plotH }}>
-              {/* Month gridlines */}
+            {/* Plot — one shared axis; color encodes stage; hover magnifies logos */}
+            <div
+              className="relative flex-1"
+              style={{ height: plotH }}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                setDock({ x: e.clientX - rect.left, w: rect.width });
+              }}
+              onMouseLeave={() => setDock(null)}
+            >
               {MONTHS.map((mo) => {
                 const left = ((mo.t - T0) / (T1 - T0)) * 100;
                 return (
@@ -272,13 +276,12 @@ export function MilestoneTimeline() {
                 );
               })}
 
-              {/* Shared baseline */}
               <div className="absolute left-0 right-0 border-b border-border/70" style={{ top: plotH - 1 }} />
 
-              {/* Markers: logo-only, ringed in the stage color */}
               {dated.map(({ m, left, row }) => {
                 const top = PLOT_TOP + row * ROW_H;
                 const color = stageColor(m.stage);
+                const scale = dockScale(left);
                 return (
                   <span key={`${m.company}-${m.activity}`}>
                     <span
@@ -297,8 +300,17 @@ export function MilestoneTimeline() {
                       rel="noreferrer"
                       onMouseEnter={(e) => showTip(e, m)}
                       onMouseLeave={() => setTip(null)}
-                      className={`absolute grid -translate-x-1/2 place-items-center rounded-full border-2 bg-surface shadow-sm transition-transform hover:z-30 hover:scale-110 ${m.sourceUrl ? "cursor-pointer" : "cursor-default"}`}
-                      style={{ left: `${left}%`, top, width: MARKER, height: MARKER, borderColor: color }}
+                      className={`absolute grid place-items-center rounded-full border-2 bg-surface shadow-sm transition-transform duration-75 ease-out hover:z-30 ${m.sourceUrl ? "cursor-pointer" : "cursor-default"}`}
+                      style={{
+                        left: `${left}%`,
+                        top,
+                        width: MARKER,
+                        height: MARKER,
+                        borderColor: color,
+                        transform: `translateX(-50%) scale(${scale.toFixed(3)})`,
+                        transformOrigin: "center bottom",
+                        zIndex: scale > 1.02 ? Math.round(scale * 20) : undefined,
+                      }}
                       aria-label={`${m.company} — ${m.activity}`}
                     >
                       <FirmLogo src={m.logo} name={m.company} size={18} />
@@ -309,7 +321,6 @@ export function MilestoneTimeline() {
             </div>
           </div>
 
-          {/* Date-TBD shelf: logo-only, dashed ring = no confirmed date */}
           {undated.length > 0 && (
             <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-dashed border-border pt-3">
               <span className="mr-1 text-[10px] font-semibold uppercase tracking-wider text-faint">date TBD</span>
@@ -321,7 +332,7 @@ export function MilestoneTimeline() {
                   rel="noreferrer"
                   onMouseEnter={(e) => showTip(e, m)}
                   onMouseLeave={() => setTip(null)}
-                  className={`grid place-items-center rounded-full border-2 border-dashed bg-surface ${m.sourceUrl ? "cursor-pointer hover:border-solid" : "cursor-default"}`}
+                  className={`grid place-items-center rounded-full border-2 border-dashed bg-surface transition-transform hover:scale-110 ${m.sourceUrl ? "cursor-pointer hover:border-solid" : "cursor-default"}`}
                   style={{ width: MARKER, height: MARKER, borderColor: stageColor(m.stage) }}
                   aria-label={`${m.company} — ${m.activity} (date TBD)`}
                 >
@@ -333,7 +344,6 @@ export function MilestoneTimeline() {
         </div>
       </div>
 
-      {/* Hover card — fixed to the viewport so the card frame can never clip it */}
       {tip && (
         <div
           className={`pointer-events-none fixed z-50 w-72 -translate-x-1/2 rounded-xl bg-foreground p-3 shadow-2xl ${tip.below ? "" : "-translate-y-full"}`}
