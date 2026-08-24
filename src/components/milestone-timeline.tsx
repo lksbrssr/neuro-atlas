@@ -13,6 +13,7 @@ import { useMemo, useRef, useState } from "react";
 import MILESTONES from "@/data/milestones.json";
 import CAPITAL from "@/data/capital.json";
 import { FirmLogo } from "@/components/firm-logo";
+import { Sparkline } from "@/components/sparkline";
 import { lookupAcronym } from "@/components/abbr";
 
 type Milestone = (typeof MILESTONES)[number];
@@ -44,7 +45,9 @@ const LOGO = 24;
 const LANE_PAD_BOTTOM = 14;
 const LANE_GAP = 8;
 const MIN_GAP_PCT = 5.6;
-const YEAR_COL_W = 108; // collapsed year-column width
+const FOCUS_W = 72; // focused year column width (%)
+const NARROW_W = 13; // collapsed year column width (%)
+const YEAR_EASE = "width 500ms cubic-bezier(0.22,1,0.36,1)";
 const DOCK_RADIUS = 100;
 const DOCK_MAX = 0.5;
 
@@ -90,6 +93,16 @@ const ALL_SUBCATS: Record<StageKey, string[]> = (() => {
     out[s.key] = Array.from(set).sort((a, b) => a.localeCompare(b));
   }
   return out;
+})();
+
+// Cumulative 2026 capital across the tracked rounds — the only year with
+// intra-year line data (2024/2025 are single annual totals).
+const CUM_2026 = (() => {
+  const caps = MILESTONES.filter((m) => m.stage === "capital" && m.amountUsdM && m.date).sort((a, b) =>
+    a.date! < b.date! ? -1 : 1,
+  );
+  let s = 0;
+  return caps.map((m) => { s += m.amountUsdM!; return { x: m.date as string, y: s }; });
 })();
 
 export function MilestoneTimeline() {
@@ -188,8 +201,6 @@ export function MilestoneTimeline() {
     return Math.min(Math.max((clientX - r.left) / r.width, 0), 1) * 100;
   };
 
-  const gridCols = YEARS.map((y) => (focusYear === y.year ? "minmax(720px,1fr)" : `${YEAR_COL_W}px`)).join(" ");
-
   // A not-yet-ingested year column: headline figure over a blurred scatter.
   const yearColumn = (y: { year: number; usdM: number }, focused: boolean) => (
     <button
@@ -197,8 +208,8 @@ export function MilestoneTimeline() {
       type="button"
       onClick={() => setFocusYear(y.year)}
       aria-label={`Focus ${y.year}`}
-      className="group relative overflow-hidden rounded-xl border border-dashed border-border-strong bg-surface-raised text-left transition-colors hover:border-border"
-      style={{ height: totalH }}
+      className="group relative shrink-0 overflow-hidden rounded-xl border border-dashed border-border-strong bg-surface-raised text-left hover:border-border"
+      style={{ height: totalH, width: `${focused ? FOCUS_W : NARROW_W}%`, transition: YEAR_EASE }}
     >
       <div className="absolute inset-0" style={{ filter: "blur(6px)", opacity: 0.22 }} aria-hidden>
         {SCATTER.map(([x, yy], i) => (
@@ -311,18 +322,15 @@ export function MilestoneTimeline() {
         {/* Scrollable plot */}
         <div className="min-w-0 flex-1 overflow-x-auto pb-2">
           <div className="relative" style={{ minWidth: 900 }}>
-            <div
-              className="grid gap-2 transition-[grid-template-columns] duration-500 ease-out"
-              style={{ gridTemplateColumns: gridCols }}
-            >
+            <div className="flex gap-2">
               {YEARS.map((y) => {
                 if (!(y.year === 2026 && focusYear === 2026)) return yearColumn(y, focusYear === y.year);
                 return (
                   <div
                     key={y.year}
                     ref={plotRef}
-                    className="relative cursor-crosshair select-none"
-                    style={{ height: totalH }}
+                    className="relative shrink-0 cursor-crosshair select-none"
+                    style={{ height: totalH, width: `${FOCUS_W}%`, transition: YEAR_EASE }}
                     onPointerDown={(e) => { dragStart.current = xToPct(e.clientX); dragged.current = false; setSelRange(null); }}
                     onPointerMove={(e) => {
                       const rect = e.currentTarget.getBoundingClientRect();
@@ -430,10 +438,17 @@ export function MilestoneTimeline() {
                 key={c.year}
                 type="button"
                 onClick={() => setFocusYear(c.year)}
-                className={`tnum flex w-full items-baseline justify-between rounded px-1 py-0.5 text-[13px] transition-colors hover:bg-surface-raised ${focusYear === c.year ? "font-semibold" : ""}`}
+                className={`flex w-full flex-col gap-0.5 rounded px-1 py-1 text-left transition-colors hover:bg-surface-raised ${focusYear === c.year ? "bg-surface-raised" : ""}`}
               >
-                <span className={focusYear === c.year ? "text-foreground" : "text-muted"}>{c.year}</span>
-                <span className="font-semibold">{fmtUsd(c.usdM)}</span>
+                <span className="tnum flex items-baseline justify-between text-[13px]">
+                  <span className={focusYear === c.year ? "font-semibold text-foreground" : "text-muted"}>{c.year}</span>
+                  <span className="font-semibold">{fmtUsd(c.usdM)}</span>
+                </span>
+                {c.year === 2026 && CUM_2026.length > 1 && (
+                  <span className="mt-0.5 block">
+                    <Sparkline series={CUM_2026} width={166} height={22} />
+                  </span>
+                )}
               </button>
             ))}
             <div className="mt-0.5 px-1 text-[10px] text-faint">2026 is Jan–Apr</div>
