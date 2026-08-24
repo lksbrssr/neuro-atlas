@@ -1,0 +1,66 @@
+{
+  "area": "neurotech",
+  "records": [
+    {
+      "instrument": "performance_curves",
+      "state": "reading",
+      "metric": "Simultaneously recorded neurons",
+      "value": "Up to ~3,200 neurons (2014 dataset record)",
+      "trend": "Doubling roughly every 7 years, 1957 to 2014",
+      "direction": "accelerating",
+      "window": "1957 → 2014",
+      "measuredAt": "2014-01-01",
+      "checkedAt": "2022-10-01",
+      "series": [
+        { "x": 1957, "y": 2 },
+        { "x": 1970, "y": 8 },
+        { "x": 1981, "y": 18 },
+        { "x": 1991, "y": 82 },
+        { "x": 1993, "y": 148 },
+        { "x": 2009, "y": 744 },
+        { "x": 2014, "y": 3200 }
+      ],
+      "seriesScale": "log",
+      "sources": [
+        { "label": "Stevenson — Tracking Advances in Neural Recording (UConn)", "url": "https://stevenson.lab.uconn.edu/scaling/" },
+        { "label": "Stevenson & Kording (2011), Nature Neuroscience", "url": "https://www.nature.com/articles/nn.2731" }
+      ],
+      "upstreamTodo": "Add post-2014 frontier points from the Stevenson tracked dataset if newer maxima can be sourced; until then the curve ends where the data does."
+    },
+    {
+      "instrument": "latency_compression",
+      "state": "unwired",
+      "candidateMetric": "Lag from animal study to first human trial, and from IDE approval to first implant",
+      "blocker": "The sample of completed transitions is too small to trend."
+    },
+    {
+      "instrument": "idea_vintage",
+      "state": "unwired",
+      "candidateMetric": "median reference age from OpenAlex",
+      "blocker": "awaiting first run of scripts/velocity/field_velocity_openalex.py",
+      "owner": "Lukas"
+    },
+    {
+      "instrument": "revealed_commitments",
+      "state": "reading",
+      "metric": "Cumulative humans implanted with an intracortical BCI (peer-reviewed count), against the 10,000-by-2030 milestone the field has set",
+      "value": "67 participants implanted (1998–2024)",
+      "trend": "A peer-reviewed count across all iBCI trials, ~150× below the 10,000-by-2030 milestone. Enrolment is now accelerating across several companies (Neuralink 21, Synchron, Precision Neuroscience). On the therapeutic side, clinical trials of brain stimulation for psychiatric conditions have doubled roughly every 4.7 years since 2000 — trial starts are among the field's costliest commitments.",
+      "window": "1998 → 2024",
+      "measuredAt": "2024-01-01",
+      "checkedAt": "2024-01-01",
+      "sources": [
+        { "label": "Patrick-Krueger et al. (2024), Nature Reviews Bioengineering", "url": "https://doi.org/10.1038/s44222-024-00239-5" },
+        { "label": "Robinson (2025), IEEE Pulse — psychiatric-stimulation trial growth", "url": "https://pubmed.ncbi.nlm.nih.gov/40668700/" },
+        { "label": "PL Neuro — 10k-by-2030 milestone", "url": "https://www.plneuro.xyz/" }
+      ],
+      "upstreamTodo": "Add a ClinicalTrials.gov pull for a monthly-refreshing series; Robinson's ~100×-since-2000 headline and the fitted 4.7y doubling time don't reconcile, so no series is wired until it comes from primary registry data."
+    },
+    {
+      "instrument": "markets",
+      "state": "unwired",
+      "candidateMetric": "Implied arrival dates across the mapped BCI and whole-brain-emulation questions (Metaculus, Polymarket, Kalshi)",
+      "blocker": "The term-structure aggregation is not built; the live crowd forecasts are shown per market."
+    }
+  ]
+}
