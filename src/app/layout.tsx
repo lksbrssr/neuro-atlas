@@ -32,12 +32,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <SiteHeader />
           <SiteNav />
-          <div className="mx-auto flex w-full max-w-6xl flex-1 items-stretch gap-8 px-4 sm:px-6">
+          <div className="mx-auto flex w-full max-w-[88rem] flex-1 items-stretch gap-8 px-4 sm:px-6">
             <SideNav />
-            <main className="min-w-0 flex-1 py-10">{children}</main>
+            <main className="min-w-0 flex-1 py-8">{children}</main>
           </div>
           <footer className="border-t border-border">
-            <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 text-xs text-faint sm:px-6">
+            <div className="mx-auto flex w-full max-w-[88rem] items-center justify-between px-4 py-6 text-xs text-faint sm:px-6">
               <span>Neuro Atlas — a work in progress.</span>
               <span className="tnum">v0.2</span>
             </div>

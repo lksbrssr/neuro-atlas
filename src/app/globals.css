@@ -9,6 +9,8 @@
   --surface-raised: #ffffff;
   --border: #e7e7ea;
   --border-strong: #d9d9de;
+  --nav: #eceef1;
+  --nav-border: #dcdce2;
 
   /* Text */
   --foreground: #0c0c0e;
@@ -38,6 +40,8 @@
   --surface-raised: #17171a;
   --border: #232328;
   --border-strong: #303036;
+  --nav: #0e0e12;
+  --nav-border: #212127;
 
   --foreground: #f4f4f5;
   --muted: #a1a1aa;
@@ -64,6 +68,8 @@
   --color-surface-raised: var(--surface-raised);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
+  --color-nav: var(--nav);
+  --color-nav-border: var(--nav-border);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-faint: var(--faint);

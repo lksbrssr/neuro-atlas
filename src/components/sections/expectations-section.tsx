@@ -1,9 +1,6 @@
-import type { Metadata } from "next";
-import { PlateHeader } from "@/components/plate-header";
+import { SectionIntro } from "@/components/sections/section-intro";
 import { PlaceholderPanel } from "@/components/placeholder-panel";
 import MARKETS from "@/data/velocity/neurotech_market_signals.json";
-
-export const metadata: Metadata = { title: "Expectations — Neuro Atlas" };
 
 const PLATFORM_LABEL: Record<string, string> = {
   kalshi: "Kalshi",
@@ -11,20 +8,19 @@ const PLATFORM_LABEL: Record<string, string> = {
   metaculus: "Metaculus",
 };
 
-export default function ExpectationsPage() {
+export function ExpectationsSection() {
   return (
     <>
-      <PlateHeader
-        title="Expectations"
-        question="When does the crowd think it arrives?"
-        status="partial"
-        description="Forecast markets mapped to the field's inflection points. Live: the mapped questions. Next: live prices via the platform APIs, and a term structure across horizons."
-      />
+      <SectionIntro title="Expectations">
+        Forecast markets mapped to the field&apos;s inflection points — what the crowd
+        implies about when BCI milestones arrive. Live: the mapped questions. Next: live
+        prices via the platform APIs, and a term structure across horizons.
+      </SectionIntro>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {MARKETS.mappings.map((m) => (
           <div key={m.title} className="card flex flex-col p-5">
-            <h2 className="text-sm font-semibold tracking-tight">{m.title}</h2>
+            <h3 className="text-sm font-semibold tracking-tight">{m.title}</h3>
             {m.match === "proxy" && m.primary ? (
               <>
                 <a

@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import { PlateHeader } from "@/components/plate-header";
 import { PlaceholderPanel } from "@/components/placeholder-panel";
 
-export const metadata: Metadata = { title: "Geopolitics — Neuro Atlas" };
+export const metadata: Metadata = { title: "Policy — Neuro Atlas" };
 
-export default function GeopoliticsPage() {
+export default function PolicyPage() {
   return (
     <>
       <PlateHeader
-        title="Geopolitics"
-        question="Where is the field forming?"
+        title="Policy"
+        question="Where it forms, and under what rules"
         status="partial"
-        description="US, China, and Europe compared on capital, trials, approvals, and IP. Live: the Q1 2026 China signal. Next: patent assignee-country split and approvals by regulator."
+        description="Geopolitics and regulation: how the US, China, and Europe compare on capital, trials, approvals, and IP — and the policy that gates them. Live: the Q1 2026 China signal. Next: patent assignee-country split and approvals by regulator."
       />
 
       <div className="card mb-4 p-5">
