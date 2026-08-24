@@ -1,4 +1,3 @@
-import { SectionIntro } from "@/components/sections/section-intro";
 import { PlaceholderPanel } from "@/components/placeholder-panel";
 import { FirmLogo } from "@/components/firm-logo";
 import { BarList } from "@/components/bar-list";
@@ -11,12 +10,6 @@ export function FundingSection() {
   );
   return (
     <>
-      <SectionIntro title="Funding flows">
-        Implanted-BCI capital. Live: the 2026 year-to-date tally and deal list from the
-        Q1+ market memo. Next: the venture / non-dilutive / public / strategic split,
-        and the cumulative funding curve back through 2024.
-      </SectionIntro>
-
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="card p-5">
           <h3 className="mb-1 text-sm font-semibold">New capital by year</h3>
