@@ -1,5 +1,4 @@
 import { SectionIntro } from "@/components/sections/section-intro";
-import { PlaceholderPanel } from "@/components/placeholder-panel";
 import MARKETS from "@/data/velocity/neurotech_market_signals.json";
 
 const PLATFORM_LABEL: Record<string, string> = {
@@ -53,14 +52,6 @@ export function ExpectationsSection() {
             <p className="mt-3 border-t border-border pt-3 text-xs leading-relaxed text-muted">{m.note}</p>
           </div>
         ))}
-      </div>
-
-      <div className="mt-4">
-        <PlaceholderPanel
-          title="Term structure"
-          description="The same milestone asked at several horizons — a yield curve for the field, where an earlier implied date means expected acceleration. Blocked on: aggregation across the platform APIs."
-          height="h-40"
-        />
       </div>
 
       <p className="mt-4 text-xs leading-relaxed text-faint">

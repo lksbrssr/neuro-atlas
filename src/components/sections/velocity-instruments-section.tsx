@@ -2,11 +2,8 @@ import { SectionIntro } from "@/components/sections/section-intro";
 import { Sparkline, GhostChart } from "@/components/sparkline";
 import INSTRUMENTS from "@/data/velocity/instruments.json";
 import RECORDS from "@/data/velocity/neurotech_records.json";
-import POINTS from "@/data/velocity/neurotech_inflection_points.json";
-import MARKETS from "@/data/velocity/neurotech_market_signals.json";
 
 const DEFS = Object.fromEntries(INSTRUMENTS.instruments.map((i) => [i.id, i]));
-const MARKET_BY_TITLE = Object.fromEntries(MARKETS.mappings.map((m) => [m.title, m]));
 
 export function VelocityInstrumentsSection() {
   return (
@@ -107,45 +104,6 @@ export function VelocityInstrumentsSection() {
             </div>
           );
         })}
-      </section>
-
-      <section className="mt-10">
-        <h3 className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">
-          Inflection points we&apos;re tracking
-        </h3>
-        <p className="mb-4 max-w-2xl text-xs leading-relaxed text-faint">
-          {INSTRUMENTS.inflectionExplainer.description}
-        </p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {POINTS.points.map((p) => {
-            const mkt = MARKET_BY_TITLE[p.title];
-            return (
-              <div key={p.title} className="card flex flex-col p-5">
-                <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-accent">
-                  {p.opportunitySpace}
-                </p>
-                <h4 className="text-sm font-semibold tracking-tight">{p.title}</h4>
-                <p className="mt-2 text-xs leading-relaxed text-muted">
-                  <span className="font-medium text-foreground">Signal: </span>
-                  {p.signal}
-                </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted">
-                  <span className="font-medium text-foreground">Cascade: </span>
-                  {p.cascade}
-                </p>
-                <div className="mt-3 border-t border-border pt-3 text-[11px]">
-                  {mkt?.match === "proxy" && mkt.primary ? (
-                    <a href={mkt.primary.url} target="_blank" rel="noreferrer" className="text-accent hover:underline">
-                      {mkt.primary.platform}: “{mkt.primary.question}” ↗
-                    </a>
-                  ) : (
-                    <span className="italic text-faint">No live market prices this yet — white space.</span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </section>
 
       <p className="mt-6 text-xs leading-relaxed text-faint">
