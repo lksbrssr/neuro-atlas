@@ -1,0 +1,54 @@
+name,type,country,domain,memo_column,note
+Boston Scientific,strategic_medtech,USA,bostonscientific.com,left,
+OpenAI,strategic_tech,USA,openai.com,left,
+Khosla Ventures,vc,USA,khoslaventures.com,left,
+Quiet Capital,vc,USA,quiet.com,left,
+In-Q-Tel (IQT),strategic_vc,USA,iqt.org,left,US intelligence-community-affiliated investor
+Y Combinator,accelerator,USA,ycombinator.com,left,
+Lightspeed,vc,USA,lsvp.com,left,
+Hillhouse,pe_vc,China,hillhouseinvestment.com,left,
+Charoen Pokphand Group,conglomerate,Thailand,cpgroupglobal.com,left,
+Gaorong Ventures,vc,China,gaorongvc.com,left,高榕
+Alumni Ventures,vc,USA,av.vc,left,
+Medtronic,strategic_medtech,USA,medtronic.com,left,
+Cleveland Clinic,hospital,USA,clevelandclinic.org,left,
+Genesys Capital,vc,Canada,genesyscapital.com,left,
+JobsOhio,economic_development,USA,jobsohio.com,left,
+Astellas,strategic_pharma,Japan,astellas.com,left,
+Ottobock,strategic_medtech,Germany,ottobock.com,left,
+Medical University of Vienna,academic_hospital,Austria,meduniwien.ac.at,left,
+CORAL,unknown,,,left,Identity not confirmed from memo alone
+Emory University,academic,USA,emory.edu,left,
+ARPA-H,government_funder,USA,arpa-h.gov,left,
+University of Utah Health,academic_hospital,USA,utah.edu,left,Shown as U Health
+UTHealth Houston,academic_hospital,USA,uth.edu,left,
+University of Iowa,academic,USA,uiowa.edu,left,
+Baylor College of Medicine,academic_hospital,USA,bcm.edu,left,
+New York University,academic,USA,nyu.edu,left,
+Harborview Medical Center,hospital,USA,uwmedicine.org,left,UW Medicine
+Northern Care Alliance NHS Foundation Trust,hospital,UK,northerncarealliance.nhs.uk,left,
+Cabrini Health,hospital,Australia,cabrini.com.au,left,
+Massachusetts General Hospital,hospital,USA,massgeneral.org,left,
+Stanford University,academic,USA,stanford.edu,left,
+University of Pittsburgh,academic,USA,pitt.edu,left,
+University of Michigan,academic,USA,umich.edu,left,
+UC Davis,academic,USA,ucdavis.edu,left,
+Alibaba Group,strategic_tech,China,alibabagroup.com,right,
+SDIC Unity Capital,state_vc,China,sdicfund.com,right,国投创合; domain best-effort
+Tencent,strategic_tech,China,tencent.com,right,
+FountainBridge Capital,vc,China,,right,源来资本; domain not confirmed
+OrbiMed,healthcare_investor,USA,orbimed.com,right,
+Oriza Seed,vc,China,oriza.com.cn,right,元禾原点; domain best-effort
+Qiming Venture Partners,vc,China,qimingvc.com,right,
+Lilly Asia Ventures,vc,China,lillyasiaventures.com,right,
+Source Code Capital,vc,China,sourcecodecap.com,right,源码资本
+Shanghai State-Owned Capital Investment,state_investor,China,,right,上海国投; domain not confirmed
+National Medical Products Administration (NMPA),regulator,China,nmpa.gov.cn,right,China's medical device regulator
+Gobi Partners,vc,China,gobipartners.com,right,domain best-effort
+Dalton Venture,vc,China,,right,道彤投资; domain not confirmed
+Guosheng Group,state_investor,China,,right,国盛集团; domain not confirmed
+Tsing Song Capital,vc,China,,right,清松资本; domain not confirmed
+Liepin,strategic_tech,China,liepin.com,right,猎聘
+SEAS Capital,vc,China,,right,云时资本; domain not confirmed
+Fourier Intelligence,strategic_medtech,China,fftai.com,right,
+Huashan Hospital Fudan University,hospital,China,,right,domain not confirmed

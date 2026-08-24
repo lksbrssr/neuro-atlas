@@ -1,0 +1,10 @@
+metric,value,unit,qualifier,note
+new_capital,650,USD_millions,+,"New capital raised by implanted-BCI firms, Jan–Apr 2026"
+acquisition_value,14,USD_billions,,"Single acquisition (Penumbra activity row)"
+global_investors,50,count,,"Distinct investors participating in tracked deals"
+growth_vs_prior_year,102,percent,,"Capital growth vs. Jan–Apr 2025"
+bci_startups,24,count,,"Startups with tracked milestones in the period"
+commercial_milestones,25,count,+,"Jan–Apr 2026"
+clinical_partners,18,count,+,"Jan–Apr 2026"
+clinical_indications,12,count,,"Jan–Apr 2026"
+market_approvals,1,count,,"Jan–Apr 2026"
