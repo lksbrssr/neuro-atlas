@@ -5,12 +5,10 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const TABS: { href: string; label: string }[] = [
-  { href: "/", label: "Overview" },
   { href: "/progress", label: "Progress" },
   { href: "/ecosystem", label: "Ecosystem" },
   { href: "/policy", label: "Policy" },
 ];
-const METHODOLOGY = { href: "/methodology", label: "Methodology" };
 
 function BrandMark() {
   return (
@@ -74,10 +72,6 @@ export function SideNav() {
             <VItem key={t.href} tab={t} active={pathname === t.href} />
           ))}
         </div>
-        <div className="mt-auto">
-          <div className="mx-3 my-2 border-t border-border" />
-          <VItem tab={METHODOLOGY} active={pathname === METHODOLOGY.href} />
-        </div>
       </nav>
     </aside>
   );
@@ -97,8 +91,6 @@ export function MobileBar() {
           {TABS.map((t) => (
             <HItem key={t.href} tab={t} active={pathname === t.href} />
           ))}
-          <span className="mx-1 h-4 w-px bg-border" aria-hidden />
-          <HItem tab={METHODOLOGY} active={pathname === METHODOLOGY.href} />
         </div>
       </nav>
     </div>

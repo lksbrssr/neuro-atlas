@@ -10,7 +10,6 @@ const PLATES: {
   { href: "/progress", title: "Progress", status: "live", blurb: "The 2026 milestone timeline (with capital, clinical & commercial lanes and a drag-to-summarize window), forecast markets, and the instruments that read the field's pace." },
   { href: "/ecosystem", title: "Ecosystem", status: "live", blurb: "363 neurotech companies, faceted like a shop: category, stage, country, modality." },
   { href: "/policy", title: "Policy", status: "partial", blurb: "Geopolitics and regulation: where the field forms — US / China / EU — and under what rules." },
-  { href: "/methodology", title: "Methodology", status: "live", blurb: "How this is built, what each reading means, and how to contribute." },
 ];
 
 export default function Home() {
@@ -77,6 +76,11 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        <p className="mt-4 text-xs text-faint">
+          <Link href="/methodology" className="font-medium text-accent hover:underline">
+            Methodology &amp; how to contribute →
+          </Link>
+        </p>
       </section>
     </>
   );

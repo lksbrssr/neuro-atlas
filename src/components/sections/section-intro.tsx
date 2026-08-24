@@ -10,7 +10,7 @@ export function SectionIntro({
   return (
     <div className="mb-5">
       <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted">{children}</p>
+      <p className="mt-1 text-sm leading-relaxed text-muted">{children}</p>
     </div>
   );
 }
