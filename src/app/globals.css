@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --background: #f6f6f7;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border: #e7e7ea;
+  --border-strong: #d9d9de;
+
+  /* Text */
+  --foreground: #0c0c0e;
+  --muted: #6b6b74;
+  --faint: #9a9aa3;
+
+  /* Accent — neural violet */
+  --accent: #6d5bff;
+  --accent-soft: #efedff;
+  --accent-foreground: #ffffff;
+
+  /* Semantic */
+  --positive: #0bab64;
+  --positive-soft: #e7f8f0;
+  --negative: #e5484d;
+  --negative-soft: #fdebec;
+
+  --ring: rgba(109, 91, 255, 0.35);
+  --shadow-card: 0 1px 2px rgba(9, 9, 11, 0.04), 0 8px 24px -12px rgba(9, 9, 11, 0.08);
+}
+
+.dark {
+  --background: #09090b;
+  --surface: #111113;
+  --surface-raised: #17171a;
+  --border: #232328;
+  --border-strong: #303036;
+
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --faint: #63636b;
+
+  --accent: #8b7dff;
+  --accent-soft: #1d1a33;
+  --accent-foreground: #0c0c0e;
+
+  --positive: #2ee6a8;
+  --positive-soft: #0d2a20;
+  --negative: #ff6369;
+  --negative-soft: #331519;
+
+  --ring: rgba(139, 125, 255, 0.4);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-negative: var(--negative);
+  --color-negative-soft: var(--negative-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Shared card primitive */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+}
+
+/* Tabular numbers for all metrics */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }
