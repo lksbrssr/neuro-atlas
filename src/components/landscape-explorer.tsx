@@ -8,7 +8,6 @@
 import { useMemo, useState } from "react";
 import COMPANIES from "@/data/landscape.json";
 import { FirmLogo } from "@/components/firm-logo";
-import { BarList } from "@/components/bar-list";
 
 type Company = (typeof COMPANIES)[number];
 
@@ -99,8 +98,7 @@ export function LandscapeExplorer() {
     };
     const founded = results.map((c) => c.founded).filter((y): y is number => y != null).sort((a, b) => a - b);
     return {
-      byCategory: by("category", 6),
-      byStage: by("fundingStage", 6),
+      byCategory: by("category", 1),
       medianFounded: founded.length ? founded[Math.floor(founded.length / 2)] : null,
     };
   }, [results]);
@@ -207,17 +205,6 @@ export function LandscapeExplorer() {
             <div className="text-[11px] text-muted">
               largest category in view ({profile.byCategory[0]?.value ?? 0})
             </div>
-          </div>
-        </div>
-
-        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="card p-5">
-            <h3 className="mb-3 text-sm font-semibold">By category</h3>
-            <BarList items={profile.byCategory} />
-          </div>
-          <div className="card p-5">
-            <h3 className="mb-3 text-sm font-semibold">By funding stage</h3>
-            <BarList items={profile.byStage} />
           </div>
         </div>
 
