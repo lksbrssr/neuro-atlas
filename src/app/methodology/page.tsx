@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PlateHeader } from "@/components/plate-header";
 import { Abbr } from "@/components/abbr";
 
-export const metadata: Metadata = { title: "Methodology — State of BCI" };
+export const metadata: Metadata = { title: "Methodology — Neuro Atlas" };
 
 const SOURCES = [
   {
@@ -126,7 +126,7 @@ export default function MethodologyPage() {
             This atlas is built in the open. The data layer is CSV and JSON with
             provenance fields —{" "}
             <a
-              href="https://github.com/lksbrssr/bci-dashboard"
+              href="https://github.com/lksbrssr/neuro-atlas"
               target="_blank"
               rel="noreferrer"
               className="font-medium text-accent hover:underline"

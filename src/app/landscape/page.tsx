@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PlateHeader } from "@/components/plate-header";
 import { LandscapeExplorer } from "@/components/landscape-explorer";
 
-export const metadata: Metadata = { title: "Landscape — State of BCI" };
+export const metadata: Metadata = { title: "Landscape — Neuro Atlas" };
 
 export default function LandscapePage() {
   return (

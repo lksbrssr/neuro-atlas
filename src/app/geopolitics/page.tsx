@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PlateHeader } from "@/components/plate-header";
 import { PlaceholderPanel } from "@/components/placeholder-panel";
 
-export const metadata: Metadata = { title: "Geopolitics — State of BCI" };
+export const metadata: Metadata = { title: "Geopolitics — Neuro Atlas" };
 
 export default function GeopoliticsPage() {
   return (

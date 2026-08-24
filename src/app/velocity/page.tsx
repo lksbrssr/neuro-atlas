@@ -6,7 +6,7 @@ import RECORDS from "@/data/velocity/neurotech_records.json";
 import POINTS from "@/data/velocity/neurotech_inflection_points.json";
 import MARKETS from "@/data/velocity/neurotech_market_signals.json";
 
-export const metadata: Metadata = { title: "Velocity — State of BCI" };
+export const metadata: Metadata = { title: "Velocity — Neuro Atlas" };
 
 const DEFS = Object.fromEntries(INSTRUMENTS.instruments.map((i) => [i.id, i]));
 const MARKET_BY_TITLE = Object.fromEntries(MARKETS.mappings.map((m) => [m.title, m]));

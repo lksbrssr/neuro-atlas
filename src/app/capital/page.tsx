@@ -6,7 +6,7 @@ import { BarList } from "@/components/bar-list";
 import CAPITAL from "@/data/capital.json";
 import MILESTONES from "@/data/milestones.json";
 
-export const metadata: Metadata = { title: "Capital — State of BCI" };
+export const metadata: Metadata = { title: "Capital — Neuro Atlas" };
 
 export default function CapitalPage() {
   const deals = MILESTONES.filter((m) => m.stage === "capital" && m.amountUsdM).sort(

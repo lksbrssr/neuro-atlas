@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PlateHeader } from "@/components/plate-header";
 import { MilestoneTimeline } from "@/components/milestone-timeline";
 
-export const metadata: Metadata = { title: "Milestones — State of BCI" };
+export const metadata: Metadata = { title: "Milestones — Neuro Atlas" };
 
 export default function MilestonesPage() {
   return (
