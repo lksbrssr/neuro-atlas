@@ -1,15 +1,12 @@
 "use client";
 
-// Timeline of the Q1+ 2026 BCI milestones (rebuild of the Neurotech Futures ×
-// PL Neuro market-memo right column). ONE shared time axis — stage is encoded
-// by marker color only. Markers are logo-only; detail lives in the hover card.
-//
-// Legend: each stage is a group pill. Click one and it expands *inline, in the
-// same row* into its subcategory pills (FIH, IDE, pivotal, …), separated from
-// the group name by a vertical divider — only one stage open at a time; opening
-// another collapses the first. Clicking an already-open group toggles all of its
-// subcategories on/off. Hovering the plot magnifies nearby logos like the macOS
-// dock. Undated milestones sit in a "date TBD" shelf instead of on the axis.
+// Timeline of the Q1+ 2026 BCI milestones. Each stage that has any subcategory
+// selected gets its own horizontal LANE, tinted in the stage color, and its
+// events live in that lane (staggered into rows when they'd overlap). One shared
+// month axis runs across all lanes. The legend's group pills expand inline into
+// their subcategories (with a collapse ✕ to close again); clicking an open group
+// toggles all its subcategories. Hovering the plot magnifies nearby logos like
+// the macOS dock. Undated milestones sit in a "date TBD" shelf.
 
 import { useMemo, useState } from "react";
 import MILESTONES from "@/data/milestones.json";
@@ -29,20 +26,21 @@ const MONTHS = [
 ];
 
 const STAGES = [
-  { key: "capital", label: "Capital", color: "var(--positive)" },
-  { key: "clinical", label: "Clinical", color: "var(--negative)" },
-  { key: "commercial", label: "Commercial", color: "var(--warning)" },
+  { key: "capital", label: "Capital", color: "var(--positive)", soft: "var(--positive-soft)" },
+  { key: "clinical", label: "Clinical", color: "var(--negative)", soft: "var(--negative-soft)" },
+  { key: "commercial", label: "Commercial", color: "var(--warning)", soft: "var(--warning-soft)" },
 ] as const;
 type StageKey = (typeof STAGES)[number]["key"];
 
-const PLOT_TOP = 26;
-const ROW_H = 40;
+const PLOT_TOP = 24;
+const LANE_LABEL_H = 18;
+const ROW_H = 34;
 const MARKER = 26;
+const LANE_PAD_BOTTOM = 12;
+const LANE_GAP = 8;
 const MIN_GAP_PCT = 4.2;
-
-// Dock magnification
-const DOCK_RADIUS = 88; // px of influence on either side of the cursor
-const DOCK_MAX = 0.55; // up to +55% size at the cursor
+const DOCK_RADIUS = 92;
+const DOCK_MAX = 0.55;
 
 function pct(dateStr: string): number {
   const t = new Date(dateStr + "T00:00:00Z").getTime();
@@ -91,38 +89,42 @@ export function MilestoneTimeline() {
     commercial: new Set(ALL_SUBCATS.commercial),
   });
   const [openStage, setOpenStage] = useState<StageKey | null>(null);
-  const [dock, setDock] = useState<{ x: number; w: number } | null>(null);
+  const [dock, setDock] = useState<{ x: number; y: number; w: number } | null>(null);
   const [tip, setTip] = useState<{ m: Milestone; x: number; y: number; below: boolean } | null>(null);
 
   const matches = (m: Milestone) =>
     subcatsOf(m).some((sub) => sel[m.stage as StageKey]?.has(sub));
 
-  const dated = useMemo(() => {
-    const list = MILESTONES.filter((m) => m.date && matches(m)).sort((a, b) =>
-      a.date! < b.date! ? -1 : 1,
-    );
-    const rowLast: number[] = [];
-    return list.map((m) => {
-      const left = pct(m.date!);
-      let row = rowLast.findIndex((last) => left - last >= MIN_GAP_PCT);
-      if (row === -1) {
-        row = rowLast.length;
-        rowLast.push(left);
-      } else {
-        rowLast[row] = left;
-      }
-      return { m, left, row };
+  // One lane per stage that has any subcategory selected.
+  const { lanes, totalH, undated } = useMemo(() => {
+    let y = PLOT_TOP;
+    const lanes = STAGES.filter((s) => sel[s.key].size > 0).map((stage) => {
+      const evs = MILESTONES.filter((m) => m.stage === stage.key && m.date && matches(m)).sort((a, b) =>
+        a.date! < b.date! ? -1 : 1,
+      );
+      const rowLast: number[] = [];
+      const placed = evs.map((m) => {
+        const left = pct(m.date!);
+        let row = rowLast.findIndex((last) => left - last >= MIN_GAP_PCT);
+        if (row === -1) {
+          row = rowLast.length;
+          rowLast.push(left);
+        } else {
+          rowLast[row] = left;
+        }
+        return { m, left, row };
+      });
+      const nRows = Math.max(1, ...placed.map((p) => p.row + 1));
+      const height = LANE_LABEL_H + nRows * ROW_H + LANE_PAD_BOTTOM;
+      const top = y;
+      y += height + LANE_GAP;
+      return { stage, placed, height, top };
     });
+    const undated = MILESTONES.filter((m) => !m.date && matches(m));
+    return { lanes, totalH: Math.max(y, PLOT_TOP + 48), undated };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sel]);
 
-  const undated = useMemo(() => MILESTONES.filter((m) => !m.date && matches(m)), [sel]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const nRows = Math.max(1, ...dated.map((d) => d.row + 1));
-  const plotH = PLOT_TOP + nRows * ROW_H + 26;
-
-  // Click a group pill: expand it if collapsed; if already open, toggle all of
-  // its subcategories on/off. Opening a group collapses any other open one.
   const clickGroup = (key: StageKey) => {
     if (openStage !== key) {
       setOpenStage(key);
@@ -152,17 +154,17 @@ export function MilestoneTimeline() {
 
   const stageColor = (key: string) => STAGES.find((s) => s.key === key)?.color;
 
-  // macOS-dock scale for a marker at `leftPct`, given the cursor position.
-  const dockScale = (leftPct: number) => {
+  // 2D macOS-dock scale for a marker at (leftPct, absY), given the cursor.
+  const dockScale = (leftPct: number, absY: number) => {
     if (!dock) return 1;
     const mx = (leftPct / 100) * dock.w;
-    const dist = Math.abs(mx - dock.x);
+    const dist = Math.hypot(mx - dock.x, absY - dock.y);
     return 1 + DOCK_MAX * Math.max(0, 1 - dist / DOCK_RADIUS);
   };
 
   return (
     <div className="card p-5">
-      {/* Legend: group pills that expand inline into their subcategories */}
+      {/* Legend: group pills expand inline into subcategories; ✕ collapses */}
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
         {STAGES.map((s) => {
           const subs = ALL_SUBCATS[s.key];
@@ -192,7 +194,6 @@ export function MilestoneTimeline() {
                 )}
               </button>
 
-              {/* Inline expansion — unfolds to the right, in the same row */}
               <div
                 className={`grid transition-all duration-300 ease-out ${
                   open ? "grid-cols-[1fr] opacity-100" : "grid-cols-[0fr] opacity-0"
@@ -224,6 +225,18 @@ export function MilestoneTimeline() {
                         </button>
                       );
                     })}
+                    {/* Collapse */}
+                    <button
+                      type="button"
+                      onClick={() => setOpenStage(null)}
+                      aria-label={`Collapse ${s.label}`}
+                      title="Collapse"
+                      className="ml-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border text-faint transition-colors hover:border-border-strong hover:text-foreground"
+                    >
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                        <path d="M6 6l12 12M18 6L6 18" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -241,7 +254,7 @@ export function MilestoneTimeline() {
             {/* Pre-2026: history exists, not yet ingested */}
             <div
               className="relative shrink-0 overflow-hidden rounded-l-xl border-r border-dashed border-border-strong bg-surface-raised"
-              style={{ width: 116, height: plotH }}
+              style={{ width: 116, height: totalH }}
             >
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-2" style={{ filter: "blur(4px)", opacity: 0.35 }} aria-hidden>
                 {[52, 72, 44, 64, 56].map((w, i) => (
@@ -254,47 +267,54 @@ export function MilestoneTimeline() {
               </div>
             </div>
 
-            {/* Plot — one shared axis; color encodes stage; hover magnifies logos */}
+            {/* Plot: tinted lanes + shared month axis; hover magnifies logos */}
             <div
               className="relative flex-1"
-              style={{ height: plotH }}
+              style={{ height: totalH }}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
-                setDock({ x: e.clientX - rect.left, w: rect.width });
+                setDock({ x: e.clientX - rect.left, y: e.clientY - rect.top, w: rect.width });
               }}
               onMouseLeave={() => setDock(null)}
             >
+              {/* Lane backgrounds (tinted per stage) */}
+              {lanes.map((l) => (
+                <div
+                  key={l.stage.key}
+                  className="absolute left-0 right-0 overflow-hidden rounded-xl"
+                  style={{ top: l.top, height: l.height, background: l.stage.soft }}
+                >
+                  <span
+                    className="absolute left-2.5 top-1.5 text-[10px] font-semibold uppercase tracking-wider"
+                    style={{ color: l.stage.color }}
+                  >
+                    {l.stage.label}
+                  </span>
+                </div>
+              ))}
+
+              {/* Month gridlines + labels (above lane tints, below markers) */}
               {MONTHS.map((mo) => {
                 const left = ((mo.t - T0) / (T1 - T0)) * 100;
                 return (
-                  <div key={mo.label} className="absolute bottom-0 top-0" style={{ left: `${left}%` }}>
-                    <div className="absolute bottom-0 top-6 border-l border-border" />
-                    <div className="absolute top-0.5 -translate-x-1/2 text-[10px] font-medium uppercase tracking-wider text-faint">
+                  <div key={mo.label} className="absolute bottom-0 top-0" style={{ left: `${left}%`, zIndex: 1 }}>
+                    <div className="absolute bottom-0 top-5 border-l border-border/70" />
+                    <div className="absolute top-0 -translate-x-1/2 text-[10px] font-medium uppercase tracking-wider text-faint">
                       {mo.label}
                     </div>
                   </div>
                 );
               })}
 
-              <div className="absolute left-0 right-0 border-b border-border/70" style={{ top: plotH - 1 }} />
-
-              {dated.map(({ m, left, row }) => {
-                const top = PLOT_TOP + row * ROW_H;
-                const color = stageColor(m.stage);
-                const scale = dockScale(left);
-                return (
-                  <span key={`${m.company}-${m.activity}`}>
-                    <span
-                      className="absolute w-px bg-border-strong"
-                      style={{ left: `${left}%`, top: top + MARKER, height: plotH - (top + MARKER) - 5 }}
-                      aria-hidden
-                    />
-                    <span
-                      className="absolute h-[7px] w-[7px] -translate-x-1/2 rounded-full border-2"
-                      style={{ left: `${left}%`, top: plotH - 4, borderColor: color, background: "var(--surface)" }}
-                      aria-hidden
-                    />
+              {/* Markers */}
+              {lanes.flatMap((l) =>
+                l.placed.map(({ m, left, row }) => {
+                  const top = l.top + LANE_LABEL_H + row * ROW_H;
+                  const scale = dockScale(left, top + MARKER / 2);
+                  const color = l.stage.color;
+                  return (
                     <a
+                      key={`${m.company}-${m.activity}`}
                       href={m.sourceUrl ?? undefined}
                       target="_blank"
                       rel="noreferrer"
@@ -308,16 +328,16 @@ export function MilestoneTimeline() {
                         height: MARKER,
                         borderColor: color,
                         transform: `translateX(-50%) scale(${scale.toFixed(3)})`,
-                        transformOrigin: "center bottom",
-                        zIndex: scale > 1.02 ? Math.round(scale * 20) : undefined,
+                        transformOrigin: "center",
+                        zIndex: scale > 1.02 ? Math.round(scale * 20) : 2,
                       }}
                       aria-label={`${m.company} — ${m.activity}`}
                     >
                       <FirmLogo src={m.logo} name={m.company} size={18} />
                     </a>
-                  </span>
-                );
-              })}
+                  );
+                }),
+              )}
             </div>
           </div>
 
