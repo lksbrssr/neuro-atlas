@@ -22,7 +22,7 @@ Extracted from the infographic **"Q1+ 2026 Market Memo: Global BCI Industry"** b
 - **`milestones.csv`** — 27 firm-level milestone rows across 24 startups, stage-coded per the memo legend (`capital` = green, `clinical` = red, `commercial` = yellow). `nf_slug` joins to `neurofounders/companies.csv` (20/24 firms match).
 - **`ecosystem_firms.csv`** — the ~54 investors & strategic partners shown, best-effort typed (`vc`, `strategic_medtech`, `hospital`, `regulator`, …) and geolocated. The memo's dotted-line deal attributions are **not** encoded — too ambiguous to assert from the graphic.
 
-Caveats: firm→activity pairings and stage colors were read off the infographic; treat single rows as directional until cross-checked against the memo text. The memo's own disclaimer applies (PL Neuro may hold financial interest in referenced companies).
+Caveats: stage colors were read off the infographic; ~half the milestone rows now carry primary-source links harvested from the memo post (see `provenance.md` for the full sourcing chain and corrections). The memo's own disclaimer applies (PL Neuro may hold financial interest in referenced companies).
 
 ## `logos/` — firm logos
 
