@@ -1,0 +1,56 @@
+{
+  "area": "neurotech",
+  "mappings": [
+    {
+      "title": "The BCI app store",
+      "match": "proxy",
+      "primary": {
+        "platform": "kalshi",
+        "ticker": "KXNEURALINKCOUNT-26-40",
+        "question": "Will Neuralink implant ≥40 people in 2026?",
+        "url": "https://kalshi.com/markets/kxneuralinkcount/neuralink-count"
+      },
+      "fallback": {
+        "platform": "polymarket",
+        "slug": "will-neuralinks-valuation-hit-by-december-31",
+        "hint": "$75B",
+        "question": "Will Neuralink's valuation hit $75B by Dec 31?",
+        "url": "https://polymarket.com/event/will-neuralinks-valuation-hit-by-december-31"
+      },
+      "note": "Implant-count (Kalshi) is the best adoption/scaling proxy for a commercial BCI ecosystem; Polymarket valuation is the liquidity fallback."
+    },
+    {
+      "title": "Neural distillation",
+      "match": "proxy",
+      "primary": {
+        "platform": "metaculus",
+        "id": 372,
+        "question": "Will brain emulation be the first successful route to human-level AI?",
+        "url": "https://www.metaculus.com/questions/372/brain-emulation-produces-first-human-ai/"
+      },
+      "note": "The closest live forecast: a reputation-weighted proxy for how seriously the crowd takes neural-data-driven paths to frontier AI. No money at stake; the crowd prices it in the low single digits."
+    },
+    {
+      "title": "The neuromorphic energy pivot",
+      "match": "gap",
+      "note": "No market prices a neuromorphic model matching SOTA at 1000× efficiency — pure white space."
+    },
+    {
+      "title": "Memory retrieval in simulation",
+      "match": "proxy",
+      "primary": {
+        "platform": "metaculus",
+        "id": 2813,
+        "kind": "date",
+        "question": "When will the first human whole-brain emulation happen?",
+        "url": "https://www.metaculus.com/questions/2813/date-of-first-human-whole-brain-emulation/"
+      },
+      "note": "The crowd currently places the first human whole-brain emulation decades out. Reputation-weighted, no money at stake."
+    }
+  ],
+  "apiEndpoints": {
+    "polymarket": "https://gamma-api.polymarket.com",
+    "kalshi": "https://api.elections.kalshi.com/trade-api/v2",
+    "metaculus": "https://www.metaculus.com/api"
+  }
+}

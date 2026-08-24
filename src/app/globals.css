@@ -25,6 +25,8 @@
   --positive-soft: #e7f8f0;
   --negative: #e5484d;
   --negative-soft: #fdebec;
+  --warning: #d97706;
+  --warning-soft: #fbf1df;
 
   --ring: rgba(109, 91, 255, 0.35);
   --shadow-card: 0 1px 2px rgba(9, 9, 11, 0.04), 0 8px 24px -12px rgba(9, 9, 11, 0.08);
@@ -49,6 +51,8 @@
   --positive-soft: #0d2a20;
   --negative: #ff6369;
   --negative-soft: #331519;
+  --warning: #f5b942;
+  --warning-soft: #2e2410;
 
   --ring: rgba(139, 125, 255, 0.4);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
@@ -70,6 +74,8 @@
   --color-positive-soft: var(--positive-soft);
   --color-negative: var(--negative);
   --color-negative-soft: var(--negative-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

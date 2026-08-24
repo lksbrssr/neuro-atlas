@@ -1,0 +1,166 @@
+{
+  "BCI": {
+    "expansion": "Brain-Computer Interface",
+    "definition": "System that translates neural activity into commands for external devices (or vice versa)"
+  },
+  "FIH": {
+    "expansion": "First in Human",
+    "definition": "First time a device is implanted in or used on a human subject"
+  },
+  "BDD": {
+    "expansion": "FDA Breakthrough Device Designation",
+    "definition": "US FDA program granting priority review and interaction for devices treating serious conditions"
+  },
+  "IDE": {
+    "expansion": "Investigational Device Exemption",
+    "definition": "US FDA approval to use an unapproved device in a clinical study"
+  },
+  "TAP": {
+    "expansion": "Total Product Life Cycle Advisory Program",
+    "definition": "US FDA pilot providing early strategic engagement across a device's life cycle"
+  },
+  "JV": {
+    "expansion": "Joint Venture",
+    "definition": "Business entity jointly owned by two or more partner companies"
+  },
+  "FDA": {
+    "expansion": "US Food and Drug Administration",
+    "definition": "US regulator for medical devices and drugs"
+  },
+  "NMPA": {
+    "expansion": "National Medical Products Administration",
+    "definition": "China's medical device and drug regulator"
+  },
+  "EEG": {
+    "expansion": "Electroencephalography",
+    "definition": "Non-invasive recording of electrical brain activity via scalp electrodes"
+  },
+  "MEA": {
+    "expansion": "Microelectrode Array",
+    "definition": "Grid of tiny electrodes for recording/stimulating neural tissue at high resolution"
+  },
+  "DBS": {
+    "expansion": "Deep Brain Stimulation",
+    "definition": "Implanted electrodes delivering electrical stimulation to deep brain structures"
+  },
+  "TMS": {
+    "expansion": "Transcranial Magnetic Stimulation",
+    "definition": "Non-invasive brain stimulation via magnetic pulses through the skull"
+  },
+  "tDCS": {
+    "expansion": "Transcranial Direct Current Stimulation",
+    "definition": "Non-invasive brain stimulation via weak direct electrical current"
+  },
+  "tES": {
+    "expansion": "Transcranial Electrical Stimulation",
+    "definition": "Umbrella term for non-invasive electrical brain stimulation methods"
+  },
+  "VNS": {
+    "expansion": "Vagus Nerve Stimulation",
+    "definition": "Electrical stimulation of the vagus nerve for therapeutic effect"
+  },
+  "taVNS": {
+    "expansion": "Transauricular Vagus Nerve Stimulation",
+    "definition": "Non-invasive VNS delivered via the ear"
+  },
+  "FES": {
+    "expansion": "Functional Electrical Stimulation",
+    "definition": "Electrical stimulation of nerves/muscles to restore movement"
+  },
+  "fNIRS": {
+    "expansion": "Functional Near-Infrared Spectroscopy",
+    "definition": "Non-invasive brain imaging via blood-oxygenation changes measured with infrared light"
+  },
+  "fMRI": {
+    "expansion": "Functional Magnetic Resonance Imaging",
+    "definition": "Brain imaging measuring activity via blood-flow changes"
+  },
+  "MRI": {
+    "expansion": "Magnetic Resonance Imaging",
+    "definition": "Structural imaging using magnetic fields and radio waves"
+  },
+  "CT": {
+    "expansion": "Computed Tomography",
+    "definition": "X-ray-based cross-sectional imaging"
+  },
+  "MEG": {
+    "expansion": "Magnetoencephalography",
+    "definition": "Brain imaging via magnetic fields produced by neural currents"
+  },
+  "OPM-MEG": {
+    "expansion": "Optically Pumped Magnetometer MEG",
+    "definition": "Wearable MEG using quantum optical sensors"
+  },
+  "sEMG": {
+    "expansion": "Surface Electromyography",
+    "definition": "Non-invasive recording of muscle electrical activity from the skin"
+  },
+  "EMG": {
+    "expansion": "Electromyography",
+    "definition": "Recording of electrical activity in muscles"
+  },
+  "ERP": {
+    "expansion": "Event-Related Potential",
+    "definition": "Brain response time-locked to a stimulus measured with EEG"
+  },
+  "ECoG": {
+    "expansion": "Electrocorticography",
+    "definition": "Recording of brain activity from electrodes placed on the cortical surface"
+  },
+  "CNS": {
+    "expansion": "Central Nervous System",
+    "definition": "Brain and spinal cord"
+  },
+  "PNS": {
+    "expansion": "Peripheral Nervous System",
+    "definition": "Nerves outside the brain and spinal cord"
+  },
+  "TBI": {
+    "expansion": "Traumatic Brain Injury",
+    "definition": "Brain injury from external mechanical force"
+  },
+  "SCI": {
+    "expansion": "Spinal Cord Injury",
+    "definition": "Damage to the spinal cord causing loss of function"
+  },
+  "ALS": {
+    "expansion": "Amyotrophic Lateral Sclerosis",
+    "definition": "Progressive neurodegenerative disease affecting motor neurons"
+  },
+  "AR": {
+    "expansion": "Augmented Reality",
+    "definition": "Digital content overlaid on the physical world"
+  },
+  "VR": {
+    "expansion": "Virtual Reality",
+    "definition": "Fully immersive simulated environment"
+  },
+  "SDK": {
+    "expansion": "Software Development Kit",
+    "definition": "Toolset for building software against a platform"
+  },
+  "API": {
+    "expansion": "Application Programming Interface",
+    "definition": "Programmatic interface for software-to-software interaction"
+  },
+  "OEM": {
+    "expansion": "Original Equipment Manufacturer",
+    "definition": "Company whose components are used in another company's end products"
+  },
+  "CMOS": {
+    "expansion": "Complementary Metal-Oxide-Semiconductor",
+    "definition": "Chip technology used in high-density neural interfaces"
+  },
+  "CE": {
+    "expansion": "Conformité Européenne",
+    "definition": "EU regulatory marking for products including medical devices"
+  },
+  "PMA": {
+    "expansion": "Premarket Approval",
+    "definition": "Most stringent US FDA approval pathway for high-risk devices"
+  },
+  "510(k)": {
+    "expansion": "FDA 510(k) Clearance",
+    "definition": "US FDA pathway clearing devices substantially equivalent to existing ones"
+  }
+}

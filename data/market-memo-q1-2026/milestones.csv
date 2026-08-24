@@ -1,29 +1,29 @@
-company,nf_slug,activity,stage,amount_usd_m,note,source_url
-Penumbra,,$14b,commercial,14000,"Acquisition by Boston Scientific (reported as $14.5b); per memo author 'not a BCI play' but a neural-access bet by a DBS company",https://www.massdevice.com/boston-scientific-to-acquire-penumbra-for-14-5b/
-Merge Labs,merge-labs,$252m,capital,252,"Round led by OpenAI",https://openai.com/index/investing-in-merge-labs/
-Science Corp,science-corp,$230m,capital,230,"Series C to commercialize PRIMA retinal implant",https://www.businesswire.com/news/home/20260305896789/en/Science-Corporation-Closes-%24230-Million-Series-C-to-Accelerate-Commercialization-of-Its-PRIMA-BCI-Retinal-Implant-the-Worlds-Most-Advanced-Vision-Restoration-Technology
-Neurosoft Bioelectronics,neurosoft-bioelectronics,partner,commercial,,"Partnership with Science Corp (Q1 2026)",https://www.massdevice.com/science-neurosoft-partner-on-bci-tech/
-Envoy Medical,,$78m,capital,78,,
-StairMed,stairmed,$73m,capital,73,"Part of China BCI investment crossing $100m in the period",
-Axoft,axoft,$55m,capital,55,"Series raise; also first patient test in China",https://www.bloomberg.com/news/articles/2026-04-29/us-brain-implant-company-axoft-tests-on-patient-in-china-raises-more-money
-Onward Medical,onward-medical,$47m,capital,47,,
-Precision Neuroscience,precision-neuroscience,JV,commercial,,"Partnership with Medtronic to integrate Layer 7 BCI with Medtronic neurosurgical platform (Jan 2026)",https://www.globenewswire.com/news-release/2026/01/12/3217312/0/en/Precision-Neuroscience-and-Medtronic-Partner-to-Integrate-Layer-7-Brain-Computer-Interface-with-Medtronic-Neurosurgical-Platform.html
-Neuracle,neuracle,approval,commercial,,"Commercial clearance from China's NMPA — the memo's '1 market approval'",https://www.sixthtone.com/news/1018307
-Synchron,synchron,pivotal,clinical,,"Pivotal trial kicking off in 2026, following $200m Series D (Nov 2025, outside memo window)",https://www.forbes.com/sites/naveenrao/2025/11/15/full-circle-synchrons-200-million-signals-revolution-by-evolution/
-Gestala,gestala,$21m,capital,21,"Part of China BCI investment crossing $100m in the period",
-Enspire DBS,enspire-dbs,$10m,capital,10,,
-EpiAneura,,spinout,commercial,,,
-Blue Arbor Technologies,,$5m,capital,5,,
-Blue Arbor Technologies,,FIH,clinical,,"First in Human",
-Ruten Neuro,ruten-inc,$2m,capital,2,,
-Motif Neurotech,motif-neurotech,grant,capital,,,
-Motif Neurotech,motif-neurotech,IDE,clinical,,"Investigational Device Exemption; FIH depression implant trial",https://www.wired.com/story/a-brain-implant-for-depression-is-about-to-be-tested-in-humans/
-CorTec,cortec,FIH,clinical,,"Second human implantation of its BCI system (Feb 2026)",https://www.globenewswire.com/news-release/2026/02/10/3235251/0/en/CorTec-Announces-Successful-Second-Human-Implantation-of-Its-Brain-Computer-Interface-BCI-System.html
-CorTec,cortec,BDD/TAP,clinical,,"FDA Breakthrough Device Designation / Total Product Life Cycle program",
-INBRAIN Neuroelectronics,inbrain-neuroelectronics,FIH,clinical,,"First in Human",
-Phantom Neuro,phantom-neuro,FIH,clinical,,"First in Human",
-NeuroXess,neuroxess,FIH,clinical,,"First in Human",
-Paradromics,paradromics,FIH/partner,clinical,,"First in Human plus APEX partnership program launch",https://www.paradromics.com/news/paradromics-launches-apex-partnership-program-to-boost-neurotechnology-discovery
-Nia Therapeutics,nia-therapeutics,BDD,clinical,,"FDA Breakthrough Device Designation",
-ReVision Implant,revision-implant,BDD,clinical,,"FDA Breakthrough Device Designation",
-Motif Neurotech,motif-neurotech,partner,commercial,,"MintNeuro partnership (May 1 2026) — noted by memo author as omitted from the visual; included here for completeness",https://www.prnewswire.com/news-releases/mintneuro-and-motif-neurotech-partner-to-advance-miniature-brain-computer-interface-therapy-for-mental-health-302758663.html
+company,nf_slug,activity,stage,amount_usd_m,date,date_precision,note,source_url
+Penumbra,,$14b,commercial,14500,2026-01-15,day,"Acquisition by Boston Scientific at ~$14.5b enterprise value ($374/share cash+stock); per memo author 'not a BCI play' but a neural-access bet by a DBS company",https://news.bostonscientific.com/2026-01-15-Boston-Scientific-announces-agreement-to-acquire-Penumbra,-Inc
+Merge Labs,merge-labs,$252m,capital,252,2026-01-15,day,"Seed round with OpenAI participating; company came out of stealth the same day",https://openai.com/index/investing-in-merge-labs/
+Science Corp,science-corp,$230m,capital,230,2026-03-05,day,"Series C to accelerate commercialization of the PRIMA BCI retinal implant",https://www.businesswire.com/news/home/20260305896789/en/Science-Corporation-Closes-%24230-Million-Series-C-to-Accelerate-Commercialization-of-Its-PRIMA-BCI-Retinal-Implant-the-Worlds-Most-Advanced-Vision-Restoration-Technology
+Neurosoft Bioelectronics,neurosoft-bioelectronics,partner,commercial,,,window,"Partnership with Science Corp (Q1 2026)",https://www.massdevice.com/science-neurosoft-partner-on-bci-tech/
+Envoy Medical,,$78m,capital,78,2026-02-12,day,"Upsized public offering (Nasdaq: COCH): $30m upfront plus up to $48m via milestone-linked warrants",https://ir.envoymedical.com/news-events/press-releases/detail/80/envoy-medical-announces-closing-of-up-to-78-0-million-upsized-public-offering
+StairMed,stairmed,$73m,capital,73,,window,"RMB 500m (~$72.8m) strategic round led by Alibaba; Tencent, FountainBridge, OrbiMed, Oriza Seed, Qiming, Source Code participating — part of China BCI investment crossing $100m",https://www.massdevice.com/chinese-bci-startup-stairmed-72m-financing/
+Axoft,axoft,$55m,capital,55,2026-04-29,day,"Raise alongside first patient test in China",https://www.bloomberg.com/news/articles/2026-04-29/us-brain-implant-company-axoft-tests-on-patient-in-china-raises-more-money
+Onward Medical,onward-medical,$47m,capital,47,2026-04-15,day,"€40m (~$47.2m) private placement with institutional investors",https://www.massdevice.com/onward-raise-47m-in-private-placement/
+Precision Neuroscience,precision-neuroscience,JV,commercial,,2026-01-12,day,"Partnership with Medtronic to integrate Layer 7 BCI with Medtronic neurosurgical platform",https://www.globenewswire.com/news-release/2026/01/12/3217312/0/en/Precision-Neuroscience-and-Medtronic-Partner-to-Integrate-Layer-7-Brain-Computer-Interface-with-Medtronic-Neurosurgical-Platform.html
+Neuracle,neuracle,approval,commercial,,2026-03-13,day,"World's first market approval of an invasive BCI: NMPA registration for implantable BCI for hand-motor augmentation — the memo's '1 market approval'",https://www.bloomberg.com/news/articles/2026-03-13/china-approves-first-brain-implant-for-commercial-use
+Synchron,synchron,pivotal,clinical,,,window,"Pivotal trial kicking off in 2026, following $200m Series D (Nov 2025, outside memo window)",https://www.forbes.com/sites/naveenrao/2025/11/15/full-circle-synchrons-200-million-signals-revolution-by-evolution/
+Gestala,gestala,$21m,capital,21,,window,"Part of China BCI investment crossing $100m in the period",
+Enspire DBS,enspire-dbs,$10m,capital,10,,window,,
+EpiAneura,,spinout,commercial,,,window,,
+Blue Arbor Technologies,,$5m,capital,5,,window,,
+Blue Arbor Technologies,,FIH,clinical,,,window,"First in Human",
+Ruten Neuro,ruten-inc,$2m,capital,2,,window,,
+Motif Neurotech,motif-neurotech,grant,capital,,,window,,
+Motif Neurotech,motif-neurotech,IDE,clinical,,,window,"Investigational Device Exemption; first-in-human depression implant trial",https://www.wired.com/story/a-brain-implant-for-depression-is-about-to-be-tested-in-humans/
+CorTec,cortec,FIH,clinical,,2026-02-10,day,"Second human implantation of its Brain Interchange BCI system",https://www.globenewswire.com/news-release/2026/02/10/3235251/0/en/CorTec-Announces-Successful-Second-Human-Implantation-of-Its-Brain-Computer-Interface-BCI-System.html
+CorTec,cortec,BDD/TAP,clinical,,,window,"FDA Breakthrough Device Designation / Total Product Life Cycle program",
+INBRAIN Neuroelectronics,inbrain-neuroelectronics,FIH,clinical,,,window,"First in Human",
+Phantom Neuro,phantom-neuro,FIH,clinical,,,window,"First in Human",
+NeuroXess,neuroxess,FIH,clinical,,,window,"First in Human",
+Paradromics,paradromics,FIH/partner,clinical,,,window,"First in Human plus APEX partnership program launch",https://www.paradromics.com/news/paradromics-launches-apex-partnership-program-to-boost-neurotechnology-discovery
+Nia Therapeutics,nia-therapeutics,BDD,clinical,,,window,"FDA Breakthrough Device Designation",
+ReVision Implant,revision-implant,BDD,clinical,,,window,"FDA Breakthrough Device Designation",
+Motif Neurotech,motif-neurotech,partner,commercial,,2026-05-01,day,"MintNeuro partnership to advance miniature BCI therapy for mental health — noted by memo author as omitted from the visual (out of window); included for completeness",https://www.prnewswire.com/news-releases/mintneuro-and-motif-neurotech-partner-to-advance-miniature-brain-computer-interface-therapy-for-mental-health-302758663.html

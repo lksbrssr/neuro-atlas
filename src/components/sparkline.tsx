@@ -39,6 +39,22 @@ function fmtDelta(v: number, unit: string): string {
   return `${sign}${fmt(Math.abs(v), unit)}`;
 }
 
+export function GhostChart({ width = 116, height = 34 }: { width?: number; height?: number }) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      aria-hidden="true"
+      className="text-faint"
+      style={{ filter: "blur(3.5px)", opacity: 0.28 }}
+    >
+      <ellipse cx={width * 0.42} cy={height * 0.55} rx={width * 0.34} ry={height * 0.26} fill="currentColor" />
+      <ellipse cx={width * 0.66} cy={height * 0.42} rx={width * 0.22} ry={height * 0.2} fill="currentColor" />
+    </svg>
+  );
+}
+
 export function Sparkline({
   series,
   series2,
