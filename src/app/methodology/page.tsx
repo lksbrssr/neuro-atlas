@@ -145,7 +145,7 @@ export default function MethodologyPage() {
           <ul className="space-y-2 text-xs leading-relaxed text-muted">
             <li>
               <span className="tnum font-medium text-foreground">2026-08-24</span> — v0.2:
-              plates introduced; milestone Zeitstrahl (Jan–Apr 2026), faceted landscape
+              plates introduced; milestone timeline (Jan–Apr 2026), faceted landscape
               explorer, velocity instruments, capital partials. Announcement dates
               added to 10 of 28 milestone rows from primary sources.
             </li>
