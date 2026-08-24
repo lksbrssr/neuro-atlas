@@ -1,12 +1,13 @@
 "use client";
 
-// Timeline of the Q1+ 2026 BCI milestones. Each selected stage gets a tinted
-// lane (cool blue palette, no good/bad traffic-light colors). Logos are large;
-// hovering one expands it to show the company name inline. Click-hold-drag
-// across the plot selects a time window and the right-hand rail aggregates it
-// (capital raised, event counts by stage) — the single home for those numbers.
-// The legend's group pills expand inline into subcategories (acronyms carry a
-// tooltip); ✕ collapses. Undated milestones sit in a "date TBD" shelf.
+// Timeline of the Q1+ 2026 BCI milestones. Years sit side by side: 2024 and
+// 2025 are narrow columns showing only the headline capital figure over a
+// blurred (not-yet-ingested) announcement area; 2026 is the focused, wide lane
+// timeline. Clicking a year focuses it — columns slide/resize (animated grid).
+// Each selected stage gets a tinted lane (cool blue palette). Big logos expand
+// to show the company name on hover. Click-hold-drag across the plot selects a
+// window; the rail aggregates it. Legend pills expand inline into subcategories
+// (acronyms carry a tooltip); ✕ collapses. Undated milestones sit in a shelf.
 
 import { useMemo, useRef, useState } from "react";
 import MILESTONES from "@/data/milestones.json";
@@ -26,13 +27,14 @@ const MONTHS = [
   { label: "May", t: Date.UTC(2026, 4, 1) },
 ];
 
-// Cool, non-judgmental palette (cyan / blue / violet) instead of green/amber/red.
 const STAGES = [
   { key: "capital", label: "Capital", color: "#22b8cf", soft: "rgba(34,184,207,0.12)" },
   { key: "clinical", label: "Clinical", color: "#4c6ef5", soft: "rgba(76,110,245,0.12)" },
   { key: "commercial", label: "Commercial", color: "#9775fa", soft: "rgba(151,117,250,0.13)" },
 ] as const;
 type StageKey = (typeof STAGES)[number]["key"];
+
+const YEARS = CAPITAL as { year: number; usdM: number; note: string }[];
 
 const PLOT_TOP = 24;
 const LANE_LABEL_H = 20;
@@ -42,9 +44,15 @@ const LOGO = 24;
 const LANE_PAD_BOTTOM = 14;
 const LANE_GAP = 8;
 const MIN_GAP_PCT = 5.6;
-const MIN_W = 1040;
+const YEAR_COL_W = 108; // collapsed year-column width
 const DOCK_RADIUS = 100;
 const DOCK_MAX = 0.5;
+
+// Deterministic blurred-bubble scatter for the not-yet-ingested year columns.
+const SCATTER = [
+  [18, 14], [62, 10], [40, 22], [78, 30], [26, 38], [56, 44], [82, 52],
+  [34, 58], [66, 66], [20, 72], [48, 78], [74, 84], [30, 90], [58, 30], [44, 52],
+];
 
 const dateOf = (s: string) => new Date(s + "T00:00:00Z").getTime();
 function pct(dateStr: string): number {
@@ -91,6 +99,7 @@ export function MilestoneTimeline() {
     commercial: new Set(ALL_SUBCATS.commercial),
   });
   const [openStage, setOpenStage] = useState<StageKey | null>(null);
+  const [focusYear, setFocusYear] = useState(2026);
   const [dock, setDock] = useState<{ x: number; y: number; w: number } | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [tip, setTip] = useState<{ m: Milestone; x: number; y: number; below: boolean } | null>(null);
@@ -123,11 +132,10 @@ export function MilestoneTimeline() {
       return { stage, placed, height, top };
     });
     const undated = MILESTONES.filter((m) => !m.date && matches(m));
-    return { lanes, totalH: Math.max(y, PLOT_TOP + 48), undated };
+    return { lanes, totalH: Math.max(y, PLOT_TOP + 120), undated };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sel]);
 
-  // Aggregates for the selected window (or the full period when none).
   const agg = useMemo(() => {
     const [t1, t2] = selRange
       ? [pctToT(Math.min(selRange.a, selRange.b)), pctToT(Math.max(selRange.a, selRange.b))]
@@ -175,11 +183,51 @@ export function MilestoneTimeline() {
     const dist = Math.hypot(mx - dock.x, absY - dock.y);
     return 1 + DOCK_MAX * Math.max(0, 1 - dist / DOCK_RADIUS);
   };
-
   const xToPct = (clientX: number) => {
     const r = plotRef.current!.getBoundingClientRect();
     return Math.min(Math.max((clientX - r.left) / r.width, 0), 1) * 100;
   };
+
+  const gridCols = YEARS.map((y) => (focusYear === y.year ? "minmax(720px,1fr)" : `${YEAR_COL_W}px`)).join(" ");
+
+  // A not-yet-ingested year column: headline figure over a blurred scatter.
+  const yearColumn = (y: { year: number; usdM: number }, focused: boolean) => (
+    <button
+      key={y.year}
+      type="button"
+      onClick={() => setFocusYear(y.year)}
+      aria-label={`Focus ${y.year}`}
+      className="group relative overflow-hidden rounded-xl border border-dashed border-border-strong bg-surface-raised text-left transition-colors hover:border-border"
+      style={{ height: totalH }}
+    >
+      <div className="absolute inset-0" style={{ filter: "blur(6px)", opacity: 0.22 }} aria-hidden>
+        {SCATTER.map(([x, yy], i) => (
+          <span
+            key={i}
+            className="absolute rounded-full"
+            style={{ left: `${x}%`, top: `${yy}%`, width: 16, height: 16, background: STAGES[i % 3].color }}
+          />
+        ))}
+      </div>
+      <div className={`absolute inset-x-0 px-2 text-center ${focused ? "top-1/2 -translate-y-1/2" : "top-5"}`}>
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted">{y.year}</div>
+        <div className={`tnum font-semibold tracking-tight ${focused ? "text-4xl" : "text-sm"}`}>{fmtUsd(y.usdM)}</div>
+        <div className="mt-0.5 text-[10px] leading-tight text-faint">
+          new capital{y.year === 2026 ? " · Jan–Apr" : ""}
+        </div>
+      </div>
+      {focused && (
+        <div className="absolute inset-x-0 bottom-6 text-center text-[11px] text-faint">
+          detailed timeline coming soon
+        </div>
+      )}
+      {!focused && (
+        <div className="absolute inset-x-0 bottom-3 text-center text-[9px] uppercase tracking-wider text-faint opacity-0 transition-opacity group-hover:opacity-100">
+          view
+        </div>
+      )}
+    </button>
+  );
 
   return (
     <div>
@@ -255,124 +303,102 @@ export function MilestoneTimeline() {
           );
         })}
         <span className="ml-auto hidden text-[11px] text-faint md:block">
-          drag across to summarize a window · hover a logo for the name · click to open source
+          click a year to focus it · drag across to summarize · hover a logo for the name
         </span>
       </div>
 
       <div className="flex gap-5">
         {/* Scrollable plot */}
         <div className="min-w-0 flex-1 overflow-x-auto pb-2">
-          <div className="relative" style={{ minWidth: MIN_W }}>
-            <div className="flex">
-              {/* Pre-2026 */}
-              <div
-                className="relative shrink-0 overflow-hidden rounded-l-xl border-r border-dashed border-border-strong bg-surface-raised"
-                style={{ width: 116, height: totalH }}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-2" style={{ filter: "blur(4px)", opacity: 0.35 }} aria-hidden>
-                  {[52, 72, 44, 64, 56].map((w, i) => (
-                    <div key={i} className="h-4 rounded-full bg-faint/60" style={{ width: w }} />
-                  ))}
-                </div>
-                <div className="absolute inset-x-0 bottom-2 text-center">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted">pre-2026</div>
-                  <div className="text-[10px] text-faint">coming soon</div>
-                </div>
-              </div>
-
-              {/* Plot area */}
-              <div
-                ref={plotRef}
-                className="relative flex-1 cursor-crosshair select-none"
-                style={{ height: totalH }}
-                onPointerDown={(e) => { dragStart.current = xToPct(e.clientX); dragged.current = false; setSelRange(null); }}
-                onPointerMove={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setDock({ x: e.clientX - rect.left, y: e.clientY - rect.top, w: rect.width });
-                  if (dragStart.current != null) {
-                    const p = xToPct(e.clientX);
-                    if (Math.abs(p - dragStart.current) > 0.5) { dragged.current = true; setSelRange({ a: dragStart.current, b: p }); }
-                  }
-                }}
-                onPointerUp={() => { if (dragStart.current != null && !dragged.current) setSelRange(null); dragStart.current = null; }}
-                onMouseLeave={() => setDock(null)}
-              >
-                {/* Lane backgrounds */}
-                {lanes.map((l) => (
-                  <div key={l.stage.key} className="absolute left-0 right-0 overflow-hidden rounded-xl" style={{ top: l.top, height: l.height, background: l.stage.soft }}>
-                    <span className="absolute left-2.5 top-1.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: l.stage.color }}>{l.stage.label}</span>
-                  </div>
-                ))}
-
-                {/* Selection band */}
-                {selRange && (
+          <div className="relative" style={{ minWidth: 900 }}>
+            <div
+              className="grid gap-2 transition-[grid-template-columns] duration-500 ease-out"
+              style={{ gridTemplateColumns: gridCols }}
+            >
+              {YEARS.map((y) => {
+                if (!(y.year === 2026 && focusYear === 2026)) return yearColumn(y, focusYear === y.year);
+                return (
                   <div
-                    className="pointer-events-none absolute bottom-0 top-0 rounded-md border-x"
-                    style={{
-                      left: `${Math.min(selRange.a, selRange.b)}%`,
-                      width: `${Math.abs(selRange.a - selRange.b)}%`,
-                      background: "var(--accent-soft)",
-                      borderColor: "var(--accent)",
-                      opacity: 0.6,
-                      zIndex: 3,
+                    key={y.year}
+                    ref={plotRef}
+                    className="relative cursor-crosshair select-none"
+                    style={{ height: totalH }}
+                    onPointerDown={(e) => { dragStart.current = xToPct(e.clientX); dragged.current = false; setSelRange(null); }}
+                    onPointerMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setDock({ x: e.clientX - rect.left, y: e.clientY - rect.top, w: rect.width });
+                      if (dragStart.current != null) {
+                        const p = xToPct(e.clientX);
+                        if (Math.abs(p - dragStart.current) > 0.5) { dragged.current = true; setSelRange({ a: dragStart.current, b: p }); }
+                      }
                     }}
-                  />
-                )}
+                    onPointerUp={() => { if (dragStart.current != null && !dragged.current) setSelRange(null); dragStart.current = null; }}
+                    onMouseLeave={() => setDock(null)}
+                  >
+                    {lanes.map((l) => (
+                      <div key={l.stage.key} className="absolute left-0 right-0 overflow-hidden rounded-xl" style={{ top: l.top, height: l.height, background: l.stage.soft }}>
+                        <span className="absolute left-2.5 top-1.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: l.stage.color }}>{l.stage.label}</span>
+                      </div>
+                    ))}
 
-                {/* Month gridlines + labels */}
-                {MONTHS.map((mo) => {
-                  const left = ((mo.t - T0) / (T1 - T0)) * 100;
-                  return (
-                    <div key={mo.label} className="absolute bottom-0 top-0" style={{ left: `${left}%`, zIndex: 1 }}>
-                      <div className="absolute bottom-0 top-5 border-l border-border/70" />
-                      <div className="absolute top-0 -translate-x-1/2 text-[10px] font-medium uppercase tracking-wider text-faint">{mo.label}</div>
-                    </div>
-                  );
-                })}
+                    {selRange && (
+                      <div
+                        className="pointer-events-none absolute bottom-0 top-0 rounded-md border-x"
+                        style={{ left: `${Math.min(selRange.a, selRange.b)}%`, width: `${Math.abs(selRange.a - selRange.b)}%`, background: "var(--accent-soft)", borderColor: "var(--accent)", opacity: 0.6, zIndex: 3 }}
+                      />
+                    )}
 
-                {/* Markers */}
-                {lanes.flatMap((l) =>
-                  l.placed.map(({ m, left, row }) => {
-                    const top = l.top + LANE_LABEL_H + row * ROW_H;
-                    const scale = dockScale(left, top + MARKER / 2);
-                    const color = l.stage.color;
-                    const key = `${m.company}-${m.activity}`;
-                    const isHover = hovered === key;
-                    return (
-                      <a
-                        key={key}
-                        href={m.sourceUrl ?? undefined}
-                        target="_blank"
-                        rel="noreferrer"
-                        onMouseEnter={(e) => { setHovered(key); showTip(e, m); }}
-                        onMouseLeave={() => { setHovered(null); setTip(null); }}
-                        onClick={(e) => { if (dragged.current) e.preventDefault(); }}
-                        className={`absolute flex items-center rounded-full border-2 bg-surface shadow-sm transition-transform duration-100 ease-out ${m.sourceUrl ? "cursor-pointer" : "cursor-default"}`}
-                        style={{
-                          left: `${left}%`,
-                          top,
-                          height: MARKER,
-                          width: isHover ? "auto" : MARKER,
-                          paddingLeft: isHover ? 4 : 0,
-                          paddingRight: isHover ? 11 : 0,
-                          justifyContent: isHover ? "flex-start" : "center",
-                          borderColor: color,
-                          transform: `translateX(-50%) scale(${scale.toFixed(3)})`,
-                          transformOrigin: "center",
-                          zIndex: isHover ? 40 : scale > 1.02 ? Math.round(scale * 20) : 4,
-                        }}
-                        aria-label={`${m.company} — ${m.activity}`}
-                      >
-                        <FirmLogo src={m.logo} name={m.company} size={LOGO} />
-                        {isHover && <span className="ml-1.5 whitespace-nowrap text-[12px] font-semibold">{m.company}</span>}
-                      </a>
-                    );
-                  }),
-                )}
-              </div>
+                    {MONTHS.map((mo) => {
+                      const left = ((mo.t - T0) / (T1 - T0)) * 100;
+                      return (
+                        <div key={mo.label} className="absolute bottom-0 top-0" style={{ left: `${left}%`, zIndex: 1 }}>
+                          <div className="absolute bottom-0 top-5 border-l border-border/70" />
+                          <div className="absolute top-0 -translate-x-1/2 text-[10px] font-medium uppercase tracking-wider text-faint">{mo.label}</div>
+                        </div>
+                      );
+                    })}
+
+                    {lanes.flatMap((l) =>
+                      l.placed.map(({ m, left, row }) => {
+                        const top = l.top + LANE_LABEL_H + row * ROW_H;
+                        const scale = dockScale(left, top + MARKER / 2);
+                        const color = l.stage.color;
+                        const key = `${m.company}-${m.activity}`;
+                        const isHover = hovered === key;
+                        return (
+                          <a
+                            key={key}
+                            href={m.sourceUrl ?? undefined}
+                            target="_blank"
+                            rel="noreferrer"
+                            onMouseEnter={(e) => { setHovered(key); showTip(e, m); }}
+                            onMouseLeave={() => { setHovered(null); setTip(null); }}
+                            onClick={(e) => { if (dragged.current) e.preventDefault(); }}
+                            className={`absolute flex items-center rounded-full border-2 bg-surface shadow-sm transition-transform duration-100 ease-out ${m.sourceUrl ? "cursor-pointer" : "cursor-default"}`}
+                            style={{
+                              left: `${left}%`, top, height: MARKER,
+                              width: isHover ? "auto" : MARKER,
+                              paddingLeft: isHover ? 4 : 0, paddingRight: isHover ? 11 : 0,
+                              justifyContent: isHover ? "flex-start" : "center",
+                              borderColor: color,
+                              transform: `translateX(-50%) scale(${scale.toFixed(3)})`,
+                              transformOrigin: "center",
+                              zIndex: isHover ? 40 : scale > 1.02 ? Math.round(scale * 20) : 4,
+                            }}
+                            aria-label={`${m.company} — ${m.activity}`}
+                          >
+                            <FirmLogo src={m.logo} name={m.company} size={LOGO} />
+                            {isHover && <span className="ml-1.5 whitespace-nowrap text-[12px] font-semibold">{m.company}</span>}
+                          </a>
+                        );
+                      }),
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
-            {undated.length > 0 && (
+            {focusYear === 2026 && undated.length > 0 && (
               <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-dashed border-border pt-3">
                 <span className="mr-1 text-[10px] font-semibold uppercase tracking-wider text-faint">date TBD</span>
                 {undated.map((m) => (
@@ -399,13 +425,18 @@ export function MilestoneTimeline() {
         <aside className="hidden w-48 shrink-0 lg:block">
           <div className="mb-4">
             <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-faint">New capital by year</div>
-            {CAPITAL.map((c) => (
-              <div key={c.year} className="tnum flex items-baseline justify-between text-[13px]">
-                <span className="text-muted">{c.year}</span>
+            {YEARS.map((c) => (
+              <button
+                key={c.year}
+                type="button"
+                onClick={() => setFocusYear(c.year)}
+                className={`tnum flex w-full items-baseline justify-between rounded px-1 py-0.5 text-[13px] transition-colors hover:bg-surface-raised ${focusYear === c.year ? "font-semibold" : ""}`}
+              >
+                <span className={focusYear === c.year ? "text-foreground" : "text-muted"}>{c.year}</span>
                 <span className="font-semibold">{fmtUsd(c.usdM)}</span>
-              </div>
+              </button>
             ))}
-            <div className="mt-0.5 text-[10px] text-faint">2026 is Jan–Apr</div>
+            <div className="mt-0.5 px-1 text-[10px] text-faint">2026 is Jan–Apr</div>
           </div>
 
           <div className="border-t border-border pt-3">
@@ -414,9 +445,7 @@ export function MilestoneTimeline() {
                 {selRange ? "Selected window" : "Full period"}
               </span>
               {selRange && (
-                <button type="button" onClick={() => setSelRange(null)} className="text-[10px] font-medium text-accent hover:underline">
-                  clear
-                </button>
+                <button type="button" onClick={() => setSelRange(null)} className="text-[10px] font-medium text-accent hover:underline">clear</button>
               )}
             </div>
             <div className="tnum mb-3 text-[11px] text-muted">{fmtDate(agg.t1)} – {fmtDate(agg.t2)}, 2026</div>
@@ -432,15 +461,13 @@ export function MilestoneTimeline() {
                     <>
                       <div className="tnum text-[15px] font-semibold">{fmtUsd(r.usd)}</div>
                       <div className="text-[10px] text-faint">
-                        {r.rounds} round{r.rounds === 1 ? "" : "s"}
-                        {r.count > r.rounds ? ` · ${r.count - r.rounds} grant` : ""}
+                        {r.rounds} round{r.rounds === 1 ? "" : "s"}{r.count > r.rounds ? ` · ${r.count - r.rounds} grant` : ""}
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="tnum text-[15px] font-semibold">
-                        {r.count}
-                        {r.usd > 0 && <span className="ml-1 text-[11px] font-medium text-muted">· {fmtUsd(r.usd)}</span>}
+                        {r.count}{r.usd > 0 && <span className="ml-1 text-[11px] font-medium text-muted">· {fmtUsd(r.usd)}</span>}
                       </div>
                       <div className="text-[10px] leading-snug text-faint">{r.breakdown || "—"}</div>
                     </>
@@ -452,22 +479,14 @@ export function MilestoneTimeline() {
         </aside>
       </div>
 
-      {/* Pill acronym tooltip */}
       {pillTip && (
-        <div
-          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-[10px] font-medium text-background shadow-lg"
-          style={{ left: pillTip.x, top: pillTip.y }}
-        >
+        <div className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-[10px] font-medium text-background shadow-lg" style={{ left: pillTip.x, top: pillTip.y }}>
           {pillTip.text}
         </div>
       )}
 
-      {/* Marker hover card */}
       {tip && (
-        <div
-          className={`pointer-events-none fixed z-50 w-72 -translate-x-1/2 rounded-xl bg-foreground p-3 shadow-2xl ${tip.below ? "" : "-translate-y-full"}`}
-          style={{ left: tip.x, top: tip.y }}
-        >
+        <div className={`pointer-events-none fixed z-50 w-72 -translate-x-1/2 rounded-xl bg-foreground p-3 shadow-2xl ${tip.below ? "" : "-translate-y-full"}`} style={{ left: tip.x, top: tip.y }}>
           <div className="mb-1 flex items-center gap-2">
             <FirmLogo src={tip.m.logo} name={tip.m.company} size={18} />
             <span className="text-[13px] font-semibold text-background">{tip.m.company}</span>
