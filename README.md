@@ -2,7 +2,7 @@
 
 An interactive dashboard on the state of brain-computer interfaces — devices, clinical trials, funding, and the field's trajectory. Neobank-grade UI, light and dark mode.
 
-**Status:** plumbing only. The shell, theming, and layout primitives are in place; data modules land via PRs.
+**Status:** taking shape. The atlas is organized as **plates** — tabs that each open their own dashboard: Milestones (2026 Zeitstrahl), Landscape (faceted 363-company explorer), Velocity (field instruments with drag-to-measure sparklines), Capital, Pipeline, Geopolitics, Expectations, People, Access, and Methodology. Canonical data lives in `data/` (CSV/JSON with provenance); `scripts/generate-derived.mjs` builds the slim `src/data/*.json` the app consumes.
 
 ## Stack
 

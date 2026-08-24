@@ -1,0 +1,41 @@
+{
+  "note": "The five instruments PL R&D reads a field's velocity with, plus the inflection-point explainer. Definitions are field-agnostic; records are declared per field and deliberately ragged — a reading is never fabricated, an honest 'unwired' is a correct answer.",
+  "instruments": [
+    {
+      "id": "performance_curves",
+      "label": "Performance curves",
+      "subtitle": "Cost or capability per unit, tracked over time.",
+      "description": "How much a fixed unit of output costs, or how much capability one unit buys, tracked over time: dollars per genome sequenced, per watt of solar, per kWh of battery, transistors per chip. These are real rates with units attached, and they tend to fall along steady curves, which makes them the most predictable trend in a field. The first job in each field is to find its gating unit, the single cost that everything downstream waits on."
+    },
+    {
+      "id": "latency_compression",
+      "label": "Latency compression",
+      "subtitle": "The lag between pipeline stages, and whether it is shrinking.",
+      "description": "The time it takes work to move from one stage to the next, and whether that lag is getting shorter: a preprint to a replication, a published method to a working open-source implementation, a demo to a shipped product. This tracks the pipeline itself rather than how much is flowing through it, so a shrinking lag is a direct read on acceleration."
+    },
+    {
+      "id": "idea_vintage",
+      "label": "Idea vintage",
+      "subtitle": "Whether the age of the ideas new work builds on is turning.",
+      "description": "The median age of the references cited by new work in a field, computed from the text a field already produces. We read the slope of the most recent segment only: a falling recent median (newer work leaning on fresher ideas) reads as accelerating, a rising one as decelerating. Paper vintage uses academic references; patent vintage is the invention-side twin (median age of patents cited as prior art). The reliable window structurally excludes the two most recent years (OpenAlex indexing lag)."
+    },
+    {
+      "id": "revealed_commitments",
+      "label": "Revealed commitments",
+      "subtitle": "Where people put money and careers, not just attention.",
+      "description": "Where people actually place bets: talent switching into the field, external capital forming around it, and job postings that name the technology. Money and careers are commitments and carry more signal than press or social attention, which is easy to manufacture."
+    },
+    {
+      "id": "markets",
+      "label": "Markets",
+      "subtitle": "What forecast markets imply about when a milestone arrives.",
+      "description": "What forecast markets and prediction platforms imply about when a milestone will arrive, and whether that date is pulling in. Asking the same milestone at several time horizons gives a term structure, a kind of yield curve for a field, where an earlier implied date means expected acceleration. These need careful reading: markets can be thin, questions can resolve ambiguously, and attention-driven work can move the very markets being read."
+    }
+  ],
+  "inflectionExplainer": {
+    "id": "inflection_points",
+    "label": "Inflection points",
+    "subtitle": "Dated, falsifiable shifts we expect an accelerating field to produce.",
+    "description": "Alongside the five instruments, each field names a small set of inflection points: specific, dated, falsifiable shifts that an accelerating field should produce, each paired with a live signal. They are markers rather than targets. Reaching one is evidence the field is moving, and the live signal shows how close it is."
+  }
+}
