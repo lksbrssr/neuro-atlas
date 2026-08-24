@@ -11,7 +11,7 @@ const MARKET_BY_TITLE = Object.fromEntries(MARKETS.mappings.map((m) => [m.title,
 export function VelocityInstrumentsSection() {
   return (
     <>
-      <SectionIntro title="Five instruments">
+      <SectionIntro title="Field performance">
         Read honestly: where a reading is live it carries a date, a source, and a chart
         you can drag to measure. Where it is not, we name the metric we intend to use
         and what is blocking it — an honest &apos;unwired&apos; is a correct answer.
