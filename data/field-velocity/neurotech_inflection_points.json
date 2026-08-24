@@ -1,0 +1,29 @@
+{
+  "area": "neurotech",
+  "points": [
+    {
+      "opportunitySpace": "Neural Augmentation (BCI)",
+      "title": "The BCI app store",
+      "signal": "A regulator clears a standardized software / API layer for a commercial BCI (with medical guardrails), and the first third-party app launches and is adopted.",
+      "cascade": "BCI value compounds after surgery; a developer ecosystem forms; demand shifts toward elective use."
+    },
+    {
+      "opportunitySpace": "Biologically Inspired Intelligence (NeuroAI)",
+      "title": "Neural distillation",
+      "signal": "A major lab matches frontier reasoning by training on human neural data at a fraction of the parameters / energy, or venture funding surges into consumer EEG to harvest cognitive data for AI.",
+      "cascade": "High-fidelity neural data becomes as valuable to AI as text; comp-neuro talent flow reverses."
+    },
+    {
+      "opportunitySpace": "Biologically Inspired Intelligence (NeuroAI)",
+      "title": "The neuromorphic energy pivot",
+      "signal": "A brain-inspired model matches state-of-the-art performance at 3+ orders of magnitude better energy efficiency, and frontier labs begin acquiring neuromorphic startups.",
+      "cascade": "Neurally derived design becomes foundational to commercial AI; AI is tethered to neuroscience."
+    },
+    {
+      "opportunitySpace": "Whole Organism Emulation (WBE)",
+      "title": "Memory retrieval in simulation",
+      "signal": "A reconstructed mouse connectome simulated in silico reproduces a specific behavior the biological mouse learned before its connectome was harvested.",
+      "cascade": "WBE turns from speculation into a benchmarked engineering discipline; serious policy engagement begins."
+    }
+  ]
+}
