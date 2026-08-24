@@ -2,91 +2,102 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
-// The atlas plates. Methodology is structurally different (how the atlas is
-// made, not a plate of it), so it sits apart: after a divider at the bottom of
-// the nav.
-const TABS: { href: string; label: string; status?: "live" | "partial" | "planned" }[] = [
+const TABS: { href: string; label: string }[] = [
   { href: "/", label: "Overview" },
-  { href: "/capital", label: "Capital", status: "partial" },
-  { href: "/velocity", label: "Velocity", status: "live" },
-  { href: "/deployment", label: "Deployment", status: "partial" },
-  { href: "/policy", label: "Policy", status: "partial" },
+  { href: "/capital", label: "Capital" },
+  { href: "/velocity", label: "Velocity" },
+  { href: "/deployment", label: "Deployment" },
+  { href: "/policy", label: "Policy" },
 ];
 const METHODOLOGY = { href: "/methodology", label: "Methodology" };
 
-function StatusDot({ status }: { status?: "live" | "partial" | "planned" }) {
-  if (status === "planned") return <span className="h-1.5 w-1.5 shrink-0 rounded-full border border-border-strong" aria-label="planned" />;
-  if (status === "partial") return <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-warning/70" aria-label="partial" />;
-  if (status === "live") return <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-positive" aria-label="live" />;
-  return null;
-}
-
-function Item({
-  tab,
-  active,
-  vertical,
-}: {
-  tab: { href: string; label: string; status?: "live" | "partial" | "planned" };
-  active: boolean;
-  vertical: boolean;
-}) {
+function BrandMark() {
   return (
-    <Link
-      href={tab.href}
-      aria-current={active ? "page" : undefined}
-      className={`relative flex items-center gap-2 font-medium transition-colors ${
-        vertical
-          ? "w-full rounded-lg px-3 py-2 text-[15px]"
-          : "rounded-full px-3 py-1.5 text-sm"
-      } ${active ? "bg-foreground text-background" : "text-muted hover:bg-surface hover:text-foreground"}`}
-    >
-      {vertical ? (
-        <>
-          <span className="flex-1">{tab.label}</span>
-          {!active && <StatusDot status={tab.status} />}
-        </>
-      ) : (
-        <>
-          {tab.label}
-          {!active && <StatusDot status={tab.status} />}
-        </>
-      )}
+    <Link href="/" className="flex items-center gap-2.5 px-3">
+      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M2 12h4l3-8 4 16 3-8h6" />
+        </svg>
+      </span>
+      <span className="text-[15px] font-semibold tracking-tight">Neuro Atlas</span>
     </Link>
   );
 }
 
-// Vertical sidebar (lg+): a distinct grey panel, all items always visible
-// (no scroll), Methodology pinned below a divider.
+function VItem({ tab, active }: { tab: { href: string; label: string }; active: boolean }) {
+  return (
+    <Link
+      href={tab.href}
+      aria-current={active ? "page" : undefined}
+      className={`relative flex items-center rounded-lg px-3 py-2 text-[15px] font-medium transition-colors ${
+        active
+          ? "bg-surface text-foreground shadow-sm"
+          : "text-muted hover:bg-surface/60 hover:text-foreground"
+      }`}
+    >
+      {active && (
+        <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-accent" aria-hidden />
+      )}
+      {tab.label}
+    </Link>
+  );
+}
+
+function HItem({ tab, active }: { tab: { href: string; label: string }; active: boolean }) {
+  return (
+    <Link
+      href={tab.href}
+      aria-current={active ? "page" : undefined}
+      className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+        active ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"
+      }`}
+    >
+      {tab.label}
+    </Link>
+  );
+}
+
+// Vertical sidebar (lg+): brand top, nav in the grey chrome, Methodology below a
+// divider, theme toggle pinned at the bottom. The active item is the white pill.
 export function SideNav() {
   const pathname = usePathname();
   return (
-    <aside className="sticky top-6 hidden h-fit w-52 shrink-0 self-start lg:block">
-      <nav className="flex flex-col gap-1 rounded-2xl border border-nav-border bg-nav p-2">
+    <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col py-5 lg:flex">
+      <div className="mb-6 flex items-center justify-between gap-2 pr-3">
+        <BrandMark />
+        <ThemeToggle />
+      </div>
+      <nav className="flex flex-1 flex-col gap-0.5 px-2">
         {TABS.map((t) => (
-          <Item key={t.href} tab={t} active={pathname === t.href} vertical />
+          <VItem key={t.href} tab={t} active={pathname === t.href} />
         ))}
-        <div className="my-1 border-t border-nav-border" />
-        <Item tab={METHODOLOGY} active={pathname === METHODOLOGY.href} vertical />
+        <div className="mx-3 my-2 border-t border-border" />
+        <VItem tab={METHODOLOGY} active={pathname === METHODOLOGY.href} />
       </nav>
     </aside>
   );
 }
 
-// Horizontal fallback for small screens (the sidebar doesn't fit).
-export function SiteNav() {
+// Mobile top bar (below lg): brand + theme toggle, then a horizontal scroll nav.
+export function MobileBar() {
   const pathname = usePathname();
   return (
-    <nav className="border-b border-nav-border bg-nav lg:hidden">
-      <div className="mx-auto w-full max-w-[88rem] overflow-x-auto px-4 sm:px-6">
-        <div className="flex min-w-max items-center gap-1 py-1.5">
+    <div className="lg:hidden">
+      <div className="flex items-center justify-between px-4 py-3">
+        <BrandMark />
+        <ThemeToggle />
+      </div>
+      <nav className="overflow-x-auto px-3 pb-2">
+        <div className="flex min-w-max items-center gap-1">
           {TABS.map((t) => (
-            <Item key={t.href} tab={t} active={pathname === t.href} vertical={false} />
+            <HItem key={t.href} tab={t} active={pathname === t.href} />
           ))}
           <span className="mx-1 h-4 w-px bg-border" aria-hidden />
-          <Item tab={METHODOLOGY} active={pathname === METHODOLOGY.href} vertical={false} />
+          <HItem tab={METHODOLOGY} active={pathname === METHODOLOGY.href} />
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }

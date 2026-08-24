@@ -109,7 +109,7 @@ export function LandscapeExplorer() {
     <div className="flex flex-col gap-6 lg:flex-row">
       {/* Facet rail */}
       <aside className="w-full shrink-0 lg:w-60">
-        <div className="card sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto p-4">
+        <div className="card sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">Filters</h2>
             {activeChips.length > 0 && (
