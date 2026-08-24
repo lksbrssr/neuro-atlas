@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PlateHeader } from "@/components/plate-header";
-import { PlaceholderPanel } from "@/components/placeholder-panel";
 
 export const metadata: Metadata = { title: "Policy — Neuro Atlas" };
 
@@ -11,7 +10,7 @@ export default function PolicyPage() {
         title="Policy"
         question="Where it forms, and under what rules"
         status="partial"
-        description="Geopolitics and regulation: how the US, China, and Europe compare on capital, trials, approvals, and IP — and the policy that gates them. Live: the Q1 2026 China signal. Next: patent assignee-country split and approvals by regulator."
+        description="Geopolitics and regulation: how the US, China, and Europe compare on capital, trials, approvals, and IP — and the policy that gates them. Live: the Q1 2026 China signal."
       />
 
       <div className="card mb-4 p-5">
@@ -41,19 +40,6 @@ export default function PolicyPage() {
           China&apos;s BCI push — from regional VC to state-run syndicates and multinational
           corporates across robotics, pharma, e-commerce, and AI.
         </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <PlaceholderPanel
-          title="Patent geography"
-          description="Median patent vintage and assignee-country split — where neurotech IP is forming. Blocked on: PatentsView / EPO OPS pull (APIs are open)."
-          height="h-48"
-        />
-        <PlaceholderPanel
-          title="Approvals & trials by region"
-          description="FDA vs. NMPA vs. CE-mark activity, and trial registrations by geography (incl. ChiCTR). Blocked on: registry ETLs; ChiCTR needs Chinese-language scraping."
-          height="h-48"
-        />
       </div>
     </>
   );

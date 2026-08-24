@@ -4,7 +4,7 @@ import { MilestoneTimeline } from "@/components/milestone-timeline";
 export function MilestonesSection() {
   return (
     <>
-      <SectionIntro title="2026 milestone timeline">
+      <SectionIntro title="Milestone timeline">
         Every tracked deal, partnership, first-in-human event, and approval in the
         implanted-BCI field, Jan–Apr 2026, on one shared time axis — color marks the
         stage. Click a stage in the legend to expand its subcategories and filter by
