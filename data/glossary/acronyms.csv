@@ -1,0 +1,42 @@
+acronym,expansion,definition
+BCI,Brain-Computer Interface,System that translates neural activity into commands for external devices (or vice versa)
+FIH,First in Human,First time a device is implanted in or used on a human subject
+BDD,FDA Breakthrough Device Designation,US FDA program granting priority review and interaction for devices treating serious conditions
+IDE,Investigational Device Exemption,US FDA approval to use an unapproved device in a clinical study
+TAP,Total Product Life Cycle Advisory Program,US FDA pilot providing early strategic engagement across a device's life cycle
+JV,Joint Venture,Business entity jointly owned by two or more partner companies
+FDA,US Food and Drug Administration,US regulator for medical devices and drugs
+NMPA,National Medical Products Administration,China's medical device and drug regulator
+EEG,Electroencephalography,Non-invasive recording of electrical brain activity via scalp electrodes
+MEA,Microelectrode Array,Grid of tiny electrodes for recording/stimulating neural tissue at high resolution
+DBS,Deep Brain Stimulation,Implanted electrodes delivering electrical stimulation to deep brain structures
+TMS,Transcranial Magnetic Stimulation,Non-invasive brain stimulation via magnetic pulses through the skull
+tDCS,Transcranial Direct Current Stimulation,Non-invasive brain stimulation via weak direct electrical current
+tES,Transcranial Electrical Stimulation,Umbrella term for non-invasive electrical brain stimulation methods
+VNS,Vagus Nerve Stimulation,Electrical stimulation of the vagus nerve for therapeutic effect
+taVNS,Transauricular Vagus Nerve Stimulation,Non-invasive VNS delivered via the ear
+FES,Functional Electrical Stimulation,Electrical stimulation of nerves/muscles to restore movement
+fNIRS,Functional Near-Infrared Spectroscopy,Non-invasive brain imaging via blood-oxygenation changes measured with infrared light
+fMRI,Functional Magnetic Resonance Imaging,Brain imaging measuring activity via blood-flow changes
+MRI,Magnetic Resonance Imaging,Structural imaging using magnetic fields and radio waves
+CT,Computed Tomography,X-ray-based cross-sectional imaging
+MEG,Magnetoencephalography,Brain imaging via magnetic fields produced by neural currents
+OPM-MEG,Optically Pumped Magnetometer MEG,Wearable MEG using quantum optical sensors
+sEMG,Surface Electromyography,Non-invasive recording of muscle electrical activity from the skin
+EMG,Electromyography,Recording of electrical activity in muscles
+ERP,Event-Related Potential,Brain response time-locked to a stimulus measured with EEG
+ECoG,Electrocorticography,Recording of brain activity from electrodes placed on the cortical surface
+CNS,Central Nervous System,Brain and spinal cord
+PNS,Peripheral Nervous System,Nerves outside the brain and spinal cord
+TBI,Traumatic Brain Injury,Brain injury from external mechanical force
+SCI,Spinal Cord Injury,Damage to the spinal cord causing loss of function
+ALS,Amyotrophic Lateral Sclerosis,Progressive neurodegenerative disease affecting motor neurons
+AR,Augmented Reality,Digital content overlaid on the physical world
+VR,Virtual Reality,Fully immersive simulated environment
+SDK,Software Development Kit,Toolset for building software against a platform
+API,Application Programming Interface,Programmatic interface for software-to-software interaction
+OEM,Original Equipment Manufacturer,Company whose components are used in another company's end products
+CMOS,Complementary Metal-Oxide-Semiconductor,Chip technology used in high-density neural interfaces
+CE,Conformité Européenne,EU regulatory marking for products including medical devices
+PMA,Premarket Approval,Most stringent US FDA approval pathway for high-risk devices
+510(k),FDA 510(k) Clearance,US FDA pathway clearing devices substantially equivalent to existing ones

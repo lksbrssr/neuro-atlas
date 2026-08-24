@@ -1,0 +1,28 @@
+company,nf_slug,activity,stage,amount_usd_m,note
+Penumbra,,$14b,commercial,14000,"Acquisition — matches memo's $14b acquisition headline"
+Merge Labs,merge-labs,$252m,capital,252,
+Science Corp,science-corp,$230m,capital,230,
+Neurosoft Bioelectronics,neurosoft-bioelectronics,partner,commercial,,
+Envoy Medical,,$78m,capital,78,
+StairMed,stairmed,$73m,capital,73,
+Axoft,axoft,$55m,capital,55,
+Onward Medical,onward-medical,$47m,capital,47,
+Precision Neuroscience,precision-neuroscience,JV,commercial,,"Joint venture"
+Neuracle,neuracle,approval,commercial,,"Likely the memo's '1 market approval'"
+Synchron,synchron,pivotal,clinical,,"Pivotal trial"
+Gestala,gestala,$21m,capital,21,
+Enspire DBS,enspire-dbs,$10m,capital,10,
+EpiAneura,,spinout,commercial,,
+Blue Arbor Technologies,,$5m,capital,5,
+Blue Arbor Technologies,,FIH,clinical,,"First in Human"
+Ruten Neuro,ruten-inc,$2m,capital,2,
+Motif Neurotech,motif-neurotech,grant,capital,,
+Motif Neurotech,motif-neurotech,IDE,clinical,,"Investigational Device Exemption"
+CorTec,cortec,FIH,clinical,,"First in Human"
+CorTec,cortec,BDD/TAP,clinical,,"FDA Breakthrough Device Designation / Total Product Life Cycle program"
+INBRAIN Neuroelectronics,inbrain-neuroelectronics,FIH,clinical,,"First in Human"
+Phantom Neuro,phantom-neuro,FIH,clinical,,"First in Human"
+NeuroXess,neuroxess,FIH,clinical,,"First in Human"
+Paradromics,paradromics,FIH/partner,clinical,,"First in Human plus partnership"
+Nia Therapeutics,nia-therapeutics,BDD,clinical,,"FDA Breakthrough Device Designation"
+ReVision Implant,revision-implant,BDD,clinical,,"FDA Breakthrough Device Designation"
