@@ -12,7 +12,7 @@ export function SiteHeader() {
             </svg>
           </span>
           <span className="text-sm font-semibold tracking-tight">
-            State of BCI
+            Neuro Atlas
           </span>
           <span className="ml-1 rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted">
             Preview

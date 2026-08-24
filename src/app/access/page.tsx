@@ -3,7 +3,7 @@ import { PlateHeader } from "@/components/plate-header";
 import { PlaceholderPanel } from "@/components/placeholder-panel";
 import { Abbr } from "@/components/abbr";
 
-export const metadata: Metadata = { title: "Access — State of BCI" };
+export const metadata: Metadata = { title: "Access — Neuro Atlas" };
 
 export default function AccessPage() {
   return (

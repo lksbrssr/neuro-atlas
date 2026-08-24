@@ -31,10 +31,10 @@ export default function Home() {
       {/* Hero */}
       <section className="mb-10">
         <p className="mb-2 text-xs font-medium uppercase tracking-wider text-accent">
-          Live field tracker
+          Neuro Atlas · live field tracker
         </p>
         <h1 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-          The state of brain-computer interfaces
+          The brain-computer interface field, mapped
         </h1>
         <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
           An atlas of the BCI field — milestones, capital, velocity, and the

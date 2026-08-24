@@ -3,7 +3,7 @@ import { PlateHeader } from "@/components/plate-header";
 import { PlaceholderPanel } from "@/components/placeholder-panel";
 import MARKETS from "@/data/velocity/neurotech_market_signals.json";
 
-export const metadata: Metadata = { title: "Expectations — State of BCI" };
+export const metadata: Metadata = { title: "Expectations — Neuro Atlas" };
 
 const PLATFORM_LABEL: Record<string, string> = {
   kalshi: "Kalshi",

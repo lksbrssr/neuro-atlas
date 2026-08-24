@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "State of BCI",
+  title: "Neuro Atlas",
   description:
     "An interactive atlas of the brain-computer interface field — milestones, capital, velocity, and the field's trajectory.",
 };
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <footer className="border-t border-border">
             <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 text-xs text-faint sm:px-6">
-              <span>State of BCI — a work in progress.</span>
+              <span>Neuro Atlas — a work in progress.</span>
               <span className="tnum">v0.2</span>
             </div>
           </footer>

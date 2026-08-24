@@ -4,7 +4,7 @@ import { PlaceholderPanel } from "@/components/placeholder-panel";
 import { FirmLogo } from "@/components/firm-logo";
 import MILESTONES from "@/data/milestones.json";
 
-export const metadata: Metadata = { title: "Pipeline — State of BCI" };
+export const metadata: Metadata = { title: "Pipeline — Neuro Atlas" };
 
 export default function PipelinePage() {
   const clinical = MILESTONES.filter((m) => m.stage === "clinical");

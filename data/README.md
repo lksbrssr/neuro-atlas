@@ -1,6 +1,6 @@
 # Data
 
-Source datasets for the State of BCI dashboard. Everything here is input data — no UI depends on it yet.
+Source datasets for Neuro Atlas. Canonical files live here; the app consumes the slim derivatives in `src/data/` (regenerate with `node scripts/generate-derived.mjs`).
 
 ## `neurofounders/` — Neurotech company landscape
 

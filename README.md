@@ -1,6 +1,6 @@
-# State of BCI
+# Neuro Atlas
 
-An interactive dashboard on the state of brain-computer interfaces — devices, clinical trials, funding, and the field's trajectory. Neobank-grade UI, light and dark mode.
+An interactive atlas of the brain-computer interface field — milestones, capital, velocity, landscape, and the people building it. Neobank-grade UI, light and dark mode.
 
 **Status:** taking shape. The atlas is organized as **plates** — tabs that each open their own dashboard: Milestones (2026 Zeitstrahl), Landscape (faceted 363-company explorer), Velocity (field instruments with drag-to-measure sparklines), Capital, Pipeline, Geopolitics, Expectations, People, Access, and Methodology. Canonical data lives in `data/` (CSV/JSON with provenance); `scripts/generate-derived.mjs` builds the slim `src/data/*.json` the app consumes.
 
