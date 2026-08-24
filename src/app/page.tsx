@@ -14,12 +14,6 @@ const PLATES: {
   { href: "/methodology", title: "Methodology", status: "live", blurb: "How this is built, what each reading means, and how to contribute." },
 ];
 
-const STATUS_DOT: Record<string, string> = {
-  live: "bg-positive",
-  partial: "bg-warning",
-  planned: "border border-border-strong",
-};
-
 export default function Home() {
   return (
     <>
@@ -67,7 +61,7 @@ export default function Home() {
       {/* Plate directory */}
       <section>
         <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted">
-          The plates
+          Neuro Atlas Content
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {PLATES.map((p) => (
@@ -77,7 +71,6 @@ export default function Home() {
               className="card group flex flex-col p-5 transition-transform hover:-translate-y-0.5"
             >
               <div className="mb-2 flex items-center gap-2">
-                <span className={`h-2 w-2 rounded-full ${STATUS_DOT[p.status]}`} aria-hidden />
                 <span className="text-sm font-semibold tracking-tight">{p.title}</span>
                 <span className="ml-auto text-faint transition-transform group-hover:translate-x-0.5">→</span>
               </div>
