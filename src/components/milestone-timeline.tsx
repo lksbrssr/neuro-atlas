@@ -9,7 +9,7 @@
 // window; the rail aggregates it. Legend pills expand inline into subcategories
 // (acronyms carry a tooltip); ✕ collapses. Undated milestones sit in a shelf.
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import MILESTONES from "@/data/milestones.json";
 import CAPITAL from "@/data/capital.json";
 import { FirmLogo } from "@/components/firm-logo";
@@ -19,14 +19,11 @@ import { lookupAcronym } from "@/components/abbr";
 type Milestone = (typeof MILESTONES)[number];
 
 const T0 = Date.UTC(2026, 0, 1);
-const T1 = Date.UTC(2026, 4, 15);
-const MONTHS = [
-  { label: "Jan", t: Date.UTC(2026, 0, 1) },
-  { label: "Feb", t: Date.UTC(2026, 1, 1) },
-  { label: "Mar", t: Date.UTC(2026, 2, 1) },
-  { label: "Apr", t: Date.UTC(2026, 3, 1) },
-  { label: "May", t: Date.UTC(2026, 4, 1) },
-];
+const T1 = Date.UTC(2026, 11, 31);
+const MONTHS = Array.from({ length: 12 }, (_, i) => ({
+  label: new Date(Date.UTC(2026, i, 1)).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }),
+  t: Date.UTC(2026, i, 1),
+}));
 
 const STAGES = [
   { key: "capital", label: "Capital", color: "#22b8cf", soft: "rgba(34,184,207,0.12)" },
@@ -44,9 +41,10 @@ const MARKER = 34;
 const LOGO = 24;
 const LANE_PAD_BOTTOM = 14;
 const LANE_GAP = 8;
-const MIN_GAP_PCT = 5.6;
-const FOCUS_W = 72; // focused year column width (%)
-const NARROW_W = 13; // collapsed year column width (%)
+const MIN_GAP_PCT = 2.8; // % of the (now full-year) axis before markers stagger to a new row
+const PLOT_MIN_W = 1760; // scroll width so all 12 months are reachable
+const FOCUS_W = 82; // focused year column width (%)
+const NARROW_W = 9; // collapsed year column width (%)
 const YEAR_EASE = "width 500ms cubic-bezier(0.22,1,0.36,1)";
 const DOCK_RADIUS = 100;
 const DOCK_MAX = 0.5;
@@ -113,6 +111,7 @@ export function MilestoneTimeline() {
   });
   const [openStage, setOpenStage] = useState<StageKey | null>(null);
   const [focusYear, setFocusYear] = useState(2026);
+  const [now, setNow] = useState<number | null>(null);
   const [dock, setDock] = useState<{ x: number; y: number; w: number } | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [tip, setTip] = useState<{ m: Milestone; x: number; y: number; below: boolean } | null>(null);
@@ -122,6 +121,8 @@ export function MilestoneTimeline() {
   const plotRef = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
   const dragged = useRef(false);
+
+  useEffect(() => setNow(Date.now()), []);
 
   const matches = (m: Milestone) => subcatsOf(m).some((sub) => sel[m.stage as StageKey]?.has(sub));
 
@@ -321,7 +322,7 @@ export function MilestoneTimeline() {
       <div className="flex gap-5">
         {/* Scrollable plot */}
         <div className="min-w-0 flex-1 overflow-x-auto pb-2">
-          <div className="relative" style={{ minWidth: 900 }}>
+          <div className="relative" style={{ minWidth: PLOT_MIN_W }}>
             <div className="flex gap-2">
               {YEARS.map((y) => {
                 if (!(y.year === 2026 && focusYear === 2026)) return yearColumn(y, focusYear === y.year);
@@ -365,6 +366,20 @@ export function MilestoneTimeline() {
                         </div>
                       );
                     })}
+
+                    {/* Present-day marker */}
+                    {now != null && (() => {
+                      const p = ((now - T0) / (T1 - T0)) * 100;
+                      if (p < 0 || p > 100) return null;
+                      return (
+                        <div className="pointer-events-none absolute bottom-0 top-0" style={{ left: `${p}%`, zIndex: 6 }}>
+                          <div className="absolute bottom-0 top-4 border-l-2 border-dashed" style={{ borderColor: "var(--accent)" }} />
+                          <div className="absolute top-0 -translate-x-1/2 whitespace-nowrap rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider" style={{ color: "var(--accent-foreground)" }}>
+                            today
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                     {lanes.flatMap((l) =>
                       l.placed.map(({ m, left, row }) => {
