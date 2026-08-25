@@ -7,8 +7,9 @@ const PLATES: {
   status: "live" | "partial" | "planned";
   blurb: string;
 }[] = [
-  { href: "/progress", title: "Progress", status: "live", blurb: "The 2026 milestone timeline (with capital, clinical & commercial lanes and a drag-to-summarize window), forecast markets, and the instruments that read the field's pace." },
-  { href: "/ecosystem", title: "Ecosystem", status: "live", blurb: "363 neurotech companies, faceted like a shop: category, stage, country, modality." },
+  { href: "/milestones", title: "Milestones", status: "live", blurb: "The 2026 milestone timeline — capital / clinical / commercial lanes, a drag-to-summarize window — plus forecast-market expectations." },
+  { href: "/field-velocity", title: "Field velocity", status: "live", blurb: "Is the field speeding up? Five instruments that read its underlying pace, read honestly." },
+  { href: "/ecosystem", title: "Ecosystem", status: "live", blurb: "363 neurotech companies as logo bubbles — group by category, country (on a world map), modality, or stage." },
   { href: "/policy", title: "Policy", status: "partial", blurb: "Geopolitics and regulation: where the field forms — US / China / EU — and under what rules." },
 ];
 

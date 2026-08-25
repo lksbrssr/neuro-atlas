@@ -40,3 +40,11 @@ CMOS,Complementary Metal-Oxide-Semiconductor,Chip technology used in high-densit
 CE,Conformité Européenne,EU regulatory marking for products including medical devices
 PMA,Premarket Approval,Most stringent US FDA approval pathway for high-risk devices
 510(k),FDA 510(k) Clearance,US FDA pathway clearing devices substantially equivalent to existing ones
+SCS,Spinal Cord Stimulation,Electrical stimulation of the spinal cord for chronic pain or motor restoration
+ExG,Biopotential signals,"Umbrella for surface bioelectrical signals (EEG, EMG, ECG, EOG)"
+sEEG,Stereo-EEG,Depth electrodes recording intracranial EEG to localize epileptic zones
+(f)MRI,(Functional) MRI,Structural and functional magnetic resonance imaging
+EOG,Electrooculography,Recording of eye-movement electrical signals
+ECG,Electrocardiography,Recording of the heart's electrical activity
+EFS,Early Feasibility Study,A small first-in-human study to evaluate a device's basic safety and function
+EEG,Electroencephalography,Non-invasive recording of the brain's electrical activity via scalp electrodes

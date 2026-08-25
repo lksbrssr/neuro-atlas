@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const TABS: { href: string; label: string }[] = [
-  { href: "/progress", label: "Progress" },
+  { href: "/milestones", label: "Milestones" },
+  { href: "/field-velocity", label: "Field velocity" },
   { href: "/ecosystem", label: "Ecosystem" },
   { href: "/policy", label: "Policy" },
 ];
@@ -20,6 +21,21 @@ function BrandMark() {
       </span>
       <span className="text-[15px] font-semibold tracking-tight">Neuro Atlas</span>
     </Link>
+  );
+}
+
+/* eslint-disable @next/next/no-img-element */
+function PoweredBy() {
+  return (
+    <div className="mt-2.5 flex items-center gap-2 px-3">
+      <span className="text-[9px] font-medium uppercase tracking-wider text-faint">powered by</span>
+      <a href="https://www.plneuro.xyz" target="_blank" rel="noreferrer" title="PL Neuro" className="opacity-70 transition-opacity hover:opacity-100">
+        <img src="/powered-plneuro.svg" alt="PL Neuro" className="h-4 w-4" />
+      </a>
+      <a href="https://neurotechnology.substack.com" target="_blank" rel="noreferrer" title="Neurotech Futures" className="opacity-70 transition-opacity hover:opacity-100">
+        <img src="/powered-neurotechfutures.png" alt="Neurotech Futures" className="h-4 w-4 rounded-[3px]" />
+      </a>
+    </div>
   );
 }
 
@@ -62,9 +78,12 @@ export function SideNav() {
   const pathname = usePathname();
   return (
     <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col py-5 lg:flex">
-      <div className="mb-6 flex items-center justify-between gap-2 pr-3">
-        <BrandMark />
-        <ThemeToggle />
+      <div className="mb-6">
+        <div className="flex items-center justify-between gap-2 pr-3">
+          <BrandMark />
+          <ThemeToggle />
+        </div>
+        <PoweredBy />
       </div>
       <nav className="flex flex-1 flex-col px-2">
         <div className="flex flex-col gap-0.5">
