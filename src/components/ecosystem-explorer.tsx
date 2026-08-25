@@ -7,7 +7,7 @@
 // scrollable panel of that country's companies. Filters slide out on the right.
 // Acronyms (e.g. modality codes) carry hover tooltips.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import COMPANIES from "@/data/landscape.json";
 import { FirmLogo } from "@/components/firm-logo";
 import { AutoAbbr } from "@/components/abbr";
@@ -84,6 +84,55 @@ export function EcosystemExplorer() {
   const [sortBy, setSortBy] = useState<"az" | "newest" | "oldest">("az");
   const [visibleCount, setVisibleCount] = useState(60);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  // Drag-to-pan state (kept in a ref so panning doesn't re-render every frame).
+  const drag = useRef({ active: false, moved: false, startX: 0, startY: 0, left: 0, top: 0 });
+  // Fraction of the map to re-center on after a zoom change (applied post-layout).
+  const pendingCenter = useRef<{ fx: number; fy: number } | null>(null);
+
+  // Keep the map centered on the same point when zooming in/out.
+  const zoomTo = (next: number) => {
+    const el = scrollRef.current;
+    if (el && el.scrollWidth > 0) {
+      pendingCenter.current = {
+        fx: (el.scrollLeft + el.clientWidth / 2) / el.scrollWidth,
+        fy: (el.scrollTop + el.clientHeight / 2) / el.scrollHeight,
+      };
+    }
+    setMapZoom(next);
+  };
+
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    const pc = pendingCenter.current;
+    if (!el || !pc) return;
+    el.scrollLeft = pc.fx * el.scrollWidth - el.clientWidth / 2;
+    el.scrollTop = pc.fy * el.scrollHeight - el.clientHeight / 2;
+    pendingCenter.current = null;
+  }, [mapZoom]);
+
+  const onMapDown = (e: React.MouseEvent) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    drag.current = { active: true, moved: false, startX: e.clientX, startY: e.clientY, left: el.scrollLeft, top: el.scrollTop };
+  };
+  const onMapMove = (e: React.MouseEvent) => {
+    const d = drag.current, el = scrollRef.current;
+    if (!d.active || !el) return;
+    const dx = e.clientX - d.startX, dy = e.clientY - d.startY;
+    if (!d.moved && Math.hypot(dx, dy) > 4) d.moved = true;
+    if (d.moved) {
+      el.scrollLeft = d.left - dx;
+      el.scrollTop = d.top - dy;
+      setHoverCountry(null);
+      setTip(null);
+    }
+  };
+  const endMapDrag = () => { drag.current.active = false; };
+  // Swallow the click that ends a real drag so it doesn't lock a country.
+  const onMapClickCapture = (e: React.MouseEvent) => {
+    if (drag.current.moved) { e.stopPropagation(); e.preventDefault(); drag.current.moved = false; }
+  };
 
   useEffect(() => {
     const el = canvasRef.current;
@@ -336,7 +385,9 @@ export function EcosystemExplorer() {
         {/* Country → world map of bubble piles; hover fans them out, click locks + panel */}
         {pileView && (
           <div className="relative rounded-xl border border-border" style={{ height: pileView.baseH }}>
-            <div className="absolute inset-0 overflow-auto rounded-xl" onMouseLeave={() => setHoverCountry(null)}>
+            <div ref={scrollRef} className={`absolute inset-0 overflow-auto rounded-xl ${mapZoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
+              onMouseLeave={() => { setHoverCountry(null); endMapDrag(); }}
+              onMouseDown={onMapDown} onMouseMove={onMapMove} onMouseUp={endMapDrag} onClickCapture={onMapClickCapture}>
               <div className="relative" style={{ width: pileView.W, height: pileView.H }}>
                 <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${pileView.W}px ${pileView.H}px`, backgroundPosition: "0 0", opacity: 0.2 }} />
 
@@ -382,11 +433,11 @@ export function EcosystemExplorer() {
             </div>
 
             <div className="absolute left-2 top-2 z-40 flex flex-col overflow-hidden rounded-lg border border-border-strong bg-surface/95 shadow-sm backdrop-blur">
-              <button type="button" aria-label="Zoom in" onClick={() => setMapZoom((z) => Math.min(4, +(z * 1.4).toFixed(2)))} className="px-2.5 py-1 text-sm font-semibold leading-none hover:bg-surface-raised">+</button>
-              <button type="button" aria-label="Zoom out" onClick={() => setMapZoom((z) => Math.max(1, +(z / 1.4).toFixed(2)))} className="border-t border-border px-2.5 py-1.5 text-sm font-semibold leading-none hover:bg-surface-raised">−</button>
+              <button type="button" aria-label="Zoom in" onClick={() => zoomTo(Math.min(4, +(mapZoom * 1.4).toFixed(2)))} className="px-2.5 py-1 text-sm font-semibold leading-none hover:bg-surface-raised">+</button>
+              <button type="button" aria-label="Zoom out" onClick={() => zoomTo(Math.max(1, +(mapZoom / 1.4).toFixed(2)))} className="border-t border-border px-2.5 py-1.5 text-sm font-semibold leading-none hover:bg-surface-raised">−</button>
             </div>
             {mapZoom > 1 && (
-              <button type="button" onClick={() => setMapZoom(1)} className="absolute left-11 top-2 z-40 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">reset · {mapZoom}×</button>
+              <button type="button" onClick={() => zoomTo(1)} className="absolute left-11 top-2 z-40 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">reset · {mapZoom}×</button>
             )}
 
             {lockedCountry && (
@@ -415,7 +466,7 @@ export function EcosystemExplorer() {
               </div>
             )}
 
-            <div className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-surface/80 px-2 py-0.5 text-[10px] text-faint">hover a pile to fan it out · click to lock &amp; explore · +/− to zoom</div>
+            <div className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-surface/80 px-2 py-0.5 text-[10px] text-faint">drag to pan · hover a pile to fan it out · click to lock &amp; explore · +/− to zoom</div>
           </div>
         )}
 
