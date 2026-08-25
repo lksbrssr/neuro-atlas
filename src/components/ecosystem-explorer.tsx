@@ -79,6 +79,7 @@ export function EcosystemExplorer() {
   const [width, setWidth] = useState(900);
   const [hoverCountry, setHoverCountry] = useState<string | null>(null);
   const [lockedCountry, setLockedCountry] = useState<string | null>(null);
+  const [mapZoom, setMapZoom] = useState(1);
   const [tip, setTip] = useState<{ c: Company; x: number; y: number } | null>(null);
   const [sortBy, setSortBy] = useState<"az" | "newest" | "oldest">("az");
   const [visibleCount, setVisibleCount] = useState(60);
@@ -164,8 +165,10 @@ export function EcosystemExplorer() {
   // Positions are precomputed so hover just swaps transforms (smooth animation).
   const pileView = useMemo(() => {
     if (groupBy !== "country") return null;
-    const W = Math.max(width, 320);
+    const baseW = Math.max(width, 320);
+    const W = Math.round(baseW * mapZoom);
     const H = Math.round(W * 0.5);
+    const baseH = Math.round(baseW * 0.5);
     const proj = (cc: [number, number]) => ({ x: ((cc[1] + 180) / 360) * W, y: ((90 - cc[0]) / 180) * H });
     const byCountry = new Map<string, Company[]>();
     for (const c of results) (byCountry.get(c.country) ?? byCountry.set(c.country, []).get(c.country)!).push(c);
@@ -209,8 +212,8 @@ export function EcosystemExplorer() {
       });
     }
     piles.sort((a, b) => b.items.length - a.items.length);
-    return { piles, W, H };
-  }, [results, groupBy, width]);
+    return { piles, W, H, baseH };
+  }, [results, groupBy, width, mapZoom]);
 
   const activeItems = useMemo(
     () => (lockedCountry ? results.filter((c) => c.country === lockedCountry).sort((a, b) => a.name.localeCompare(b.name)) : []),
@@ -226,7 +229,7 @@ export function EcosystemExplorer() {
   const clearAll = () => setSel(Object.fromEntries(FACETS.map((f) => [f.key, new Set()])) as Record<FacetKey, Set<string>>);
   const totalSelected = FACETS.reduce((n, f) => n + sel[f.key].size, 0);
   const visibleFacets = FACETS.filter((f) => groupBy === "none" || f.key !== groupBy);
-  const setGroup = (g: GroupKey) => { setGroupBy(g); setHoverCountry(null); setLockedCountry(null); };
+  const setGroup = (g: GroupKey) => { setGroupBy(g); setHoverCountry(null); setLockedCountry(null); setMapZoom(1); };
 
   const showTip = (e: React.MouseEvent<HTMLElement>, c: Company) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -332,8 +335,10 @@ export function EcosystemExplorer() {
 
         {/* Country → world map of bubble piles; hover fans them out, click locks + panel */}
         {pileView && (
-          <div className="relative overflow-hidden rounded-xl" style={{ height: pileView.H }} onMouseLeave={() => setHoverCountry(null)}>
-            <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${pileView.W}px ${pileView.H}px`, backgroundPosition: "0 0", opacity: 0.2 }} />
+          <div className="relative rounded-xl border border-border" style={{ height: pileView.baseH }}>
+            <div className="absolute inset-0 overflow-auto rounded-xl" onMouseLeave={() => setHoverCountry(null)}>
+              <div className="relative" style={{ width: pileView.W, height: pileView.H }}>
+                <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${pileView.W}px ${pileView.H}px`, backgroundPosition: "0 0", opacity: 0.2 }} />
 
             {pileView.piles.map((p) => {
               const fanned = hoverCountry === p.country || lockedCountry === p.country;
@@ -373,6 +378,16 @@ export function EcosystemExplorer() {
                 </div>
               );
             })}
+              </div>
+            </div>
+
+            <div className="absolute left-2 top-2 z-40 flex flex-col overflow-hidden rounded-lg border border-border-strong bg-surface/95 shadow-sm backdrop-blur">
+              <button type="button" aria-label="Zoom in" onClick={() => setMapZoom((z) => Math.min(4, +(z * 1.4).toFixed(2)))} className="px-2.5 py-1 text-sm font-semibold leading-none hover:bg-surface-raised">+</button>
+              <button type="button" aria-label="Zoom out" onClick={() => setMapZoom((z) => Math.max(1, +(z / 1.4).toFixed(2)))} className="border-t border-border px-2.5 py-1.5 text-sm font-semibold leading-none hover:bg-surface-raised">−</button>
+            </div>
+            {mapZoom > 1 && (
+              <button type="button" onClick={() => setMapZoom(1)} className="absolute left-11 top-2 z-40 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">reset · {mapZoom}×</button>
+            )}
 
             {lockedCountry && (
               <div className="absolute right-2 top-2 z-50 flex max-h-[calc(100%-1rem)] w-72 max-w-[calc(100%-1rem)] flex-col rounded-xl border border-border bg-surface shadow-2xl" onClick={(e) => e.stopPropagation()}>
@@ -400,7 +415,7 @@ export function EcosystemExplorer() {
               </div>
             )}
 
-            <div className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-surface/80 px-2 py-0.5 text-[10px] text-faint">hover a pile to fan it out · click to lock &amp; explore</div>
+            <div className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-surface/80 px-2 py-0.5 text-[10px] text-faint">hover a pile to fan it out · click to lock &amp; explore · +/− to zoom</div>
           </div>
         )}
 
