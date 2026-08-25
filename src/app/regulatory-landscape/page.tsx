@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { PlateHeader } from "@/components/plate-header";
 
-export const metadata: Metadata = { title: "Policy — Neuro Atlas" };
+export const metadata: Metadata = { title: "Regulatory landscape — Neuro Atlas" };
 
-export default function PolicyPage() {
+export default function RegulatoryLandscapePage() {
   return (
     <>
       <PlateHeader
-        title="Policy"
+        title="Regulatory landscape"
         question="Where it forms, and under what rules"
         status="partial"
         description="Geopolitics and regulation: how the US, China, and Europe compare on capital, trials, approvals, and IP — and the policy that gates them. Live: the Q1 2026 China signal."

@@ -16,9 +16,9 @@ export function ExpectationsSection() {
         prices via the platform APIs, and a term structure across horizons.
       </SectionIntro>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2">
         {MARKETS.mappings.map((m) => (
-          <div key={m.title} className="card flex flex-col p-5">
+          <div key={m.title} className="flex flex-col">
             <h3 className="text-sm font-semibold tracking-tight">{m.title}</h3>
             {m.match === "proxy" && m.primary ? (
               <>
