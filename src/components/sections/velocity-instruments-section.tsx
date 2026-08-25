@@ -8,7 +8,7 @@ const DEFS = Object.fromEntries(INSTRUMENTS.instruments.map((i) => [i.id, i]));
 export function VelocityInstrumentsSection() {
   return (
     <>
-      <SectionIntro title="Field performance">
+      <SectionIntro title="Five instruments">
         Read honestly: where a reading is live it carries a date, a source, and a chart
         you can drag to measure. Where it is not, we name the metric we intend to use
         and what is blocking it — an honest &apos;unwired&apos; is a correct answer.

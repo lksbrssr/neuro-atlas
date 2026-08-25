@@ -33,7 +33,7 @@
   },
   "EEG": {
     "expansion": "Electroencephalography",
-    "definition": "Non-invasive recording of electrical brain activity via scalp electrodes"
+    "definition": "Non-invasive recording of the brain's electrical activity via scalp electrodes"
   },
   "MEA": {
     "expansion": "Microelectrode Array",
@@ -162,5 +162,33 @@
   "510(k)": {
     "expansion": "FDA 510(k) Clearance",
     "definition": "US FDA pathway clearing devices substantially equivalent to existing ones"
+  },
+  "SCS": {
+    "expansion": "Spinal Cord Stimulation",
+    "definition": "Electrical stimulation of the spinal cord for chronic pain or motor restoration"
+  },
+  "ExG": {
+    "expansion": "Biopotential signals",
+    "definition": "Umbrella for surface bioelectrical signals (EEG, EMG, ECG, EOG)"
+  },
+  "sEEG": {
+    "expansion": "Stereo-EEG",
+    "definition": "Depth electrodes recording intracranial EEG to localize epileptic zones"
+  },
+  "(f)MRI": {
+    "expansion": "(Functional) MRI",
+    "definition": "Structural and functional magnetic resonance imaging"
+  },
+  "EOG": {
+    "expansion": "Electrooculography",
+    "definition": "Recording of eye-movement electrical signals"
+  },
+  "ECG": {
+    "expansion": "Electrocardiography",
+    "definition": "Recording of the heart's electrical activity"
+  },
+  "EFS": {
+    "expansion": "Early Feasibility Study",
+    "definition": "A small first-in-human study to evaluate a device's basic safety and function"
   }
 }
