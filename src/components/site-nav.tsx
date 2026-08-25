@@ -13,13 +13,8 @@ const TABS: { href: string; label: string }[] = [
 
 function BrandMark() {
   return (
-    <Link href="/" className="flex items-center gap-2.5 px-3">
-      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2 12h4l3-8 4 16 3-8h6" />
-        </svg>
-      </span>
-      <span className="text-[15px] font-semibold tracking-tight">Neuro Atlas</span>
+    <Link href="/" className="px-3">
+      <span className="text-xl font-semibold tracking-tight">Neuro Atlas</span>
     </Link>
   );
 }
@@ -27,14 +22,18 @@ function BrandMark() {
 /* eslint-disable @next/next/no-img-element */
 function PoweredBy() {
   return (
-    <div className="mt-2.5 flex items-center gap-2 px-3">
-      <span className="text-[9px] font-medium uppercase tracking-wider text-faint">powered by</span>
-      <a href="https://www.plneuro.xyz" target="_blank" rel="noreferrer" title="PL Neuro" className="opacity-70 transition-opacity hover:opacity-100">
-        <img src="/powered-plneuro.svg" alt="PL Neuro" className="h-4 w-4" />
-      </a>
-      <a href="https://neurotechnology.substack.com" target="_blank" rel="noreferrer" title="Neurotech Futures" className="opacity-70 transition-opacity hover:opacity-100">
-        <img src="/powered-neurotechfutures.png" alt="Neurotech Futures" className="h-4 w-4 rounded-[3px]" />
-      </a>
+    <div className="mt-3 px-3">
+      <div className="mb-2 text-[9px] font-medium uppercase tracking-wider text-faint">powered by</div>
+      <div className="flex flex-col gap-2">
+        <a href="https://www.plneuro.xyz" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-muted transition-colors hover:text-foreground">
+          <img src="/powered-plneuro.svg" alt="PL Neuro" className="h-6 w-6" />
+          <span className="text-[12px] font-medium">PL Neuro</span>
+        </a>
+        <a href="https://neurotechnology.substack.com" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-muted transition-colors hover:text-foreground">
+          <img src="/powered-neurotechfutures.png" alt="Neurotech Futures" className="h-6 w-6 rounded-[4px]" />
+          <span className="text-[12px] font-medium">Neurotech Futures</span>
+        </a>
+      </div>
     </div>
   );
 }
@@ -101,7 +100,7 @@ export function MobileBar() {
   const pathname = usePathname();
   return (
     <div className="lg:hidden">
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="flex items-center justify-between px-1 py-3">
         <BrandMark />
         <ThemeToggle />
       </div>
