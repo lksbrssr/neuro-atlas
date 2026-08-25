@@ -48,17 +48,6 @@ const CENTROID: Record<string, [number, number]> = {
   Japan: [36.2, 138.3], Czechia: [49.8, 15.5], Turkey: [39, 35.2], "New Zealand": [-41, 174],
 };
 
-const CONTINENTS: Record<string, { label: string; lng: [number, number]; lat: [number, number]; countries: string[] }> = {
-  "north-america": { label: "North America", lng: [-140, -60], lat: [25, 70], countries: ["USA", "Canada"] },
-  "south-america": { label: "South America", lng: [-85, -40], lat: [-52, -22], countries: ["Argentina"] },
-  europe: { label: "Europe & Middle East", lng: [-12, 42], lat: [30, 64], countries: ["UK", "Switzerland", "France", "Germany", "Belgium", "Netherlands", "Spain", "Denmark", "Finland", "Ireland", "Italy", "Poland", "Austria", "Sweden", "Hungary", "Slovenia", "Lithuania", "Czechia", "Israel", "Turkey"] },
-  asia: { label: "Asia", lng: [70, 145], lat: [0, 45], countries: ["China", "India", "Japan", "South-Korea", "Taiwan", "Hong Kong", "Singapore"] },
-  oceania: { label: "Oceania", lng: [110, 180], lat: [-48, -8], countries: ["Australia", "New Zealand"] },
-};
-const COUNTRY_CONTINENT: Record<string, string> = Object.fromEntries(
-  Object.entries(CONTINENTS).flatMap(([k, v]) => v.countries.map((c) => [c, k])),
-);
-
 function hashCode(s: string): number {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
@@ -88,8 +77,8 @@ export function EcosystemExplorer() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [openFacet, setOpenFacet] = useState<FacetKey | null>("category");
   const [width, setWidth] = useState(900);
-  const [activeCountry, setActiveCountry] = useState<string | null>(null);
-  const [zoomContinent, setZoomContinent] = useState<string | null>(null);
+  const [hoverCountry, setHoverCountry] = useState<string | null>(null);
+  const [lockedCountry, setLockedCountry] = useState<string | null>(null);
   const [tip, setTip] = useState<{ c: Company; x: number; y: number } | null>(null);
   const [sortBy, setSortBy] = useState<"az" | "newest" | "oldest">("az");
   const [visibleCount, setVisibleCount] = useState(60);
@@ -170,70 +159,62 @@ export function EcosystemExplorer() {
     return { positions, labels, totalH: y + rowH };
   }, [results, groupBy, width]);
 
-  // Country → world map with compact per-region tiles (up to 5 logos + "+N").
-  // Busy continents (≥4 countries, e.g. Europe) collapse into a continent tile;
-  // clicking drills down (continent → countries → all logos in the panel grid).
-  const countryView = useMemo(() => {
+  // Country → world map of bubble piles. Each country is a tight pile at its
+  // centroid; hover fans it into a neat grid (click locks it open + panel).
+  // Positions are precomputed so hover just swaps transforms (smooth animation).
+  const pileView = useMemo(() => {
     if (groupBy !== "country") return null;
     const W = Math.max(width, 320);
-    const zoomKey = activeCountry ? COUNTRY_CONTINENT[activeCountry] : zoomContinent;
-    const z = zoomKey ? CONTINENTS[zoomKey] : null;
-    const lngMin = z ? z.lng[0] : -180, lngMax = z ? z.lng[1] : 180, latMax = z ? z.lat[1] : 90;
-    const lngRange = lngMax - lngMin, latRange = z ? z.lat[1] - z.lat[0] : 180;
-    const H = Math.round(W * (z ? latRange / lngRange : 0.5));
-    const proj = (cc: [number, number]) => ({ x: ((cc[1] - lngMin) / lngRange) * W, y: ((latMax - cc[0]) / latRange) * H });
+    const H = Math.round(W * 0.5);
+    const proj = (cc: [number, number]) => ({ x: ((cc[1] + 180) / 360) * W, y: ((90 - cc[0]) / 180) * H });
     const byCountry = new Map<string, Company[]>();
     for (const c of results) (byCountry.get(c.country) ?? byCountry.set(c.country, []).get(c.country)!).push(c);
 
-    type Tile = { kind: "country" | "continent"; key: string; label: string; items: Company[]; x: number; y: number; ox: number; oy: number; color: string };
-    const tiles: Tile[] = [];
-    const countryTile = (country: string, items: Company[]) => {
-      const cen = CENTROID[country]; const p = cen ? proj(cen) : { x: W - 64, y: 44 };
-      tiles.push({ kind: "country", key: country, label: country, items, x: p.x, y: p.y, ox: p.x, oy: p.y, color: groupColor(country) });
-    };
-
-    if (z) {
-      for (const [country, items] of byCountry) if (COUNTRY_CONTINENT[country] === zoomKey) countryTile(country, items);
-    } else {
-      const perCont = new Map<string, string[]>();
-      for (const country of byCountry.keys()) {
-        const k = COUNTRY_CONTINENT[country] ?? "other";
-        (perCont.get(k) ?? perCont.set(k, []).get(k)!).push(country);
-      }
-      for (const [contKey, countries] of perCont) {
-        const cont = CONTINENTS[contKey];
-        if (cont && countries.length >= 4) {
-          const items = countries.flatMap((c) => byCountry.get(c) ?? []);
-          const p = proj([(cont.lat[0] + cont.lat[1]) / 2, (cont.lng[0] + cont.lng[1]) / 2]);
-          tiles.push({ kind: "continent", key: contKey, label: cont.label, items, x: p.x, y: p.y, ox: p.x, oy: p.y, color: groupColor(cont.label) });
-        } else {
-          for (const country of countries) countryTile(country, byCountry.get(country)!);
-        }
-      }
+    type Pt = { x: number; y: number };
+    type Pile = { country: string; items: Company[]; cx: number; cy: number; ox: number; oy: number; color: string; piled: Pt[]; fanned: Pt[]; fanBox: { left: number; top: number; w: number; h: number } };
+    const piles: Pile[] = [];
+    for (const [country, items] of byCountry) {
+      const cen = CENTROID[country]; const p = cen ? proj(cen) : { x: W - 40, y: 30 };
+      piles.push({ country, items, cx: p.x, cy: p.y, ox: p.x, oy: p.y, color: groupColor(country), piled: [], fanned: [], fanBox: { left: 0, top: 0, w: 0, h: 0 } });
     }
-
-    const minD = z ? 150 : 124;
-    for (let it = 0; it < 90; it++) {
-      for (let i = 0; i < tiles.length; i++)
-        for (let j = i + 1; j < tiles.length; j++) {
-          const a = tiles[i], b = tiles[j];
-          const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01;
-          if (d < minD) { const push = (minD - d) / 2, ux = dx / d, uy = dy / d; a.x -= ux * push; a.y -= uy * push; b.x += ux * push; b.y += uy * push; }
+    const minD = 46;
+    for (let it = 0; it < 80; it++) {
+      for (let i = 0; i < piles.length; i++)
+        for (let j = i + 1; j < piles.length; j++) {
+          const a = piles[i], b = piles[j];
+          const dx = b.cx - a.cx, dy = b.cy - a.cy, d = Math.hypot(dx, dy) || 0.01;
+          if (d < minD) { const push = (minD - d) / 2, ux = dx / d, uy = dy / d; a.cx -= ux * push; a.cy -= uy * push; b.cx += ux * push; b.cy += uy * push; }
         }
-      for (const t of tiles) { t.x += (t.ox - t.x) * 0.05; t.y += (t.oy - t.y) * 0.05; }
+      for (const p of piles) { p.cx += (p.ox - p.cx) * 0.05; p.cy += (p.oy - p.cy) * 0.05; }
     }
-    for (const t of tiles) { t.x = Math.min(Math.max(t.x, 62), W - 62); t.y = Math.min(Math.max(t.y, 40), H - 40); }
+    for (const p of piles) { p.cx = Math.min(Math.max(p.cx, 24), W - 24); p.cy = Math.min(Math.max(p.cy, 24), H - 24); }
 
-    const imgW = z ? (W * 360) / lngRange : W;
-    const imgH = z ? imgW / 2 : H;
-    const imgLeft = z ? -((lngMin + 180) / 360) * imgW : 0;
-    const imgTop = z ? -((90 - latMax) / 180) * imgH : 0;
-    return { tiles, H, zoomed: !!z, img: { width: imgW, height: imgH, left: imgLeft, top: imgTop } };
-  }, [results, groupBy, width, activeCountry, zoomContinent]);
+    const CELLF = 26;
+    for (const p of piles) {
+      const n = p.items.length;
+      p.piled = p.items.map((_, i) => {
+        const a = i * 2.399963267, r = 1.8 * Math.sqrt(i);
+        return { x: p.cx + Math.cos(a) * r - BALL / 2, y: p.cy + Math.sin(a) * r - BALL / 2 };
+      });
+      const cols = Math.max(1, Math.ceil(Math.sqrt(n * 1.4)));
+      const rows = Math.ceil(n / cols);
+      const gw = cols * CELLF, gh = rows * CELLF;
+      let ox = p.cx - gw / 2, oy = p.cy - gh / 2;
+      ox = Math.min(Math.max(ox, 4), Math.max(4, W - gw - 4));
+      oy = Math.min(Math.max(oy, 20), Math.max(20, H - gh - 4));
+      p.fanBox = { left: ox, top: oy, w: gw, h: gh };
+      p.fanned = p.items.map((_, i) => {
+        const col = i % cols, row = Math.floor(i / cols);
+        return { x: ox + col * CELLF + (CELLF - BALL) / 2, y: oy + row * CELLF + (CELLF - BALL) / 2 };
+      });
+    }
+    piles.sort((a, b) => b.items.length - a.items.length);
+    return { piles, W, H };
+  }, [results, groupBy, width]);
 
   const activeItems = useMemo(
-    () => (activeCountry ? results.filter((c) => c.country === activeCountry).sort((a, b) => a.name.localeCompare(b.name)) : []),
-    [results, activeCountry],
+    () => (lockedCountry ? results.filter((c) => c.country === lockedCountry).sort((a, b) => a.name.localeCompare(b.name)) : []),
+    [results, lockedCountry],
   );
 
   const toggleOption = (facet: FacetKey, value: string) =>
@@ -245,7 +226,7 @@ export function EcosystemExplorer() {
   const clearAll = () => setSel(Object.fromEntries(FACETS.map((f) => [f.key, new Set()])) as Record<FacetKey, Set<string>>);
   const totalSelected = FACETS.reduce((n, f) => n + sel[f.key].size, 0);
   const visibleFacets = FACETS.filter((f) => groupBy === "none" || f.key !== groupBy);
-  const setGroup = (g: GroupKey) => { setGroupBy(g); setActiveCountry(null); setZoomContinent(null); };
+  const setGroup = (g: GroupKey) => { setGroupBy(g); setHoverCountry(null); setLockedCountry(null); };
 
   const showTip = (e: React.MouseEvent<HTMLElement>, c: Company) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -349,62 +330,77 @@ export function EcosystemExplorer() {
           </div>
         )}
 
-        {/* Country → world map with compact per-region tiles (up to 5 logos + "+N") */}
-        {countryView && (
-          <div className="relative overflow-hidden rounded-xl" style={{ height: countryView.H }}>
-            <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${countryView.img.width}px ${countryView.img.height}px`, backgroundPosition: `${countryView.img.left}px ${countryView.img.top}px`, opacity: 0.2 }} />
-            {countryView.zoomed && (
-              <button type="button" onClick={() => { setActiveCountry(null); setZoomContinent(null); }} className="absolute left-2 top-2 z-40 flex items-center gap-1 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-                World
-              </button>
-            )}
+        {/* Country → world map of bubble piles; hover fans them out, click locks + panel */}
+        {pileView && (
+          <div className="relative overflow-hidden rounded-xl" style={{ height: pileView.H }} onMouseLeave={() => setHoverCountry(null)}>
+            <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${pileView.W}px ${pileView.H}px`, backgroundPosition: "0 0", opacity: 0.2 }} />
 
-            {countryView.tiles.map((t) => (
-              <button key={t.key} type="button"
-                onClick={() => { if (t.kind === "continent") setZoomContinent(t.key); else setActiveCountry(t.key); }}
-                title={t.kind === "continent" ? `${t.label} — zoom in` : `${t.label} — see all ${t.items.length}`}
-                className="absolute z-20 -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-surface/95 p-1.5 shadow-md backdrop-blur transition-transform hover:z-30 hover:scale-105"
-                style={{ left: t.x, top: t.y, borderColor: t.color }}>
-                <div className="mb-1 flex items-center gap-1 px-0.5">
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.color }} />
-                  <span className="whitespace-nowrap text-[10px] font-semibold">{t.label}</span>
-                  <span className="tnum text-[9px] text-faint">{t.items.length}</span>
-                  {t.kind === "continent" && <span className="text-[8px] uppercase tracking-wide text-faint">region</span>}
-                </div>
-                <div className="grid grid-cols-3 justify-items-center gap-1">
-                  {t.items.slice(0, 5).map((c) => <Bubble key={c.slug} c={c} size={22} />)}
-                  {t.items.length > 5 && (
-                    <span className="flex items-center justify-center rounded-full border border-border-strong bg-surface-raised text-[9px] font-semibold text-muted" style={{ width: 22, height: 22 }}>+{t.items.length - 5}</span>
+            {pileView.piles.map((p) => {
+              const fanned = hoverCountry === p.country || lockedCountry === p.country;
+              const locked = lockedCountry === p.country;
+              return (
+                <div key={p.country} className="absolute left-0 top-0" style={{ zIndex: fanned ? 40 : 10 }}
+                  onMouseEnter={() => setHoverCountry(p.country)}
+                  onMouseLeave={() => { if (lockedCountry !== p.country) setHoverCountry((h) => (h === p.country ? null : h)); }}
+                  onClick={() => setLockedCountry((l) => (l === p.country ? null : p.country))}>
+
+                  {fanned && (
+                    <div className="absolute rounded-xl border border-border bg-surface/80 shadow-md backdrop-blur-sm"
+                      style={{ left: p.fanBox.left - 8, top: p.fanBox.top - 20, width: p.fanBox.w + 16, height: p.fanBox.h + 28 }} />
                   )}
-                </div>
-              </button>
-            ))}
 
-            {activeCountry && (
-              <div className="absolute right-2 top-2 z-50 flex max-h-[calc(100%-1rem)] w-80 max-w-[calc(100%-1rem)] flex-col rounded-xl border border-border bg-surface shadow-2xl">
+                  <div className="absolute -translate-x-1/2 whitespace-nowrap"
+                    style={fanned ? { left: p.fanBox.left + p.fanBox.w / 2, top: p.fanBox.top - 16 } : { left: p.cx, top: p.cy + 15 }}>
+                    <span className="rounded-full bg-surface/90 px-1.5 py-0.5 text-[10px] font-semibold shadow-sm">
+                      <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: p.color }} />
+                      {p.country} <span className="tnum text-faint">{p.items.length}</span>
+                      {locked && <span className="ml-1 font-normal text-faint">· click to close</span>}
+                    </span>
+                  </div>
+
+                  {p.items.map((c, i) => {
+                    const pos = fanned ? p.fanned[i] : p.piled[i];
+                    return (
+                      <button key={c.slug} type="button"
+                        onClick={(e) => { e.stopPropagation(); if (fanned) { if (c.website) window.open(c.website, "_blank"); } else { setLockedCountry(p.country); } }}
+                        onMouseEnter={(e) => showTip(e, c)} onMouseLeave={() => setTip(null)} aria-label={c.name}
+                        className="absolute left-0 top-0 transition-transform duration-500 ease-out hover:z-50"
+                        style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}>
+                        <span className="block transition-transform duration-150 hover:scale-125"><Bubble c={c} size={BALL} /></span>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+
+            {lockedCountry && (
+              <div className="absolute right-2 top-2 z-50 flex max-h-[calc(100%-1rem)] w-72 max-w-[calc(100%-1rem)] flex-col rounded-xl border border-border bg-surface shadow-2xl" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between border-b border-border px-3 py-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full" style={{ background: groupColor(activeCountry) }} />
-                    <span className="text-[13px] font-semibold">{activeCountry}</span>
+                    <span className="h-2 w-2 rounded-full" style={{ background: groupColor(lockedCountry) }} />
+                    <span className="text-[13px] font-semibold">{lockedCountry}</span>
                     <span className="tnum text-[11px] text-faint">{activeItems.length}</span>
                   </div>
-                  <button type="button" onClick={() => setActiveCountry(null)} aria-label="Close" className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-faint hover:text-foreground">
+                  <button type="button" onClick={() => setLockedCountry(null)} aria-label="Close" className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-faint hover:text-foreground">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
                 </div>
-                <div className="min-h-0 flex-1 overflow-y-auto p-2">
-                  <div className="grid grid-cols-4 gap-2">
-                    {activeItems.map((c) => (
-                      <a key={c.slug} href={c.website ?? undefined} target="_blank" rel="noreferrer" title={`${c.name} · ${c.category}`} className="flex flex-col items-center gap-1 rounded-lg p-1 hover:bg-surface-raised">
-                        <Bubble c={c} size={30} />
-                        <span className="w-full truncate text-center text-[9px] text-muted">{c.name}</span>
-                      </a>
-                    ))}
-                  </div>
+                <div className="min-h-0 flex-1 overflow-y-auto p-1.5">
+                  {activeItems.map((c) => (
+                    <a key={c.slug} href={c.website ?? undefined} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-raised">
+                      <Bubble c={c} size={24} />
+                      <div className="min-w-0">
+                        <div className="truncate text-[12px] font-medium">{c.name}</div>
+                        <div className="truncate text-[10px] text-muted">{c.category}{c.modality ? <> · <AutoAbbr text={c.modality} /></> : ""}</div>
+                      </div>
+                    </a>
+                  ))}
                 </div>
               </div>
             )}
+
+            <div className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-surface/80 px-2 py-0.5 text-[10px] text-faint">hover a pile to fan it out · click to lock &amp; explore</div>
           </div>
         )}
 
