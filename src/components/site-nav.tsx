@@ -6,8 +6,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const TABS: { href: string; label: string }[] = [
   { href: "/milestones", label: "Milestones" },
-  { href: "/field-velocity", label: "Field velocity" },
   { href: "/ecosystem", label: "Ecosystem" },
+  { href: "/field-velocity", label: "Field velocity" },
   { href: "/regulatory-landscape", label: "Regulatory landscape" },
 ];
 
