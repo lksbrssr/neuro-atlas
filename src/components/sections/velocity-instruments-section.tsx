@@ -14,12 +14,12 @@ export function VelocityInstrumentsSection() {
         and what is blocking it — an honest &apos;unwired&apos; is a correct answer.
       </SectionIntro>
 
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-x-10 gap-y-9 lg:grid-cols-2">
         {RECORDS.records.map((r) => {
           const def = DEFS[r.instrument];
           const isReading = r.state === "reading";
           return (
-            <div key={r.instrument} className="card flex flex-col p-5">
+            <div key={r.instrument} className="flex flex-col">
               <div className="mb-1 flex items-center justify-between gap-3">
                 <h3 className="text-sm font-semibold tracking-tight">{def.label}</h3>
                 {isReading ? (
