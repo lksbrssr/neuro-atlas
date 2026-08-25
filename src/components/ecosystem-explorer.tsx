@@ -19,7 +19,10 @@ const FACETS = [
   { key: "fundingStage", label: "Funding stage" },
   { key: "country", label: "Country" },
   { key: "modality", label: "Modality" },
+  { key: "formFactor", label: "Form factor" },
   { key: "interfaceDepth", label: "Interface depth" },
+  { key: "indication", label: "Indication" },
+  { key: "targetUser", label: "Target user" },
   { key: "regulatoryStage", label: "Regulatory stage" },
 ] as const;
 type FacetKey = (typeof FACETS)[number]["key"];
@@ -28,6 +31,8 @@ const GROUPS = [
   { key: "category", label: "Category" },
   { key: "country", label: "Country" },
   { key: "modality", label: "Modality" },
+  { key: "formFactor", label: "Form factor" },
+  { key: "indication", label: "Indication" },
   { key: "fundingStage", label: "Funding stage" },
 ] as const;
 type GroupKey = "none" | (typeof GROUPS)[number]["key"];
@@ -84,6 +89,7 @@ export function EcosystemExplorer() {
   const [openFacet, setOpenFacet] = useState<FacetKey | null>("category");
   const [width, setWidth] = useState(900);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
+  const [zoomContinent, setZoomContinent] = useState<string | null>(null);
   const [tip, setTip] = useState<{ c: Company; x: number; y: number } | null>(null);
   const [sortBy, setSortBy] = useState<"az" | "newest" | "oldest">("az");
   const [visibleCount, setVisibleCount] = useState(60);
@@ -137,55 +143,10 @@ export function EcosystemExplorer() {
   // Single animated canvas for every grouped view — one ball per company, keyed
   // by slug, so switching groupings (incl. to Country) floats them to new spots.
   const graph = useMemo(() => {
-    if (groupBy === "none") return null;
+    if (groupBy === "none" || groupBy === "country") return null;
     const W = Math.max(width, 320);
     const positions = new Map<string, { x: number; y: number }>();
-    const labels: { text: string; color: string; x: number; y: number; count: number; country?: string; centered?: boolean }[] = [];
-
-    if (groupBy === "country") {
-      const z = activeCountry ? CONTINENTS[COUNTRY_CONTINENT[activeCountry]] : null;
-      const lngMin = z ? z.lng[0] : -180, lngMax = z ? z.lng[1] : 180, latMax = z ? z.lat[1] : 90;
-      const lngRange = lngMax - lngMin, latRange = z ? z.lat[1] - z.lat[0] : 180;
-      const H = Math.round(W * (z ? latRange / lngRange : 0.5));
-      const groups = new Map<string, Company[]>();
-      for (const c of results) (groups.get(c.country) ?? groups.set(c.country, []).get(c.country)!).push(c);
-      let anchors = [...groups.entries()].map(([country, items]) => {
-        const cen = CENTROID[country];
-        const ax = cen ? ((cen[1] - lngMin) / lngRange) * W : W - 44;
-        const ay = cen ? ((latMax - cen[0]) / latRange) * H : 22;
-        return { country, items, x: ax, y: ay, ox: ax, oy: ay, color: groupColor(country) };
-      });
-      if (z) anchors = anchors.filter((a) => z.countries.includes(a.country));
-      const minD = z ? 130 : 84;
-      for (let it = 0; it < 80; it++) {
-        for (let i = 0; i < anchors.length; i++)
-          for (let j = i + 1; j < anchors.length; j++) {
-            const a = anchors[i], b = anchors[j];
-            const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01;
-            if (d < minD) { const push = (minD - d) / 2, ux = dx / d, uy = dy / d; a.x -= ux * push; a.y -= uy * push; b.x += ux * push; b.y += uy * push; }
-          }
-        for (const a of anchors) { a.x += (a.ox - a.x) * 0.04; a.y += (a.oy - a.y) * 0.04; }
-      }
-      for (const a of anchors) { a.x = Math.min(Math.max(a.x, 40), W - 40); a.y = Math.min(Math.max(a.y, 28), H - 20); }
-      for (const a of anchors) {
-        const n = a.items.length;
-        const R = Math.min(z ? 96 : 58, 8 + Math.sqrt(n) * (z ? 9 : 6));
-        a.items.forEach((c) => {
-          const hh = hashCode(c.slug);
-          const rr = R * Math.sqrt(((hh % 1000) / 1000));
-          const ang = ((hh >> 3) % 360) * (Math.PI / 180);
-          positions.set(c.slug, { x: a.x + Math.cos(ang) * rr - BALL / 2, y: a.y + Math.sin(ang) * rr - BALL / 2 });
-        });
-        labels.push({ text: a.country, color: a.color, x: a.x, y: a.y - R - 16, count: n, country: a.country, centered: true });
-      }
-      const imgW = z ? (W * 360) / lngRange : W;
-      const imgH = z ? imgW / 2 : H;
-      const imgLeft = z ? -((lngMin + 180) / 360) * imgW : 0;
-      const imgTop = z ? -((90 - latMax) / 180) * imgH : 0;
-      return { positions, labels, totalH: H, isMap: true, zoomed: !!z, img: { width: imgW, height: imgH, left: imgLeft, top: imgTop } };
-    }
-
-    // Category / Modality / Funding → packed clusters
+    const labels: { text: string; color: string; x: number; y: number; count: number }[] = [];
     const groups = new Map<string, Company[]>();
     for (const c of results) {
       const k = String(c[groupBy as FacetKey] ?? "—").trim() || "—";
@@ -206,8 +167,69 @@ export function EcosystemExplorer() {
       x += cw + GAPX;
       rowH = Math.max(rowH, ch);
     }
-    return { positions, labels, totalH: y + rowH, isMap: false, zoomed: false, img: { width: W, height: 0, left: 0, top: 0 } };
-  }, [results, groupBy, width, activeCountry]);
+    return { positions, labels, totalH: y + rowH };
+  }, [results, groupBy, width]);
+
+  // Country → world map with compact per-region tiles (up to 5 logos + "+N").
+  // Busy continents (≥4 countries, e.g. Europe) collapse into a continent tile;
+  // clicking drills down (continent → countries → all logos in the panel grid).
+  const countryView = useMemo(() => {
+    if (groupBy !== "country") return null;
+    const W = Math.max(width, 320);
+    const zoomKey = activeCountry ? COUNTRY_CONTINENT[activeCountry] : zoomContinent;
+    const z = zoomKey ? CONTINENTS[zoomKey] : null;
+    const lngMin = z ? z.lng[0] : -180, lngMax = z ? z.lng[1] : 180, latMax = z ? z.lat[1] : 90;
+    const lngRange = lngMax - lngMin, latRange = z ? z.lat[1] - z.lat[0] : 180;
+    const H = Math.round(W * (z ? latRange / lngRange : 0.5));
+    const proj = (cc: [number, number]) => ({ x: ((cc[1] - lngMin) / lngRange) * W, y: ((latMax - cc[0]) / latRange) * H });
+    const byCountry = new Map<string, Company[]>();
+    for (const c of results) (byCountry.get(c.country) ?? byCountry.set(c.country, []).get(c.country)!).push(c);
+
+    type Tile = { kind: "country" | "continent"; key: string; label: string; items: Company[]; x: number; y: number; ox: number; oy: number; color: string };
+    const tiles: Tile[] = [];
+    const countryTile = (country: string, items: Company[]) => {
+      const cen = CENTROID[country]; const p = cen ? proj(cen) : { x: W - 64, y: 44 };
+      tiles.push({ kind: "country", key: country, label: country, items, x: p.x, y: p.y, ox: p.x, oy: p.y, color: groupColor(country) });
+    };
+
+    if (z) {
+      for (const [country, items] of byCountry) if (COUNTRY_CONTINENT[country] === zoomKey) countryTile(country, items);
+    } else {
+      const perCont = new Map<string, string[]>();
+      for (const country of byCountry.keys()) {
+        const k = COUNTRY_CONTINENT[country] ?? "other";
+        (perCont.get(k) ?? perCont.set(k, []).get(k)!).push(country);
+      }
+      for (const [contKey, countries] of perCont) {
+        const cont = CONTINENTS[contKey];
+        if (cont && countries.length >= 4) {
+          const items = countries.flatMap((c) => byCountry.get(c) ?? []);
+          const p = proj([(cont.lat[0] + cont.lat[1]) / 2, (cont.lng[0] + cont.lng[1]) / 2]);
+          tiles.push({ kind: "continent", key: contKey, label: cont.label, items, x: p.x, y: p.y, ox: p.x, oy: p.y, color: groupColor(cont.label) });
+        } else {
+          for (const country of countries) countryTile(country, byCountry.get(country)!);
+        }
+      }
+    }
+
+    const minD = z ? 150 : 124;
+    for (let it = 0; it < 90; it++) {
+      for (let i = 0; i < tiles.length; i++)
+        for (let j = i + 1; j < tiles.length; j++) {
+          const a = tiles[i], b = tiles[j];
+          const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01;
+          if (d < minD) { const push = (minD - d) / 2, ux = dx / d, uy = dy / d; a.x -= ux * push; a.y -= uy * push; b.x += ux * push; b.y += uy * push; }
+        }
+      for (const t of tiles) { t.x += (t.ox - t.x) * 0.05; t.y += (t.oy - t.y) * 0.05; }
+    }
+    for (const t of tiles) { t.x = Math.min(Math.max(t.x, 62), W - 62); t.y = Math.min(Math.max(t.y, 40), H - 40); }
+
+    const imgW = z ? (W * 360) / lngRange : W;
+    const imgH = z ? imgW / 2 : H;
+    const imgLeft = z ? -((lngMin + 180) / 360) * imgW : 0;
+    const imgTop = z ? -((90 - latMax) / 180) * imgH : 0;
+    return { tiles, H, zoomed: !!z, img: { width: imgW, height: imgH, left: imgLeft, top: imgTop } };
+  }, [results, groupBy, width, activeCountry, zoomContinent]);
 
   const activeItems = useMemo(
     () => (activeCountry ? results.filter((c) => c.country === activeCountry).sort((a, b) => a.name.localeCompare(b.name)) : []),
@@ -223,7 +245,7 @@ export function EcosystemExplorer() {
   const clearAll = () => setSel(Object.fromEntries(FACETS.map((f) => [f.key, new Set()])) as Record<FacetKey, Set<string>>);
   const totalSelected = FACETS.reduce((n, f) => n + sel[f.key].size, 0);
   const visibleFacets = FACETS.filter((f) => groupBy === "none" || f.key !== groupBy);
-  const setGroup = (g: GroupKey) => { setGroupBy(g); setActiveCountry(null); };
+  const setGroup = (g: GroupKey) => { setGroupBy(g); setActiveCountry(null); setZoomContinent(null); };
 
   const showTip = (e: React.MouseEvent<HTMLElement>, c: Company) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -302,19 +324,16 @@ export function EcosystemExplorer() {
           </>
         )}
 
-        {/* Grouped → one animated canvas: clusters, or country map with zoom + panel */}
+        {/* Clusters (Category / Modality / Form factor / Indication / Funding) → animated balls */}
         {graph && (
-          <div className="relative overflow-hidden rounded-xl" style={{ height: graph.totalH }}>
-            {graph.isMap && (
-              <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${graph.img.width}px ${graph.img.height}px`, backgroundPosition: `${graph.img.left}px ${graph.img.top}px`, opacity: 0.2 }} />
-            )}
-            {graph.isMap && graph.zoomed && (
-              <button type="button" onClick={() => setActiveCountry(null)} className="absolute left-2 top-2 z-40 flex items-center gap-1 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-                World
-              </button>
-            )}
-
+          <div className="relative" style={{ height: graph.totalH }}>
+            {graph.labels.map((l) => (
+              <div key={l.text} className="pointer-events-none absolute z-20 flex items-center gap-1.5" style={{ left: l.x, top: l.y }}>
+                <span className="h-2 w-2 rounded-full" style={{ background: l.color }} />
+                <span className="text-[11px] font-semibold"><AutoAbbr text={l.text} /></span>
+                <span className="tnum text-[10px] text-faint">{l.count}</span>
+              </div>
+            ))}
             {results.map((c) => {
               const p = graph.positions.get(c.slug);
               if (!p) return null;
@@ -327,27 +346,43 @@ export function EcosystemExplorer() {
                 </button>
               );
             })}
+          </div>
+        )}
 
-            {graph.labels.map((l) =>
-              l.country ? (
-                <button key={l.text} type="button" onClick={() => setActiveCountry(l.country!)}
-                  className="absolute z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border bg-surface/95 px-1.5 py-0.5 text-[10px] font-semibold shadow-sm backdrop-blur transition-transform hover:scale-105"
-                  style={{ left: l.x, top: l.y, borderColor: l.color }}>
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: l.color }} />
-                  {l.text}
-                  <span className="tnum text-faint">{l.count}</span>
-                </button>
-              ) : (
-                <div key={l.text} className="pointer-events-none absolute z-20 flex items-center gap-1.5" style={{ left: l.x, top: l.y }}>
-                  <span className="h-2 w-2 rounded-full" style={{ background: l.color }} />
-                  <span className="text-[11px] font-semibold"><AutoAbbr text={l.text} /></span>
-                  <span className="tnum text-[10px] text-faint">{l.count}</span>
-                </div>
-              ),
+        {/* Country → world map with compact per-region tiles (up to 5 logos + "+N") */}
+        {countryView && (
+          <div className="relative overflow-hidden rounded-xl" style={{ height: countryView.H }}>
+            <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${countryView.img.width}px ${countryView.img.height}px`, backgroundPosition: `${countryView.img.left}px ${countryView.img.top}px`, opacity: 0.2 }} />
+            {countryView.zoomed && (
+              <button type="button" onClick={() => { setActiveCountry(null); setZoomContinent(null); }} className="absolute left-2 top-2 z-40 flex items-center gap-1 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+                World
+              </button>
             )}
 
+            {countryView.tiles.map((t) => (
+              <button key={t.key} type="button"
+                onClick={() => { if (t.kind === "continent") setZoomContinent(t.key); else setActiveCountry(t.key); }}
+                title={t.kind === "continent" ? `${t.label} — zoom in` : `${t.label} — see all ${t.items.length}`}
+                className="absolute z-20 -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-surface/95 p-1.5 shadow-md backdrop-blur transition-transform hover:z-30 hover:scale-105"
+                style={{ left: t.x, top: t.y, borderColor: t.color }}>
+                <div className="mb-1 flex items-center gap-1 px-0.5">
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.color }} />
+                  <span className="whitespace-nowrap text-[10px] font-semibold">{t.label}</span>
+                  <span className="tnum text-[9px] text-faint">{t.items.length}</span>
+                  {t.kind === "continent" && <span className="text-[8px] uppercase tracking-wide text-faint">region</span>}
+                </div>
+                <div className="grid grid-cols-3 justify-items-center gap-1">
+                  {t.items.slice(0, 5).map((c) => <Bubble key={c.slug} c={c} size={22} />)}
+                  {t.items.length > 5 && (
+                    <span className="flex items-center justify-center rounded-full border border-border-strong bg-surface-raised text-[9px] font-semibold text-muted" style={{ width: 22, height: 22 }}>+{t.items.length - 5}</span>
+                  )}
+                </div>
+              </button>
+            ))}
+
             {activeCountry && (
-              <div className="absolute right-2 top-2 z-50 flex max-h-[calc(100%-1rem)] w-72 max-w-[calc(100%-1rem)] flex-col rounded-xl border border-border bg-surface shadow-2xl">
+              <div className="absolute right-2 top-2 z-50 flex max-h-[calc(100%-1rem)] w-80 max-w-[calc(100%-1rem)] flex-col rounded-xl border border-border bg-surface shadow-2xl">
                 <div className="flex items-center justify-between border-b border-border px-3 py-2">
                   <div className="flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full" style={{ background: groupColor(activeCountry) }} />
@@ -358,16 +393,15 @@ export function EcosystemExplorer() {
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
                 </div>
-                <div className="min-h-0 flex-1 overflow-y-auto p-1.5">
-                  {activeItems.map((c) => (
-                    <a key={c.slug} href={c.website ?? undefined} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-raised">
-                      <Bubble c={c} size={22} />
-                      <div className="min-w-0">
-                        <div className="truncate text-[12px] font-medium">{c.name}</div>
-                        <div className="truncate text-[10px] text-muted">{c.category}{c.modality ? <> · <AutoAbbr text={c.modality} /></> : ""}</div>
-                      </div>
-                    </a>
-                  ))}
+                <div className="min-h-0 flex-1 overflow-y-auto p-2">
+                  <div className="grid grid-cols-4 gap-2">
+                    {activeItems.map((c) => (
+                      <a key={c.slug} href={c.website ?? undefined} target="_blank" rel="noreferrer" title={`${c.name} · ${c.category}`} className="flex flex-col items-center gap-1 rounded-lg p-1 hover:bg-surface-raised">
+                        <Bubble c={c} size={30} />
+                        <span className="w-full truncate text-center text-[9px] text-muted">{c.name}</span>
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
