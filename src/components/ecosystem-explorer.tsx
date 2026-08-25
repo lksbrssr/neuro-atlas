@@ -63,8 +63,8 @@ function groupColor(v: string): string {
   return `hsl(${185 + (hashCode(v) % 100)} 68% 60%)`;
 }
 
-const BALL = 24;
-const CELL = 28;
+const BALL = 20;
+const CELL = 24;
 const LABEL_H = 24;
 
 function Bubble({ c, size }: { c: Company; size: number }) {
@@ -134,47 +134,58 @@ export function EcosystemExplorer() {
     return { count: results.length, medianFounded: founded.length ? founded[Math.floor(founded.length / 2)] : null };
   }, [results]);
 
-  const mapLayout = useMemo(() => {
-    if (groupBy !== "country") return null;
-    const W = Math.max(width, 320);
-    const z = activeCountry ? CONTINENTS[COUNTRY_CONTINENT[activeCountry]] : null;
-    const lngMin = z ? z.lng[0] : -180, lngMax = z ? z.lng[1] : 180;
-    const latMax = z ? z.lat[1] : 90;
-    const lngRange = lngMax - lngMin, latRange = z ? z.lat[1] - z.lat[0] : 180;
-    const H = Math.round(W * (z ? latRange / lngRange : 0.5));
-    const groups = new Map<string, Company[]>();
-    for (const c of results) (groups.get(c.country) ?? groups.set(c.country, []).get(c.country)!).push(c);
-    let marks = [...groups.entries()].map(([country, items]) => {
-      const cen = CENTROID[country];
-      const ox = cen ? ((cen[1] - lngMin) / lngRange) * W : W - 42;
-      const oy = cen ? ((latMax - cen[0]) / latRange) * H : 20;
-      return { country, items, x: ox, y: oy, ox, oy, color: groupColor(country) };
-    });
-    if (z) marks = marks.filter((m) => z.countries.includes(m.country));
-    const minD = z ? 64 : 50;
-    for (let it = 0; it < 70; it++) {
-      for (let i = 0; i < marks.length; i++)
-        for (let j = i + 1; j < marks.length; j++) {
-          const a = marks[i], b = marks[j];
-          const dx = b.x - a.x, dy = b.y - a.y;
-          const d = Math.hypot(dx, dy) || 0.01;
-          if (d < minD) { const push = (minD - d) / 2, ux = dx / d, uy = dy / d; a.x -= ux * push; a.y -= uy * push; b.x += ux * push; b.y += uy * push; }
-        }
-      for (const m of marks) { m.x += (m.ox - m.x) * 0.05; m.y += (m.oy - m.y) * 0.05; }
-    }
-    for (const m of marks) { m.x = Math.min(Math.max(m.x, 44), W - 44); m.y = Math.min(Math.max(m.y, 16), H - 16); }
-    const imgW = z ? (W * 360) / lngRange : W;
-    const imgH = z ? imgW / 2 : H;
-    const imgLeft = z ? -((lngMin + 180) / 360) * imgW : 0;
-    const imgTop = z ? -((90 - latMax) / 180) * imgH : 0;
-    return { marks, H, img: { width: imgW, height: imgH, left: imgLeft, top: imgTop }, zoomed: !!z };
-  }, [results, groupBy, width, activeCountry]);
-
-  const clusterLayout = useMemo(() => {
-    if (groupBy === "none" || groupBy === "country") return null;
+  // Single animated canvas for every grouped view — one ball per company, keyed
+  // by slug, so switching groupings (incl. to Country) floats them to new spots.
+  const graph = useMemo(() => {
+    if (groupBy === "none") return null;
     const W = Math.max(width, 320);
     const positions = new Map<string, { x: number; y: number }>();
-    const labels: { text: string; color: string; x: number; y: number; count: number }[] = [];
+    const labels: { text: string; color: string; x: number; y: number; count: number; country?: string; centered?: boolean }[] = [];
+
+    if (groupBy === "country") {
+      const z = activeCountry ? CONTINENTS[COUNTRY_CONTINENT[activeCountry]] : null;
+      const lngMin = z ? z.lng[0] : -180, lngMax = z ? z.lng[1] : 180, latMax = z ? z.lat[1] : 90;
+      const lngRange = lngMax - lngMin, latRange = z ? z.lat[1] - z.lat[0] : 180;
+      const H = Math.round(W * (z ? latRange / lngRange : 0.5));
+      const groups = new Map<string, Company[]>();
+      for (const c of results) (groups.get(c.country) ?? groups.set(c.country, []).get(c.country)!).push(c);
+      let anchors = [...groups.entries()].map(([country, items]) => {
+        const cen = CENTROID[country];
+        const ax = cen ? ((cen[1] - lngMin) / lngRange) * W : W - 44;
+        const ay = cen ? ((latMax - cen[0]) / latRange) * H : 22;
+        return { country, items, x: ax, y: ay, ox: ax, oy: ay, color: groupColor(country) };
+      });
+      if (z) anchors = anchors.filter((a) => z.countries.includes(a.country));
+      const minD = z ? 130 : 84;
+      for (let it = 0; it < 80; it++) {
+        for (let i = 0; i < anchors.length; i++)
+          for (let j = i + 1; j < anchors.length; j++) {
+            const a = anchors[i], b = anchors[j];
+            const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01;
+            if (d < minD) { const push = (minD - d) / 2, ux = dx / d, uy = dy / d; a.x -= ux * push; a.y -= uy * push; b.x += ux * push; b.y += uy * push; }
+          }
+        for (const a of anchors) { a.x += (a.ox - a.x) * 0.04; a.y += (a.oy - a.y) * 0.04; }
+      }
+      for (const a of anchors) { a.x = Math.min(Math.max(a.x, 40), W - 40); a.y = Math.min(Math.max(a.y, 28), H - 20); }
+      for (const a of anchors) {
+        const n = a.items.length;
+        const R = Math.min(z ? 96 : 58, 8 + Math.sqrt(n) * (z ? 9 : 6));
+        a.items.forEach((c) => {
+          const hh = hashCode(c.slug);
+          const rr = R * Math.sqrt(((hh % 1000) / 1000));
+          const ang = ((hh >> 3) % 360) * (Math.PI / 180);
+          positions.set(c.slug, { x: a.x + Math.cos(ang) * rr - BALL / 2, y: a.y + Math.sin(ang) * rr - BALL / 2 });
+        });
+        labels.push({ text: a.country, color: a.color, x: a.x, y: a.y - R - 16, count: n, country: a.country, centered: true });
+      }
+      const imgW = z ? (W * 360) / lngRange : W;
+      const imgH = z ? imgW / 2 : H;
+      const imgLeft = z ? -((lngMin + 180) / 360) * imgW : 0;
+      const imgTop = z ? -((90 - latMax) / 180) * imgH : 0;
+      return { positions, labels, totalH: H, isMap: true, zoomed: !!z, img: { width: imgW, height: imgH, left: imgLeft, top: imgTop } };
+    }
+
+    // Category / Modality / Funding → packed clusters
     const groups = new Map<string, Company[]>();
     for (const c of results) {
       const k = String(c[groupBy as FacetKey] ?? "—").trim() || "—";
@@ -185,7 +196,7 @@ export function EcosystemExplorer() {
     const PADX = 10, GAPX = 22, GAPY = 26;
     for (const [label, items] of ordered) {
       const color = groupColor(label);
-      const cols = Math.max(3, Math.min(14, Math.ceil(Math.sqrt(items.length) * 1.6)));
+      const cols = Math.max(3, Math.min(16, Math.ceil(Math.sqrt(items.length) * 1.7)));
       const cw = cols * CELL + PADX * 2;
       const rows = Math.ceil(items.length / cols);
       const ch = LABEL_H + rows * CELL + 8;
@@ -195,8 +206,8 @@ export function EcosystemExplorer() {
       x += cw + GAPX;
       rowH = Math.max(rowH, ch);
     }
-    return { positions, labels, totalH: y + rowH };
-  }, [results, groupBy, width]);
+    return { positions, labels, totalH: y + rowH, isMap: false, zoomed: false, img: { width: W, height: 0, left: 0, top: 0 } };
+  }, [results, groupBy, width, activeCountry]);
 
   const activeItems = useMemo(
     () => (activeCountry ? results.filter((c) => c.country === activeCountry).sort((a, b) => a.name.localeCompare(b.name)) : []),
@@ -291,34 +302,52 @@ export function EcosystemExplorer() {
           </>
         )}
 
-        {/* Country → world map, zoom on click, persistent company panel */}
-        {groupBy === "country" && mapLayout && (
-          <div className="relative overflow-hidden rounded-xl" style={{ height: mapLayout.H }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/worldmap.svg" alt="" aria-hidden className="pointer-events-none absolute select-none" style={{ width: mapLayout.img.width, height: mapLayout.img.height, left: mapLayout.img.left, top: mapLayout.img.top, opacity: 0.16 }} />
-            {mapLayout.zoomed && (
-              <button type="button" onClick={() => setActiveCountry(null)} className="absolute left-2 top-2 z-30 flex items-center gap-1 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">
+        {/* Grouped → one animated canvas: clusters, or country map with zoom + panel */}
+        {graph && (
+          <div className="relative overflow-hidden rounded-xl" style={{ height: graph.totalH }}>
+            {graph.isMap && (
+              <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${graph.img.width}px ${graph.img.height}px`, backgroundPosition: `${graph.img.left}px ${graph.img.top}px`, opacity: 0.2 }} />
+            )}
+            {graph.isMap && graph.zoomed && (
+              <button type="button" onClick={() => setActiveCountry(null)} className="absolute left-2 top-2 z-40 flex items-center gap-1 rounded-full border border-border-strong bg-surface/95 px-2.5 py-1 text-[11px] font-medium shadow-sm backdrop-blur hover:bg-surface-raised">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
                 World
               </button>
             )}
-            {mapLayout.marks.map((m) => {
-              const active = activeCountry === m.country;
+
+            {results.map((c) => {
+              const p = graph.positions.get(c.slug);
+              if (!p) return null;
               return (
-                <button key={m.country} type="button" onClick={() => setActiveCountry(m.country)}
-                  className="absolute" style={{ left: m.x, top: m.y, transform: "translate(-50%,-50%)", zIndex: active ? 30 : 10 }}>
-                  <span className={`flex items-center gap-1 rounded-full border px-1.5 py-0.5 shadow-sm backdrop-blur transition-transform hover:scale-105 ${active ? "bg-surface ring-2" : "bg-surface/95"}`} style={{ borderColor: m.color, ...(active ? { boxShadow: `0 0 0 2px ${m.color}` } : {}) }}>
-                    <Bubble c={m.items[0]} size={15} />
-                    <span className="whitespace-nowrap text-[10px] font-semibold">{m.country}</span>
-                    <span className="tnum text-[10px] text-faint">{m.items.length}</span>
-                  </span>
+                <button key={c.slug} type="button" onClick={() => { if (c.website) window.open(c.website, "_blank"); }}
+                  onMouseEnter={(e) => showTip(e, c)} onMouseLeave={() => setTip(null)} aria-label={c.name}
+                  className="absolute transition-transform duration-700 ease-out hover:z-30"
+                  style={{ left: 0, top: 0, transform: `translate(${p.x}px, ${p.y}px)`, zIndex: 5 }}>
+                  <span className="block transition-transform duration-150 hover:scale-150"><Bubble c={c} size={BALL} /></span>
                 </button>
               );
             })}
 
-            {/* Persistent, scrollable country panel */}
+            {graph.labels.map((l) =>
+              l.country ? (
+                <button key={l.text} type="button" onClick={() => setActiveCountry(l.country!)}
+                  className="absolute z-20 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border bg-surface/95 px-1.5 py-0.5 text-[10px] font-semibold shadow-sm backdrop-blur transition-transform hover:scale-105"
+                  style={{ left: l.x, top: l.y, borderColor: l.color }}>
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: l.color }} />
+                  {l.text}
+                  <span className="tnum text-faint">{l.count}</span>
+                </button>
+              ) : (
+                <div key={l.text} className="pointer-events-none absolute z-20 flex items-center gap-1.5" style={{ left: l.x, top: l.y }}>
+                  <span className="h-2 w-2 rounded-full" style={{ background: l.color }} />
+                  <span className="text-[11px] font-semibold"><AutoAbbr text={l.text} /></span>
+                  <span className="tnum text-[10px] text-faint">{l.count}</span>
+                </div>
+              ),
+            )}
+
             {activeCountry && (
-              <div className="absolute right-2 top-2 z-40 flex max-h-[calc(100%-1rem)] w-72 max-w-[calc(100%-1rem)] flex-col rounded-xl border border-border bg-surface shadow-2xl">
+              <div className="absolute right-2 top-2 z-50 flex max-h-[calc(100%-1rem)] w-72 max-w-[calc(100%-1rem)] flex-col rounded-xl border border-border bg-surface shadow-2xl">
                 <div className="flex items-center justify-between border-b border-border px-3 py-2">
                   <div className="flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full" style={{ background: groupColor(activeCountry) }} />
@@ -345,30 +374,7 @@ export function EcosystemExplorer() {
           </div>
         )}
 
-        {/* Category / Modality / Funding → logo clusters */}
-        {clusterLayout && (
-          <div className="relative" style={{ height: clusterLayout.totalH }}>
-            {clusterLayout.labels.map((l) => (
-              <div key={l.text} className="absolute flex items-center gap-1.5" style={{ left: l.x, top: l.y }}>
-                <span className="h-2 w-2 rounded-full" style={{ background: l.color }} />
-                <span className="text-[11px] font-semibold"><AutoAbbr text={l.text} /></span>
-                <span className="tnum text-[10px] text-faint">{l.count}</span>
-              </div>
-            ))}
-            {results.map((c) => {
-              const p = clusterLayout.positions.get(c.slug);
-              if (!p) return null;
-              return (
-                <button key={c.slug} type="button" onClick={() => { if (c.website) window.open(c.website, "_blank"); }}
-                  onMouseEnter={(e) => showTip(e, c)} onMouseLeave={() => setTip(null)} aria-label={c.name}
-                  className="absolute transition-[transform] duration-500 ease-out hover:z-20"
-                  style={{ left: 0, top: 0, transform: `translate(${p.x}px, ${p.y}px)` }}>
-                  <span className="block transition-transform duration-150 hover:scale-125"><Bubble c={c} size={BALL} /></span>
-                </button>
-              );
-            })}
-          </div>
-        )}
+
       </div>
 
       {/* Slide-out filter drawer */}

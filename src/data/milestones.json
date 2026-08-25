@@ -125,10 +125,10 @@
     "activity": "pivotal",
     "stage": "clinical",
     "amountUsdM": null,
-    "date": null,
-    "datePrecision": "window",
-    "note": "Pivotal trial planned for 2026 following the $200m Series D that closed Nov 6, 2025 (out of window); the concrete pivotal-trial news broke June 2026, so no Jan–Apr announcement date to anchor to",
-    "sourceUrl": "https://www.forbes.com/sites/naveenrao/2025/11/15/full-circle-synchrons-200-million-signals-revolution-by-evolution/",
+    "date": "2026-06-06",
+    "datePrecision": "day",
+    "note": "First pivotal trial of a permanently implanted BCI (Stentrode), initiated in 2026 toward the first PMA filing — following the $200m Series D that closed Nov 6, 2025",
+    "sourceUrl": "https://www.techtimes.com/articles/317929/20260606/synchron-brain-implant-targets-2026-pivotal-trial-first-fda-approved-bci.htm",
     "logo": "/logos/synchron.jpg"
   },
   {

@@ -6,11 +6,11 @@ export function MilestonesSection() {
     <>
       <SectionIntro title="Milestone timeline">
         Every tracked deal, partnership, first-in-human event, and approval in the
-        implanted-BCI field, Jan–Apr 2026, on one shared time axis — color marks the
+        implanted-BCI field in 2026, on one shared time axis — color marks the
         stage. Click a stage in the legend to expand its subcategories and filter by
         any subset; hover any logo for details; click to open the primary source.
-        Undated events sit in the &apos;date TBD&apos; shelf rather than being faked
-        onto the axis.
+        Anything without a confirmed date sits in the &apos;date TBD&apos; shelf
+        rather than being faked onto the axis.
       </SectionIntro>
       <MilestoneTimeline />
       <p className="mt-4 text-xs leading-relaxed text-faint">
