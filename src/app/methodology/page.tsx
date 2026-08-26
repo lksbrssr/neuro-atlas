@@ -88,7 +88,7 @@ export default function MethodologyPage() {
         <div className="card divide-y divide-border">
           {SOURCES.map((s) => (
             <div key={s.name} className="flex flex-col gap-1 p-4 sm:flex-row sm:items-baseline sm:gap-4">
-              <div className="w-56 shrink-0 text-[13px] font-semibold">
+              <div className="w-56 shrink-0 text-label font-semibold">
                 {s.url ? (
                   <a href={s.url} target="_blank" rel="noreferrer" className="hover:text-accent">
                     {s.name} ↗
@@ -98,7 +98,7 @@ export default function MethodologyPage() {
                 )}
               </div>
               <div className="flex-1 text-xs leading-relaxed text-muted">{s.what}</div>
-              <div className="shrink-0 text-[11px] text-faint">{s.cadence}</div>
+              <div className="shrink-0 text-micro text-faint">{s.cadence}</div>
             </div>
           ))}
         </div>

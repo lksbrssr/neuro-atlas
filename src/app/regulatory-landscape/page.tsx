@@ -18,19 +18,19 @@ export default function RegulatoryLandscapePage() {
         <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <div className="tnum text-2xl font-semibold">$149m+</div>
-            <div className="mt-0.5 text-[11px] leading-snug text-muted">
+            <div className="mt-0.5 text-micro leading-snug text-muted">
               Chinese BCI investment (StairMed $73m, Axoft $55m, Gestala $21m)
             </div>
           </div>
           <div>
             <div className="tnum text-2xl font-semibold">1st</div>
-            <div className="mt-0.5 text-[11px] leading-snug text-muted">
+            <div className="mt-0.5 text-micro leading-snug text-muted">
               invasive BCI market approval worldwide (Neuracle, NMPA, Mar 13)
             </div>
           </div>
           <div>
             <div className="tnum text-2xl font-semibold">4+</div>
-            <div className="mt-0.5 text-[11px] leading-snug text-muted">
+            <div className="mt-0.5 text-micro leading-snug text-muted">
               investor types active: state syndicates, corporates (Alibaba, Tencent), global VC, family offices
             </div>
           </div>

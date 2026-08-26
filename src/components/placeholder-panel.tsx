@@ -9,7 +9,7 @@ export function PlaceholderPanel({ title, description, height = "h-64" }: Placeh
     <div className="card flex flex-col p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
-        <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-accent">
+        <span className="rounded-full bg-accent-soft px-2 py-0.5 text-micro font-medium uppercase tracking-wider text-accent">
           Coming soon
         </span>
       </div>

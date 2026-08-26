@@ -18,13 +18,13 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="mb-10">
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-accent">
+        <p className="mb-3 text-micro font-medium uppercase tracking-wider text-accent">
           Neuro Atlas · live field tracker
         </p>
-        <h1 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="max-w-3xl font-display text-display">
           The brain-computer interface field, mapped
         </h1>
-        <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
+        <p className="mt-4 max-w-[60ch] text-body text-muted">
           An atlas of the BCI field — milestones, capital, velocity, and the
           people building it. Every number carries a date and a source; where a
           reading isn&apos;t live yet, it says so.
@@ -59,7 +59,7 @@ export default function Home() {
 
       {/* Plate directory */}
       <section>
-        <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted">
+        <h2 className="mb-4 text-micro font-semibold uppercase tracking-wider text-muted">
           Neuro Atlas Content
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,14 +70,14 @@ export default function Home() {
               className="card group flex flex-col p-5 transition-transform hover:-translate-y-0.5"
             >
               <div className="mb-2 flex items-center gap-2">
-                <span className="text-sm font-semibold tracking-tight">{p.title}</span>
+                <span className="text-label font-semibold tracking-tight">{p.title}</span>
                 <span className="ml-auto text-faint transition-transform group-hover:translate-x-0.5">→</span>
               </div>
-              <p className="text-xs leading-relaxed text-muted">{p.blurb}</p>
+              <p className="text-micro leading-relaxed text-muted">{p.blurb}</p>
             </Link>
           ))}
         </div>
-        <p className="mt-4 text-xs text-faint">
+        <p className="mt-4 text-micro text-faint">
           <Link href="/methodology" className="font-medium text-accent hover:underline">
             Methodology &amp; how to contribute →
           </Link>

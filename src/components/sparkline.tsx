@@ -362,15 +362,15 @@ export function Sparkline({
           className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-center shadow-lg"
           style={{ left: scaleX(selMidX), top: selTopY - 6 }}
         >
-          <span className="tnum block text-[11px] font-semibold leading-tight text-background">
+          <span className="tnum block text-micro font-semibold leading-tight text-background">
             {fmtDelta(dAbs, unit)}
           </span>
-          <span className="tnum block text-[10px] font-medium leading-tight text-background/80">
+          <span className="tnum block text-micro font-medium leading-tight text-background/80">
             {Number.isFinite(dRel)
               ? `${dRel > 0 ? "+" : dRel < 0 ? "−" : "±"}${Math.abs(dRel).toFixed(0)}%`
               : "—"}
           </span>
-          <span className="tnum block text-[9px] leading-tight text-background/60">
+          <span className="tnum block text-micro leading-tight text-background/60">
             {String(series[lo].x)} → {String(series[hi].x)}
           </span>
         </span>
@@ -380,10 +380,10 @@ export function Sparkline({
             className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-center shadow-lg"
             style={{ left: scaleX(hx), top: hy - 6 }}
           >
-            <span className="tnum block text-[11px] font-semibold leading-tight text-background">
+            <span className="tnum block text-micro font-semibold leading-tight text-background">
               {fmt(hp.y, unit)}
             </span>
-            <span className="tnum block text-[9px] leading-tight text-background/70">
+            <span className="tnum block text-micro leading-tight text-background/70">
               {String(hp.x)}
             </span>
           </span>

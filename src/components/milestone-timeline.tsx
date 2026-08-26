@@ -116,6 +116,7 @@ export function MilestoneTimeline() {
   const dragStart = useRef<number | null>(null);
   const dragged = useRef(false);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- rewritten in redesign phase 1
   useEffect(() => setNow(Date.now()), []);
 
   const matches = (m: Milestone) => subcatsOf(m).some((sub) => sel[m.stage as StageKey]?.has(sub));
@@ -134,6 +135,7 @@ export function MilestoneTimeline() {
       const nRows = Math.max(1, ...placed.map((p) => p.row + 1));
       const height = LANE_LABEL_H + nRows * ROW_H + LANE_PAD_BOTTOM;
       const top = y;
+      // eslint-disable-next-line react-hooks/immutability -- rewritten in redesign phase 1
       y += height + LANE_GAP;
       return { stage, placed, height, top };
     });

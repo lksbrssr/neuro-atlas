@@ -25,20 +25,20 @@ export function ExpectationsSection() {
                 <h3 className="text-sm font-semibold tracking-tight">{m.title}</h3>
                 {m.match === "proxy" && m.primary ? (
                   <>
-                    <a href={m.primary.url} target="_blank" rel="noreferrer" className="mt-2 block text-[13px] font-medium text-accent hover:underline">
+                    <a href={m.primary.url} target="_blank" rel="noreferrer" className="mt-2 block text-label font-medium text-accent hover:underline">
                       {PLATFORM_LABEL[m.primary.platform] ?? m.primary.platform}: “{m.primary.question}” ↗
                     </a>
                     {"fallback" in m && m.fallback && (
-                      <a href={m.fallback.url} target="_blank" rel="noreferrer" className="mt-1 block text-[12px] text-muted hover:underline">
+                      <a href={m.fallback.url} target="_blank" rel="noreferrer" className="mt-1 block text-micro text-muted hover:underline">
                         Fallback — {PLATFORM_LABEL[m.fallback.platform] ?? m.fallback.platform}: “{m.fallback.question}” ↗
                       </a>
                     )}
-                    <span className="mt-2 inline-flex w-fit rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
+                    <span className="mt-2 inline-flex w-fit rounded-full bg-accent-soft px-2 py-0.5 text-micro font-semibold uppercase tracking-wider text-accent">
                       live price coming soon
                     </span>
                   </>
                 ) : (
-                  <span className="mt-2 inline-flex w-fit rounded-full border border-dashed border-border-strong px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-faint">
+                  <span className="mt-2 inline-flex w-fit rounded-full border border-dashed border-border-strong px-2 py-0.5 text-micro font-medium uppercase tracking-wider text-faint">
                     white space — no market prices this
                   </span>
                 )}

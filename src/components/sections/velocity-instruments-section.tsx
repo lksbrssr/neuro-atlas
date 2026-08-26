@@ -56,27 +56,27 @@ export function VelocityInstrumentsSection() {
                   <h3 className="text-sm font-semibold tracking-tight">{def.label}</h3>
                   {isReading
                     ? r.direction && (
-                        <span className="rounded-full bg-positive-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-positive">
+                        <span className="rounded-full bg-positive-soft px-2 py-0.5 text-micro font-semibold uppercase tracking-wider text-positive">
                           {r.direction}
                         </span>
                       )
                     : (
-                      <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-faint">
+                      <span className="rounded-full border border-border px-2 py-0.5 text-micro font-medium uppercase tracking-wider text-faint">
                         not yet wired
                       </span>
                     )}
                 </div>
-                <p className="mb-2 text-[11px] text-faint">{def.subtitle}</p>
+                <p className="mb-2 text-micro text-faint">{def.subtitle}</p>
 
                 {isReading ? (
                   <>
-                    <p className="text-[13px] font-medium leading-snug">{r.metric}</p>
+                    <p className="text-label font-medium leading-snug">{r.metric}</p>
                     <p className="tnum mt-0.5 text-xl font-semibold tracking-tight">{r.value}</p>
                     <p className="mt-2 text-xs leading-relaxed text-muted">{r.trend}</p>
                     {r.sources && (
                       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
                         {r.sources.map((s) => (
-                          <a key={s.url} href={s.url} target="_blank" rel="noreferrer" className="text-[11px] text-accent hover:underline">
+                          <a key={s.url} href={s.url} target="_blank" rel="noreferrer" className="text-micro text-accent hover:underline">
                             {s.label} ↗
                           </a>
                         ))}
@@ -85,7 +85,7 @@ export function VelocityInstrumentsSection() {
                   </>
                 ) : (
                   <>
-                    <p className="text-[13px] leading-snug">
+                    <p className="text-label leading-snug">
                       <span className="font-medium">Candidate metric:</span>{" "}
                       <span className="text-muted">{r.candidateMetric}</span>
                     </p>
@@ -101,21 +101,21 @@ export function VelocityInstrumentsSection() {
                 {isReading && r.series ? (
                   <div>
                     <Sparkline series={r.series} scale={(r.seriesScale as "linear" | "log") ?? "linear"} width={340} height={96} axis interactive />
-                    <p className="mt-1 text-[10px] text-faint">
+                    <p className="mt-1 text-micro text-faint">
                       {r.seriesScale === "log" ? "log scale · " : ""}
                       {r.window} · drag across the curve to measure a change
                     </p>
                   </div>
                 ) : isReading && r.instrument === "revealed_commitments" ? (
                   <div className="w-full max-w-[340px]">
-                    <div className="mb-1 flex items-baseline justify-between text-[11px] text-muted">
+                    <div className="mb-1 flex items-baseline justify-between text-micro text-muted">
                       <span>67 implanted</span>
                       <span className="tnum">milestone: 10,000 by 2030</span>
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-border/60">
                       <div className="h-full rounded-full bg-accent" style={{ width: "0.7%", minWidth: 4 }} />
                     </div>
-                    <p className="mt-1 text-[10px] text-faint">~150× below the milestone — no year-by-year series wired yet</p>
+                    <p className="mt-1 text-micro text-faint">~150× below the milestone — no year-by-year series wired yet</p>
                   </div>
                 ) : (
                   <GhostChart width={220} height={60} />
@@ -131,11 +131,11 @@ export function VelocityInstrumentsSection() {
               <div className="mb-1 flex flex-wrap items-center gap-2">
                 <h3 className="text-sm font-semibold tracking-tight">{w.title}</h3>
                 {w.pick && (
-                  <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">v1 pick</span>
+                  <span className="rounded-full bg-accent-soft px-2 py-0.5 text-micro font-semibold uppercase tracking-wider text-accent">v1 pick</span>
                 )}
-                <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-faint">coming soon</span>
+                <span className="rounded-full border border-border px-2 py-0.5 text-micro font-medium uppercase tracking-wider text-faint">coming soon</span>
               </div>
-              <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px]">
+              <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-micro">
                 <span className="text-faint">Feeds <span className="font-medium text-muted">{w.target}</span></span>
                 <span className="text-faint">Build <span className="font-medium text-muted">{w.build}</span></span>
               </div>

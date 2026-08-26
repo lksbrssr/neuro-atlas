@@ -40,8 +40,8 @@ export function Abbr({ term }: { term: string }) {
           className="pointer-events-none fixed z-[80] w-56 -translate-x-1/2 -translate-y-full rounded-lg bg-foreground px-3 py-2 text-left shadow-lg"
           style={{ left: pos.x, top: pos.y }}
         >
-          <span className="block text-[11px] font-semibold leading-snug text-background">{entry.expansion}</span>
-          <span className="mt-0.5 block text-[10px] leading-snug text-background/70">{entry.definition}</span>
+          <span className="block text-micro font-semibold leading-snug text-background">{entry.expansion}</span>
+          <span className="mt-0.5 block text-micro leading-snug text-background/70">{entry.definition}</span>
         </span>
       )}
     </span>

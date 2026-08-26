@@ -5,12 +5,12 @@ export function SectionIntro({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="mb-5">
-      <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <p className="mt-1 text-sm leading-relaxed text-muted">{children}</p>
+    <div className="mb-6">
+      <h2 className="font-display text-title">{title}</h2>
+      {children && <p className="mt-2 max-w-[72ch] text-body text-muted">{children}</p>}
     </div>
   );
 }

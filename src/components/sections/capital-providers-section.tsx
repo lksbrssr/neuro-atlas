@@ -28,7 +28,7 @@ export function CapitalProvidersSection() {
     <section>
       <div className="mb-2 flex items-center gap-2.5">
         <h2 className="text-lg font-semibold tracking-tight">Capital providers</h2>
-        <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
+        <span className="rounded-full bg-accent-soft px-2 py-0.5 text-micro font-semibold uppercase tracking-wider text-accent">
           coming soon
         </span>
       </div>
