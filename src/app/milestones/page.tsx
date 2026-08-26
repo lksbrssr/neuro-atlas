@@ -11,7 +11,7 @@ export default function MilestonesPage() {
         title="Milestones"
         question="What just happened?"
         status="live"
-        description="Every tracked deal, partnership, first-in-human event, and approval in the implanted-BCI field in 2026 — on one time axis."
+        description="Every tracked deal, partnership, first-in-human event, and approval in the implanted-BCI field in 2026, on one shared time axis — color marks the stage, and every marker opens its primary source."
       />
       <MilestonesSection />
     </>

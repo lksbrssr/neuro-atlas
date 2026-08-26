@@ -1,63 +1,56 @@
 "use client";
 
-// Timeline of the Q1+ 2026 BCI milestones. Three year columns sit side by side:
-// click a year to focus it (smooth width slide). 2024/2025 are context (headline
-// capital over a blurred not-yet-ingested area); 2026 focused shows the full-year
-// lane timeline that scrolls horizontally (the scrollbar itself signals there's
-// more), with a live "today" line and a faint cumulative-capital line + EOY
-// extrapolation in the Capital lane. The right summary rail is collapsible.
-// Legend pills expand inline into subcategories (acronyms carry a tooltip; ✕
-// collapses). Undated milestones sit in a "date TBD" shelf.
+// The 2026 milestone timeline. Three stage lanes (capital / clinical /
+// commercial) on one shared time axis whose domain is fitted to the DATA —
+// earliest event → latest event plus ~5% headroom — so the plot fills its
+// container with no dead calendar. "Project to year-end" is an explicit
+// toggle that extends the axis and draws the capital run-rate extrapolation
+// over a hatched "projected" region. Drag across the plot (or the visible
+// brush handles) to summarize a window; the summary lives in a chip above the
+// plot. One hover behaviour: a ring on the marker plus a single tooltip.
+// Below md the same data renders as a reverse-chronological event list.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import MILESTONES from "@/data/milestones.json";
 import { FirmLogo } from "@/components/firm-logo";
-import { Sparkline } from "@/components/sparkline";
 import { lookupAcronym } from "@/components/abbr";
 
 type Milestone = (typeof MILESTONES)[number];
 
-const T0 = Date.UTC(2026, 0, 1);
-const T1 = Date.UTC(2026, 11, 31);
-const MONTHS = Array.from({ length: 12 }, (_, i) => ({
-  label: new Date(Date.UTC(2026, i, 1)).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }),
-  t: Date.UTC(2026, i, 1),
-}));
-
 const STAGES = [
-  { key: "capital", label: "Capital", color: "#22b8cf", soft: "rgba(34,184,207,0.12)" },
-  { key: "clinical", label: "Clinical", color: "#4c6ef5", soft: "rgba(76,110,245,0.12)" },
-  { key: "commercial", label: "Commercial", color: "#9775fa", soft: "rgba(151,117,250,0.13)" },
+  { key: "capital", label: "Capital", color: "var(--stage-capital)", soft: "var(--stage-capital-soft)" },
+  { key: "clinical", label: "Clinical", color: "var(--stage-clinical)", soft: "var(--stage-clinical-soft)" },
+  { key: "commercial", label: "Commercial", color: "var(--stage-commercial)", soft: "var(--stage-commercial-soft)" },
 ] as const;
 type StageKey = (typeof STAGES)[number]["key"];
 
-const YEARS = [
-  { year: 2024, usdM: 260 },
-  { year: 2025, usdM: 322 },
-  { year: 2026, usdM: 653 },
-];
-
-const PLOT_TOP = 24;
-const LANE_LABEL_H = 20;
-const ROW_H = 46;
-const MARKER = 34;
-const LOGO = 24;
-const LANE_PAD_BOTTOM = 14;
+const MARKER = 28; // visual + hit target (≥24px, WCAG 2.5.8)
+const LOGO = 20;
+const ROW_H = 36;
+const LANE_LABEL_H = 26;
+const LANE_PAD_BOTTOM = 10;
 const LANE_GAP = 8;
-const MIN_GAP_PCT = 2.8;
-const FOCUS_W = 78; // focused year column width (% of the columns area)
-const NARROW_W = 9; // collapsed year column width (%)
-const FULL_W = 1360; // px width of the 2026 full-year plot (scrolls inside its column)
-const YEAR_EASE = "width 500ms cubic-bezier(0.22,1,0.36,1)";
-const DOCK_RADIUS = 100;
-const DOCK_MAX = 0.5;
-const SCATTER = [
-  [30, 12], [55, 22], [24, 34], [60, 46], [36, 58], [52, 70], [28, 82], [58, 90], [40, 26], [46, 52],
-];
+const MIN_GAP_PX = MARKER + 6; // same-row collision distance
+const MIN_PLOT_W = 720; // below this the plot scrolls (narrow-viewport fallback)
 
+const DAY = 86_400_000;
 const dateOf = (s: string) => new Date(s + "T00:00:00Z").getTime();
-const pct = (dateStr: string) => Math.min(Math.max((dateOf(dateStr) - T0) / (T1 - T0), 0), 1) * 100;
-const pctToT = (p: number) => T0 + (p / 100) * (T1 - T0);
+const dated = MILESTONES.filter((m) => m.date);
+const DATA_START = Math.min(...dated.map((m) => dateOf(m.date!)));
+const DATA_END = Math.max(...dated.map((m) => dateOf(m.date!)));
+const YEAR_END = Date.UTC(2026, 11, 31);
+const JAN1 = Date.UTC(2026, 0, 1);
+
+// SSR-safe "now" (null on the server; the today-marker appears after mount).
+const NOW = Date.now();
+const emptySubscribe = () => () => {};
+const useNow = () =>
+  useSyncExternalStore(
+    emptySubscribe,
+    () => NOW,
+    () => null,
+  );
+
 function fmtDate(t: number): string {
   return new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 }
@@ -90,11 +83,17 @@ const ALL_SUBCATS: Record<StageKey, string[]> = (() => {
   return out;
 })();
 
+// Cumulative tracked capital through 2026 (for the line in the Capital lane).
 const CUM_2026 = (() => {
   const caps = MILESTONES.filter((m) => m.stage === "capital" && m.amountUsdM && m.date).sort((a, b) => (a.date! < b.date! ? -1 : 1));
   let s = 0;
-  return caps.map((m) => { s += m.amountUsdM!; return { x: m.date as string, y: s }; });
+  return caps.map((m) => {
+    s += m.amountUsdM!;
+    return { t: dateOf(m.date!), y: s };
+  });
 })();
+
+const stageOf = (key: string) => STAGES.find((s) => s.key === key)!;
 
 export function MilestoneTimeline() {
   const [sel, setSel] = useState<Record<StageKey, Set<string>>>({
@@ -103,178 +102,296 @@ export function MilestoneTimeline() {
     commercial: new Set(ALL_SUBCATS.commercial),
   });
   const [openStage, setOpenStage] = useState<StageKey | null>(null);
-  const [focusYear, setFocusYear] = useState(2026);
-  const [railOpen, setRailOpen] = useState(true);
-  const [now, setNow] = useState<number | null>(null);
-  const [dock, setDock] = useState<{ x: number; y: number; w: number } | null>(null);
+  const [projected, setProjected] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [tip, setTip] = useState<{ m: Milestone; x: number; y: number; below: boolean } | null>(null);
   const [pillTip, setPillTip] = useState<{ text: string; x: number; y: number } | null>(null);
-  const [selRange, setSelRange] = useState<{ a: number; b: number } | null>(null);
+  const [selRange, setSelRange] = useState<{ a: number; b: number } | null>(null); // fractions 0..1 of the domain
+  const [containerW, setContainerW] = useState(1024);
 
+  const now = useNow();
+  const containerRef = useRef<HTMLDivElement>(null);
   const plotRef = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
   const dragged = useRef(false);
+  const dragEdge = useRef<"a" | "b" | null>(null);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- rewritten in redesign phase 1
-  useEffect(() => setNow(Date.now()), []);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setContainerW(el.clientWidth));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
-  const matches = (m: Milestone) => subcatsOf(m).some((sub) => sel[m.stage as StageKey]?.has(sub));
+  // ── Axis domain: fitted to the data, not the calendar ──────────────────────
+  const span = DATA_END - DATA_START;
+  // Extend to "today" only when today is close enough to the data to not
+  // create dead space (stale data shouldn't stretch the axis).
+  const liveEnd = now != null && now > DATA_END && now - DATA_END <= span * 0.15 ? now : DATA_END;
+  const T0 = DATA_START - span * 0.03;
+  const T1 = projected ? YEAR_END : liveEnd + span * 0.05;
 
+  const innerW = Math.max(containerW, MIN_PLOT_W);
+  const xOf = (t: number) => ((t - T0) / (T1 - T0)) * innerW;
+  const fracToT = (f: number) => T0 + f * (T1 - T0);
+
+  const months = useMemo(() => {
+    const out: { label: string; t: number; clamped?: boolean }[] = [];
+    const d = new Date(T0);
+    let y = d.getUTCFullYear();
+    let mo = d.getUTCMonth();
+    for (;;) {
+      const t = Date.UTC(y, mo, 1);
+      if (t > T1) break;
+      if (t >= T0) out.push({ label: new Date(t).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }), t });
+      else out.push({ label: new Date(t).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }), t: T0, clamped: true });
+      mo++;
+      if (mo === 12) {
+        mo = 0;
+        y++;
+      }
+    }
+    return out;
+  }, [T0, T1]);
+
+  const matches = useMemo(() => {
+    return (m: Milestone) => subcatsOf(m).some((sub) => sel[m.stage as StageKey]?.has(sub));
+  }, [sel]);
+
+  // ── Lane layout (px-based greedy row assignment) ────────────────────────────
   const { lanes, totalH, undated } = useMemo(() => {
-    let y = PLOT_TOP;
+    let y = 0;
     const lanes = STAGES.filter((s) => sel[s.key].size > 0).map((stage) => {
       const evs = MILESTONES.filter((m) => m.stage === stage.key && m.date && matches(m)).sort((a, b) => (a.date! < b.date! ? -1 : 1));
       const rowLast: number[] = [];
       const placed = evs.map((m) => {
-        const left = pct(m.date!);
-        let row = rowLast.findIndex((last) => left - last >= MIN_GAP_PCT);
-        if (row === -1) { row = rowLast.length; rowLast.push(left); } else { rowLast[row] = left; }
-        return { m, left, row };
+        const x = xOf(dateOf(m.date!));
+        let row = rowLast.findIndex((last) => x - last >= MIN_GAP_PX);
+        if (row === -1) {
+          row = rowLast.length;
+          rowLast.push(x);
+        } else {
+          rowLast[row] = x;
+        }
+        return { m, x, row };
       });
-      const nRows = Math.max(1, ...placed.map((p) => p.row + 1));
+      const nRows = Math.max(1, rowLast.length);
       const height = LANE_LABEL_H + nRows * ROW_H + LANE_PAD_BOTTOM;
       const top = y;
-      // eslint-disable-next-line react-hooks/immutability -- rewritten in redesign phase 1
       y += height + LANE_GAP;
-      return { stage, placed, height, top };
+      return { stage, placed, height, top, count: evs.length };
     });
     const undated = MILESTONES.filter((m) => !m.date && matches(m));
-    return { lanes, totalH: Math.max(y, PLOT_TOP + 120), undated };
+    return { lanes, totalH: Math.max(y - LANE_GAP, 140) + 22, undated };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel]);
+  }, [sel, matches, innerW, T0, T1]);
 
+  const AXIS_TOP = 22; // month labels above the lanes
+
+  // ── Brush aggregates ────────────────────────────────────────────────────────
   const agg = useMemo(() => {
-    const [t1, t2] = selRange
-      ? [pctToT(Math.min(selRange.a, selRange.b)), pctToT(Math.max(selRange.a, selRange.b))]
-      : [T0, T1];
+    if (!selRange) return null;
+    const [t1, t2] = [fracToT(Math.min(selRange.a, selRange.b)), fracToT(Math.max(selRange.a, selRange.b))];
     const rows = STAGES.filter((s) => sel[s.key].size > 0).map((stage) => {
       const evs = MILESTONES.filter((m) => m.stage === stage.key && m.date && matches(m) && dateOf(m.date) >= t1 && dateOf(m.date) <= t2);
       const usd = evs.reduce((s, m) => s + (m.amountUsdM ?? 0), 0);
-      const rounds = evs.filter((m) => m.amountUsdM).length;
-      const byType: Record<string, number> = {};
-      evs.forEach((m) => subcatsOf(m).forEach((sub) => { if (sub !== "$") byType[sub] = (byType[sub] ?? 0) + 1; }));
-      const breakdown = Object.entries(byType).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${v} ${k}`).join(" · ");
-      return { stage, count: evs.length, usd, rounds, breakdown };
+      return { stage, count: evs.length, usd };
     });
-    return { t1, t2, rows };
-  }, [sel, selRange]); // eslint-disable-line react-hooks/exhaustive-deps
+    const total = rows.reduce((s, r) => s + r.count, 0);
+    return { t1, t2, rows, total };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selRange, sel, matches, T0, T1]);
 
   const clickGroup = (key: StageKey) => {
-    if (openStage !== key) { setOpenStage(key); return; }
+    if (openStage !== key) {
+      setOpenStage(key);
+      return;
+    }
     setSel((v) => ({ ...v, [key]: v[key].size === ALL_SUBCATS[key].length ? new Set<string>() : new Set(ALL_SUBCATS[key]) }));
   };
   const toggleSub = (stage: StageKey, sub: string) =>
     setSel((v) => {
       const next = new Set(v[stage]);
-      if (next.has(sub)) next.delete(sub); else next.add(sub);
+      if (next.has(sub)) next.delete(sub);
+      else next.add(sub);
       return { ...v, [stage]: next };
     });
 
-  const showTip = (e: React.MouseEvent<HTMLElement>, m: Milestone) => {
-    const r = e.currentTarget.getBoundingClientRect();
+  const showTip = (el: HTMLElement, m: Milestone) => {
+    const r = el.getBoundingClientRect();
     const vw = window.innerWidth;
-    const x = Math.min(Math.max(r.left + r.width / 2, 156), vw - 156);
-    const below = r.top < 190;
-    setTip({ m, x, y: below ? r.bottom + 8 : r.top - 8, below });
+    const x = Math.min(Math.max(r.left + r.width / 2, 132), vw - 132);
+    const below = r.top < 230;
+    setTip({ m, x, y: below ? r.bottom + 10 : r.top - 10, below });
   };
-  const stageColor = (key: string) => STAGES.find((s) => s.key === key)?.color;
 
-  const dockScale = (leftPct: number, absY: number) => {
-    if (!dock) return 1;
-    const mx = (leftPct / 100) * dock.w;
-    const dist = Math.hypot(mx - dock.x, absY - dock.y);
-    return 1 + DOCK_MAX * Math.max(0, 1 - dist / DOCK_RADIUS);
-  };
-  const xToPct = (clientX: number) => {
+  const fracOfClientX = (clientX: number) => {
     const r = plotRef.current!.getBoundingClientRect();
-    return Math.min(Math.max((clientX - r.left) / r.width, 0), 1) * 100;
+    return Math.min(Math.max((clientX - r.left) / r.width, 0), 1);
   };
 
+  // ── Capital cumulative line (+ optional EOY extrapolation) ─────────────────
   const capitalLine = (H: number) => {
-    const pts = [{ x: 0, y: 0 }, ...CUM_2026.map((p) => ({ x: pct(p.x), y: p.y }))];
-    const last = pts[pts.length - 1];
-    const slope = last.x > 0 ? last.y / last.x : 0;
-    const yEoy = slope * 100;
-    const yMax = Math.max(yEoy, last.y) || 1;
-    const ys = (v: number) => H - 5 - (v / yMax) * (H - 12);
+    if (CUM_2026.length === 0) return null;
+    const last = CUM_2026[CUM_2026.length - 1];
+    const ratePerDay = last.y / ((last.t - JAN1) / DAY);
+    const yEoy = ratePerDay * ((YEAR_END - JAN1) / DAY);
+    const yMax = (projected ? yEoy : last.y) || 1;
+    const ys = (v: number) => H - 6 - (v / yMax) * (H - LANE_LABEL_H - 12);
+    const pts = [{ t: DATA_START, y: 0 }, ...CUM_2026.map((p) => ({ t: p.t, y: p.y }))];
     return {
-      solid: pts.map((p) => `${p.x.toFixed(2)},${ys(p.y).toFixed(2)}`).join(" "),
-      dashed: `${last.x.toFixed(2)},${ys(last.y).toFixed(2)} 100,${ys(yEoy).toFixed(2)}`,
+      solid: pts.map((p) => `${xOf(p.t).toFixed(1)},${ys(p.y).toFixed(1)}`).join(" "),
+      dashed: projected ? `${xOf(last.t).toFixed(1)},${ys(last.y).toFixed(1)} ${xOf(YEAR_END).toFixed(1)},${ys(yEoy).toFixed(1)}` : null,
+      eoyLabel: projected ? `≈${fmtUsd(yEoy)} run-rate` : null,
     };
   };
 
-  const scatter = (opacity: number) => (
-    <div className="absolute inset-0" style={{ filter: "blur(6px)", opacity }} aria-hidden>
-      {SCATTER.map(([x, yy], i) => (
-        <span key={i} className="absolute rounded-full" style={{ left: `${x}%`, top: `${yy}%`, width: 14, height: 14, background: STAGES[i % 3].color }} />
-      ))}
-    </div>
-  );
+  const needsScroll = innerW > containerW;
 
-  // The 2026 full-year plot (scrolls inside its column).
+  // ── Desktop plot ────────────────────────────────────────────────────────────
   const plot = (
-    <div className="h-full overflow-x-auto pb-2" style={{ height: totalH + 16 }}>
+    <div className={`${needsScroll ? "scroll-fade-x overflow-x-auto" : ""} pb-1`}>
       <div
         ref={plotRef}
         className="relative cursor-crosshair select-none"
-        style={{ width: FULL_W, height: totalH }}
-        onPointerDown={(e) => { dragStart.current = xToPct(e.clientX); dragged.current = false; setSelRange(null); }}
+        style={{ width: innerW, height: AXIS_TOP + totalH }}
+        onPointerDown={(e) => {
+          if (dragEdge.current) return;
+          dragStart.current = fracOfClientX(e.clientX);
+          dragged.current = false;
+        }}
         onPointerMove={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-          setDock({ x: e.clientX - rect.left, y: e.clientY - rect.top, w: rect.width });
+          if (dragEdge.current && selRange) {
+            const f = fracOfClientX(e.clientX);
+            setSelRange({ ...selRange, [dragEdge.current]: f });
+            return;
+          }
           if (dragStart.current != null) {
-            const p = xToPct(e.clientX);
-            if (Math.abs(p - dragStart.current) > 0.5) { dragged.current = true; setSelRange({ a: dragStart.current, b: p }); }
+            const f = fracOfClientX(e.clientX);
+            if (Math.abs(f - dragStart.current) > 0.005) {
+              dragged.current = true;
+              setSelRange({ a: dragStart.current, b: f });
+            }
           }
         }}
-        onPointerUp={() => { if (dragStart.current != null && !dragged.current) setSelRange(null); dragStart.current = null; }}
-        onMouseLeave={() => setDock(null)}
+        onPointerUp={() => {
+          if (dragStart.current != null && !dragged.current && !dragEdge.current) setSelRange(null);
+          dragStart.current = null;
+          dragEdge.current = null;
+        }}
       >
+        {/* Lanes */}
         {lanes.map((l) => {
           const cap = l.stage.key === "capital" ? capitalLine(l.height) : null;
           return (
-            <div key={l.stage.key} className="absolute left-0 right-0 overflow-hidden rounded-xl" style={{ top: l.top, height: l.height, background: l.stage.soft }}>
+            <div
+              key={l.stage.key}
+              className="absolute left-0 right-0 overflow-hidden rounded-lg"
+              style={{ top: AXIS_TOP + l.top, height: l.height, background: l.stage.soft, borderLeft: `2px solid ${l.stage.color}` }}
+            >
               {cap && (
-                <svg className="pointer-events-none absolute inset-0" width="100%" height={l.height} viewBox={`0 0 100 ${l.height}`} preserveAspectRatio="none" aria-hidden>
-                  <polyline points={cap.solid} fill="none" stroke={l.stage.color} strokeWidth={1} opacity={0.4} vectorEffect="non-scaling-stroke" />
-                  <polyline points={cap.dashed} fill="none" stroke={l.stage.color} strokeWidth={1} strokeDasharray="3 3" opacity={0.28} vectorEffect="non-scaling-stroke" />
+                <svg className="pointer-events-none absolute inset-0" width={innerW} height={l.height} aria-hidden>
+                  <polyline points={cap.solid} fill="none" stroke={l.stage.color} strokeWidth={1.5} opacity={0.45} />
+                  {cap.dashed && <polyline points={cap.dashed} fill="none" stroke={l.stage.color} strokeWidth={1.5} strokeDasharray="5 4" opacity={0.75} />}
                 </svg>
               )}
-              <span className="absolute left-2.5 top-1.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: l.stage.color }}>{l.stage.label}</span>
+              <span className="absolute left-3 top-1.5 flex items-center gap-1.5 text-micro font-semibold uppercase tracking-wider text-muted">
+                <span className="h-2 w-2 rounded-full" style={{ background: l.stage.color }} aria-hidden />
+                {l.stage.label}
+                <span className="tnum font-medium text-faint">{l.count}</span>
+              </span>
+              {cap?.eoyLabel && (
+                <span className="tnum absolute right-2 top-1.5 text-micro font-medium text-muted">{cap.eoyLabel}</span>
+              )}
             </div>
           );
         })}
 
-        {selRange && (
-          <div className="pointer-events-none absolute bottom-0 top-0 rounded-md border-x" style={{ left: `${Math.min(selRange.a, selRange.b)}%`, width: `${Math.abs(selRange.a - selRange.b)}%`, background: "var(--accent-soft)", borderColor: "var(--accent)", opacity: 0.6, zIndex: 3 }} />
+        {/* Projected region (toggle on): hatched, clearly not data */}
+        {projected && (
+          <div
+            className="pointer-events-none absolute bottom-0 rounded-r-lg"
+            style={{
+              top: AXIS_TOP,
+              left: xOf(DATA_END) + MARKER / 2 + 2,
+              right: 0,
+              background: "repeating-linear-gradient(135deg, transparent 0 5px, var(--border) 5px 6px)",
+              opacity: 0.7,
+            }}
+          >
+            <span className="absolute right-1 -top-5 text-micro font-medium uppercase tracking-wider text-faint">projected</span>
+          </div>
         )}
 
-        {MONTHS.map((mo) => {
-          const left = ((mo.t - T0) / (T1 - T0)) * 100;
+        {/* Month ticks */}
+        {months.map((mo, i) => {
+          const x = xOf(mo.t);
+          const nearLeftEdge = x < 28;
           return (
-            <div key={mo.label} className="absolute bottom-0 top-0" style={{ left: `${left}%`, zIndex: 1 }}>
-              <div className="absolute bottom-0 top-5 border-l border-border/70" />
-              <div className="absolute top-0 -translate-x-1/2 text-[10px] font-medium uppercase tracking-wider text-faint">{mo.label}</div>
+            <div key={mo.t} className="absolute bottom-0 top-0" style={{ left: x }}>
+              {!mo.clamped && <div className="absolute top-5 bottom-0 border-l border-border/80" />}
+              <div className={`absolute top-0 whitespace-nowrap text-micro font-medium uppercase tracking-wider text-faint ${nearLeftEdge ? "left-0" : "-translate-x-1/2"}`}>
+                {mo.label}
+                {i === 0 && <span className="ml-1 text-faint/80">2026</span>}
+              </div>
             </div>
           );
         })}
 
-        {now != null && (() => {
-          const p = ((now - T0) / (T1 - T0)) * 100;
-          if (p < 0 || p > 100) return null;
-          return (
-            <div className="pointer-events-none absolute bottom-0 top-0" style={{ left: `${p}%`, zIndex: 6 }}>
-              <div className="absolute bottom-0 top-4 border-l-2 border-dashed" style={{ borderColor: "var(--accent)" }} />
-              <div className="absolute top-0 -translate-x-1/2 whitespace-nowrap rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider" style={{ color: "var(--accent-foreground)" }}>today</div>
+        {/* Today marker (only when it falls inside the fitted domain) */}
+        {now != null && now >= T0 && now <= T1 && (
+          <div className="pointer-events-none absolute bottom-0 top-0 z-[6]" style={{ left: xOf(now) }}>
+            <div className="absolute top-4 bottom-0 border-l-2 border-dashed" style={{ borderColor: "var(--accent)" }} />
+            <div className="absolute top-0 -translate-x-1/2 whitespace-nowrap rounded-full bg-accent px-2 py-0.5 text-micro font-semibold uppercase tracking-wider" style={{ color: "var(--accent-foreground)" }}>
+              today
             </div>
-          );
-        })()}
+          </div>
+        )}
 
+        {/* Brush selection with draggable handles */}
+        {selRange && (
+          <>
+            <div
+              className="pointer-events-none absolute bottom-0 rounded-md"
+              style={{
+                top: AXIS_TOP,
+                left: `${Math.min(selRange.a, selRange.b) * 100}%`,
+                width: `${Math.abs(selRange.a - selRange.b) * 100}%`,
+                background: "var(--accent-soft)",
+                opacity: 0.55,
+                zIndex: 3,
+              }}
+            />
+            {(["a", "b"] as const).map((edge) => (
+              <div
+                key={edge}
+                role="separator"
+                aria-label={`Adjust window ${edge === "a" ? "start" : "end"}`}
+                className="absolute bottom-0 z-[7] w-2.5 -translate-x-1/2 cursor-ew-resize"
+                style={{ top: AXIS_TOP, left: `${selRange[edge] * 100}%` }}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  dragEdge.current = edge;
+                  (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+                }}
+                onPointerMove={(e) => {
+                  if (dragEdge.current === edge) setSelRange((r) => (r ? { ...r, [edge]: fracOfClientX(e.clientX) } : r));
+                }}
+                onPointerUp={() => {
+                  dragEdge.current = null;
+                }}
+              >
+                <div className="mx-auto h-full w-0.5 bg-accent" />
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* Markers */}
         {lanes.flatMap((l) =>
-          l.placed.map(({ m, left, row }) => {
-            const top = l.top + LANE_LABEL_H + row * ROW_H;
-            const scale = dockScale(left, top + MARKER / 2);
+          l.placed.map(({ m, x, row }) => {
+            const top = AXIS_TOP + l.top + LANE_LABEL_H + row * ROW_H;
             const color = l.stage.color;
             const key = `${m.company}-${m.activity}`;
             const isHover = hovered === key;
@@ -284,24 +401,40 @@ export function MilestoneTimeline() {
                 href={m.sourceUrl ?? undefined}
                 target="_blank"
                 rel="noreferrer"
-                onMouseEnter={(e) => { setHovered(key); showTip(e, m); }}
-                onMouseLeave={() => { setHovered(null); setTip(null); }}
-                onClick={(e) => { if (dragged.current) e.preventDefault(); }}
-                className={`absolute flex items-center rounded-full border-2 bg-surface shadow-sm transition-transform duration-100 ease-out ${m.sourceUrl ? "cursor-pointer" : "cursor-default"}`}
+                onMouseEnter={(e) => {
+                  setHovered(key);
+                  showTip(e.currentTarget, m);
+                }}
+                onMouseLeave={() => {
+                  setHovered(null);
+                  setTip(null);
+                }}
+                onFocus={(e) => {
+                  setHovered(key);
+                  showTip(e.currentTarget, m);
+                }}
+                onBlur={() => {
+                  setHovered(null);
+                  setTip(null);
+                }}
+                onClick={(e) => {
+                  if (dragged.current) e.preventDefault();
+                }}
+                className={`absolute grid -translate-x-1/2 place-items-center rounded-full border-2 bg-surface transition-shadow ${m.sourceUrl ? "cursor-pointer" : "cursor-default"}`}
                 style={{
-                  left: `${left}%`, top, height: MARKER,
-                  width: isHover ? "auto" : MARKER,
-                  paddingLeft: isHover ? 4 : 0, paddingRight: isHover ? 11 : 0,
-                  justifyContent: isHover ? "flex-start" : "center",
+                  left: x,
+                  top,
+                  width: MARKER,
+                  height: MARKER,
                   borderColor: color,
-                  transform: `translateX(-50%) scale(${scale.toFixed(3)})`,
-                  transformOrigin: "center",
-                  zIndex: isHover ? 40 : scale > 1.02 ? Math.round(scale * 20) : 4,
+                  boxShadow: isHover ? `0 0 0 3px ${l.stage.soft}, 0 2px 8px rgba(0,0,0,0.18)` : undefined,
+                  zIndex: isHover ? 40 : 4,
                 }}
                 aria-label={`${m.company} — ${m.activity}`}
               >
-                <FirmLogo src={m.logo} name={m.company} size={LOGO} />
-                {isHover && <span className="ml-1.5 whitespace-nowrap text-[12px] font-semibold">{m.company}</span>}
+                <span className="overflow-hidden rounded-full" style={{ width: LOGO, height: LOGO, filter: "grayscale(1)", opacity: 0.85 }}>
+                  <FirmLogo src={m.logo} name={m.company} size={LOGO} />
+                </span>
               </a>
             );
           }),
@@ -310,10 +443,60 @@ export function MilestoneTimeline() {
     </div>
   );
 
+  // ── Mobile: reverse-chronological grouped list (same data, readable form) ──
+  const mobileList = (() => {
+    const evs = MILESTONES.filter((m) => m.date && matches(m)).sort((a, b) => (a.date! < b.date! ? 1 : -1));
+    const groups: { label: string; items: Milestone[] }[] = [];
+    for (const m of evs) {
+      const label = new Date(dateOf(m.date!)).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+      if (groups[groups.length - 1]?.label !== label) groups.push({ label, items: [] });
+      groups[groups.length - 1].items.push(m);
+    }
+    return (
+      <div>
+        {groups.map((g) => (
+          <section key={g.label} className="mb-6">
+            <h3 className="mb-2 border-b border-border pb-1.5 text-micro font-semibold uppercase tracking-wider text-muted">{g.label}</h3>
+            <ul className="space-y-1">
+              {g.items.map((m) => {
+                const stage = stageOf(m.stage);
+                const row = (
+                  <span className="flex items-start gap-3 py-2">
+                    <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: stage.color }} aria-hidden />
+                    <FirmLogo src={m.logo} name={m.company} size={24} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-label font-semibold">{m.company}</span>
+                      <span className="tnum block text-micro text-muted">
+                        {m.activity} · {fmtDate(dateOf(m.date!))}
+                      </span>
+                      {m.note && <span className="mt-0.5 line-clamp-2 block text-micro text-faint">{m.note}</span>}
+                    </span>
+                    {m.sourceUrl && <span className="mt-1 text-faint" aria-hidden>↗</span>}
+                  </span>
+                );
+                return (
+                  <li key={`${m.company}-${m.activity}`}>
+                    {m.sourceUrl ? (
+                      <a href={m.sourceUrl} target="_blank" rel="noreferrer" className="block rounded-lg px-1 hover:bg-surface-raised">
+                        {row}
+                      </a>
+                    ) : (
+                      <span className="block px-1">{row}</span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+      </div>
+    );
+  })();
+
   return (
-    <div>
-      {/* Legend */}
-      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+    <div ref={containerRef}>
+      {/* Legend + projection toggle */}
+      <div className="mb-4 flex flex-wrap items-center gap-1.5">
         {STAGES.map((s) => {
           const subs = ALL_SUBCATS[s.key];
           const selected = sel[s.key];
@@ -322,12 +505,15 @@ export function MilestoneTimeline() {
           const noneOn = selected.size === 0;
           return (
             <div key={s.key} className="flex items-center gap-1.5">
-              <button type="button" onClick={() => clickGroup(s.key)} aria-expanded={open}
-                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all ${open ? "border-border-strong bg-surface-raised" : noneOn ? "border-border opacity-40" : "border-border-strong"}`}>
+              <button
+                type="button"
+                onClick={() => clickGroup(s.key)}
+                aria-expanded={open}
+                className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-label font-medium transition-all ${open ? "border-border-strong bg-surface-raised" : noneOn ? "border-border opacity-50" : "border-border-strong"}`}
+              >
                 <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
                 {s.label}
-                <span className="tnum text-faint">{total}</span>
-                {!open && <span className="text-[9px] text-faint" aria-hidden>▸</span>}
+                <span className="tnum text-micro text-faint">{total}</span>
               </button>
               <div className={`grid transition-all duration-300 ease-out ${open ? "grid-cols-[1fr] opacity-100" : "grid-cols-[0fr] opacity-0"}`}>
                 <div className="overflow-hidden">
@@ -338,19 +524,35 @@ export function MilestoneTimeline() {
                       const count = MILESTONES.filter((m) => m.stage === s.key && subcatsOf(m).includes(sub)).length;
                       const expansion = lookupAcronym(sub)?.expansion;
                       return (
-                        <button key={sub} type="button" onClick={() => toggleSub(s.key, sub)}
-                          onMouseEnter={(e) => { if (!expansion) return; const r = e.currentTarget.getBoundingClientRect(); setPillTip({ text: expansion, x: r.left + r.width / 2, y: r.top - 6 }); }}
-                          onMouseLeave={() => setPillTip(null)} aria-pressed={on}
-                          className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-all ${on ? "border-border-strong" : "border-border opacity-40"}`}
-                          style={on ? { borderColor: s.color } : undefined}>
+                        <button
+                          key={sub}
+                          type="button"
+                          onClick={() => toggleSub(s.key, sub)}
+                          onMouseEnter={(e) => {
+                            if (!expansion) return;
+                            const r = e.currentTarget.getBoundingClientRect();
+                            setPillTip({ text: expansion, x: r.left + r.width / 2, y: r.top - 6 });
+                          }}
+                          onMouseLeave={() => setPillTip(null)}
+                          aria-pressed={on}
+                          className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-micro font-medium transition-all ${on ? "border-border-strong" : "border-border opacity-50"}`}
+                          style={on ? { borderColor: s.color } : undefined}
+                        >
                           {subcatLabel(sub)}
                           <span className="tnum text-faint">{count}</span>
                         </button>
                       );
                     })}
-                    <button type="button" onClick={() => setOpenStage(null)} aria-label={`Collapse ${s.label}`} title="Collapse"
-                      className="ml-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border text-faint transition-colors hover:border-border-strong hover:text-foreground">
-                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                    <button
+                      type="button"
+                      onClick={() => setOpenStage(null)}
+                      aria-label={`Collapse ${s.label}`}
+                      title="Collapse"
+                      className="ml-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-faint transition-colors hover:border-border-strong hover:text-foreground"
+                    >
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                        <path d="M6 6l12 12M18 6L6 18" />
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -358,134 +560,104 @@ export function MilestoneTimeline() {
             </div>
           );
         })}
-        <span className="ml-auto hidden text-[11px] text-faint md:block">click a year to focus · drag across to summarize · hover a logo for the name</span>
+        <button
+          type="button"
+          onClick={() => setProjected((p) => !p)}
+          aria-pressed={projected}
+          className={`ml-auto hidden items-center gap-2 rounded-full border px-3 py-1.5 text-micro font-medium transition-colors md:flex ${projected ? "border-border-strong bg-surface-raised text-foreground" : "border-border text-muted hover:text-foreground"}`}
+        >
+          <span className={`h-2 w-2 rounded-full ${projected ? "bg-accent" : "bg-border-strong"}`} aria-hidden />
+          Project to year-end
+        </button>
       </div>
 
-      <div className="flex gap-4">
-        {/* Year columns */}
-        <div className="min-w-0 flex-1">
-          <div className="flex gap-2">
-            {YEARS.map((y) => {
-              const focused = focusYear === y.year;
-              const w = `${focused ? FOCUS_W : NARROW_W}%`;
-              if (focused && y.year === 2026) {
-                return <div key={y.year} className="shrink-0" style={{ width: w, transition: YEAR_EASE }}>{plot}</div>;
-              }
-              return (
-                <button
-                  key={y.year}
-                  type="button"
-                  onClick={() => setFocusYear(focused ? 2026 : y.year)}
-                  aria-label={`Focus ${y.year}`}
-                  className="group relative shrink-0 overflow-hidden rounded-xl border border-dashed border-border-strong bg-surface-raised text-left hover:border-border"
-                  style={{ width: w, height: totalH, transition: YEAR_EASE }}
-                >
-                  {scatter(focused ? 0.22 : 0.18)}
-                  <div className={`absolute inset-x-0 px-2 text-center ${focused ? "top-1/2 -translate-y-1/2" : "top-5"}`}>
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted">{y.year}</div>
-                    <div className={`tnum font-semibold tracking-tight ${focused ? "text-4xl" : "text-sm"}`}>{fmtUsd(y.usdM)}</div>
-                    <div className="mt-0.5 text-[10px] leading-tight text-faint">new capital{y.year === 2026 ? " · Jan–Apr" : ""}</div>
-                  </div>
-                  {focused && <div className="absolute inset-x-0 bottom-6 text-center text-[11px] text-faint">detailed timeline coming soon</div>}
-                </button>
-              );
-            })}
-          </div>
-
-          {focusYear === 2026 && undated.length > 0 && (
-            <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-dashed border-border pt-3">
-              <span className="mr-1 text-[10px] font-semibold uppercase tracking-wider text-faint">date TBD</span>
-              {undated.map((m) => (
-                <a key={`${m.company}-${m.activity}`} href={m.sourceUrl ?? undefined} target="_blank" rel="noreferrer"
-                  onMouseEnter={(e) => showTip(e, m)} onMouseLeave={() => setTip(null)}
-                  className={`grid place-items-center rounded-full border-2 border-dashed bg-surface transition-transform hover:scale-110 ${m.sourceUrl ? "cursor-pointer hover:border-solid" : "cursor-default"}`}
-                  style={{ width: MARKER, height: MARKER, borderColor: stageColor(m.stage) }} aria-label={`${m.company} — ${m.activity} (date TBD)`}>
-                  <FirmLogo src={m.logo} name={m.company} size={LOGO} />
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Collapsible summary rail */}
-        {railOpen ? (
-          <aside className="hidden w-48 shrink-0 lg:block">
-            <div className="mb-3 flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-faint">New capital by year</span>
-              <button type="button" onClick={() => setRailOpen(false)} aria-label="Collapse panel" title="Collapse panel"
-                className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-faint transition-colors hover:border-border-strong hover:text-foreground">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
-              </button>
-            </div>
-            {YEARS.map((c) => (
-              <button key={c.year} type="button" onClick={() => setFocusYear(c.year)}
-                className={`mb-1 flex w-full flex-col gap-0.5 rounded px-1 py-1 text-left transition-colors hover:bg-surface-raised ${focusYear === c.year ? "bg-surface-raised" : ""}`}>
-                <span className="tnum flex items-baseline justify-between text-[13px]">
-                  <span className={focusYear === c.year ? "font-semibold text-foreground" : "text-muted"}>{c.year}</span>
-                  <span className="font-semibold">{fmtUsd(c.usdM)}</span>
-                </span>
-                {c.year === 2026 && CUM_2026.length > 1 && <span className="mt-0.5 block"><Sparkline series={CUM_2026} width={166} height={22} /></span>}
-              </button>
+      {/* Brush summary chip / hint */}
+      <div className="mb-2 hidden min-h-6 items-center md:flex">
+        {agg && selRange ? (
+          <div className="tnum flex flex-wrap items-center gap-x-3 gap-y-1 rounded-full bg-accent-soft px-3 py-1 text-micro font-medium text-accent">
+            <span className="font-semibold">
+              {fmtDate(agg.t1)} – {fmtDate(agg.t2)}
+            </span>
+            {agg.rows.map((r) => (
+              <span key={r.stage.key}>
+                {r.stage.label} {r.count}
+                {r.usd > 0 ? ` (${fmtUsd(r.usd)})` : ""}
+              </span>
             ))}
-            <div className="mt-1 px-1 text-[10px] text-faint">2026 is Jan–Apr</div>
-
-            <div className="mt-4 border-t border-border pt-3">
-              <div className="mb-1 flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-faint">{selRange ? "Selected window" : "Full period"}</span>
-                {selRange && <button type="button" onClick={() => setSelRange(null)} className="text-[10px] font-medium text-accent hover:underline">clear</button>}
-              </div>
-              <div className="tnum mb-3 text-[11px] text-muted">{fmtDate(agg.t1)} – {fmtDate(agg.t2)}, 2026</div>
-              <div className="space-y-3">
-                {agg.rows.map((r) => (
-                  <div key={r.stage.key}>
-                    <div className="mb-0.5 flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full" style={{ background: r.stage.color }} />
-                      <span className="text-[11px] font-semibold">{r.stage.label}</span>
-                    </div>
-                    {r.stage.key === "capital" ? (
-                      <>
-                        <div className="tnum text-[15px] font-semibold">{fmtUsd(r.usd)}</div>
-                        <div className="text-[10px] text-faint">{r.rounds} round{r.rounds === 1 ? "" : "s"}{r.count > r.rounds ? ` · ${r.count - r.rounds} grant` : ""}</div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="tnum text-[15px] font-semibold">{r.count}{r.usd > 0 && <span className="ml-1 text-[11px] font-medium text-muted">· {fmtUsd(r.usd)}</span>}</div>
-                        <div className="text-[10px] leading-snug text-faint">{r.breakdown || "—"}</div>
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </aside>
+            <button type="button" onClick={() => setSelRange(null)} className="font-semibold underline-offset-2 hover:underline">
+              clear
+            </button>
+          </div>
         ) : (
-          <button type="button" onClick={() => setRailOpen(true)} aria-label="Open summary panel" title="Open summary"
-            className="hidden shrink-0 items-start justify-center rounded-lg border border-border pt-3 text-faint transition-colors hover:border-border-strong hover:text-foreground lg:flex" style={{ width: 22 }}>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
-          </button>
+          <span className="ml-auto text-micro text-faint">drag across the timeline to summarize a window</span>
         )}
       </div>
 
-      {pillTip && (
-        <div className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-[10px] font-medium text-background shadow-lg" style={{ left: pillTip.x, top: pillTip.y }}>{pillTip.text}</div>
+      <div className="hidden md:block">{plot}</div>
+      <div className="md:hidden">{mobileList}</div>
+
+      {/* Date-TBD shelf */}
+      {undated.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-dashed border-border pt-3">
+          <span className="mr-1 text-micro font-semibold uppercase tracking-wider text-faint">date TBD</span>
+          {undated.map((m) => (
+            <a
+              key={`${m.company}-${m.activity}`}
+              href={m.sourceUrl ?? undefined}
+              target="_blank"
+              rel="noreferrer"
+              onMouseEnter={(e) => showTip(e.currentTarget, m)}
+              onMouseLeave={() => setTip(null)}
+              onFocus={(e) => showTip(e.currentTarget, m)}
+              onBlur={() => setTip(null)}
+              className={`grid place-items-center rounded-full border-2 border-dashed bg-surface ${m.sourceUrl ? "cursor-pointer hover:border-solid" : "cursor-default"}`}
+              style={{ width: MARKER, height: MARKER, borderColor: stageOf(m.stage).color }}
+              aria-label={`${m.company} — ${m.activity} (date TBD)`}
+            >
+              <FirmLogo src={m.logo} name={m.company} size={LOGO} />
+            </a>
+          ))}
+        </div>
       )}
 
+      {pillTip && (
+        <div
+          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-micro font-medium text-background shadow-lg"
+          style={{ left: pillTip.x, top: pillTip.y }}
+        >
+          {pillTip.text}
+        </div>
+      )}
+
+      {/* The single tooltip (full-colour logo lives here, where it's legible) */}
       {tip && (
-        <div className={`pointer-events-none fixed z-50 w-72 -translate-x-1/2 rounded-xl bg-foreground p-3 shadow-2xl ${tip.below ? "" : "-translate-y-full"}`} style={{ left: tip.x, top: tip.y }}>
+        <div
+          className={`pointer-events-none fixed z-50 w-60 -translate-x-1/2 rounded-xl bg-foreground p-3 shadow-2xl ${tip.below ? "" : "-translate-y-full"}`}
+          style={{ left: tip.x, top: tip.y }}
+          role="tooltip"
+        >
           <div className="mb-1 flex items-center gap-2">
-            <FirmLogo src={tip.m.logo} name={tip.m.company} size={18} />
-            <span className="text-[13px] font-semibold text-background">{tip.m.company}</span>
-            <span className="ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-background/90" style={{ background: stageColor(tip.m.stage) }}>{tip.m.stage}</span>
+            <FirmLogo src={tip.m.logo} name={tip.m.company} size={20} />
+            <span className="text-label font-semibold text-background">{tip.m.company}</span>
+            <span className="ml-auto flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-background/80">
+              <span className="h-2 w-2 rounded-full" style={{ background: stageOf(tip.m.stage).color }} aria-hidden />
+              {tip.m.stage}
+            </span>
           </div>
-          <div className="tnum text-[12px] font-medium text-background/90">
+          <div className="tnum text-micro font-medium text-background/90">
             {tip.m.activity}
-            <span className="text-background/60">{" · "}{tip.m.date ? fmtDateFull(tip.m.date) : "Jan–Apr 2026 · exact date TBD"}</span>
+            <span className="text-background/60">{" · "}{tip.m.date ? fmtDateFull(tip.m.date) : "2026 · exact date TBD"}</span>
           </div>
           {expandActivity(tip.m.activity).filter(([, ex]) => ex).length > 0 && (
-            <div className="mt-1 text-[10px] leading-snug text-background/60">{expandActivity(tip.m.activity).filter(([, ex]) => ex).map(([tok, ex]) => `${tok} — ${ex}`).join(" · ")}</div>
+            <div className="mt-1 text-micro leading-snug text-background/60">
+              {expandActivity(tip.m.activity)
+                .filter(([, ex]) => ex)
+                .map(([tok, ex]) => `${tok} — ${ex}`)
+                .join(" · ")}
+            </div>
           )}
-          <div className="mt-1.5 text-[11px] leading-relaxed text-background/75">{tip.m.note ?? "Details coming soon."}</div>
-          {tip.m.sourceUrl && <div className="mt-1.5 text-[10px] font-medium text-background/50">click to open source ↗</div>}
+          {tip.m.note && <div className="mt-1.5 text-micro leading-relaxed text-background/75">{tip.m.note}</div>}
+          {tip.m.sourceUrl && <div className="mt-1.5 text-micro font-medium text-background/50">click to open source ↗</div>}
         </div>
       )}
     </div>
