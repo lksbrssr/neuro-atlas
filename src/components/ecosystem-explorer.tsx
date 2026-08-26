@@ -374,7 +374,7 @@ export function EcosystemExplorer() {
             {graph.labels.map((l) => (
               <div key={l.text} className="pointer-events-none absolute z-20 flex items-center gap-1.5" style={{ left: l.x, top: l.y }}>
                 <span className="h-2 w-2 rounded-full" style={{ background: l.color }} />
-                <span className="text-[11px] font-semibold"><AutoAbbr text={l.text} /></span>
+                <span className="pointer-events-auto text-[11px] font-semibold"><AutoAbbr text={l.text} /></span>
                 <span className="tnum text-[10px] text-faint">{l.count}</span>
               </div>
             ))}
