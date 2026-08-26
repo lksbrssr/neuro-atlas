@@ -129,6 +129,17 @@ export function EcosystemExplorer() {
     }
   };
   const endMapDrag = () => { drag.current.active = false; };
+  // Double-click to zoom in on the clicked spot (it becomes the new center).
+  const onMapDblClick = (e: React.MouseEvent) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    pendingCenter.current = {
+      fx: (el.scrollLeft + (e.clientX - rect.left)) / el.scrollWidth,
+      fy: (el.scrollTop + (e.clientY - rect.top)) / el.scrollHeight,
+    };
+    setMapZoom((z) => Math.min(4, +(z * 1.6).toFixed(2)));
+  };
   // Swallow the click that ends a real drag so it doesn't lock a country.
   const onMapClickCapture = (e: React.MouseEvent) => {
     if (drag.current.moved) { e.stopPropagation(); e.preventDefault(); drag.current.moved = false; }
@@ -387,7 +398,7 @@ export function EcosystemExplorer() {
           <div className="relative rounded-xl border border-border" style={{ height: pileView.baseH }}>
             <div ref={scrollRef} className={`absolute inset-0 overflow-auto rounded-xl ${mapZoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
               onMouseLeave={() => { setHoverCountry(null); endMapDrag(); }}
-              onMouseDown={onMapDown} onMouseMove={onMapMove} onMouseUp={endMapDrag} onClickCapture={onMapClickCapture}>
+              onMouseDown={onMapDown} onMouseMove={onMapMove} onMouseUp={endMapDrag} onDoubleClick={onMapDblClick} onClickCapture={onMapClickCapture}>
               <div className="relative" style={{ width: pileView.W, height: pileView.H }}>
                 <div className="pointer-events-none absolute inset-0" aria-hidden style={{ backgroundImage: "url(/worldmap.svg)", backgroundRepeat: "no-repeat", backgroundSize: `${pileView.W}px ${pileView.H}px`, backgroundPosition: "0 0", opacity: 0.2 }} />
 
@@ -466,7 +477,7 @@ export function EcosystemExplorer() {
               </div>
             )}
 
-            <div className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-surface/80 px-2 py-0.5 text-[10px] text-faint">drag to pan · hover a pile to fan it out · click to lock &amp; explore · +/− to zoom</div>
+            <div className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-surface/80 px-2 py-0.5 text-[10px] text-faint">drag to pan · double-click to zoom in · hover a pile to fan it out · click to lock &amp; explore · +/− to zoom</div>
           </div>
         )}
 
