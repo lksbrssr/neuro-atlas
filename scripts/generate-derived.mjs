@@ -80,6 +80,48 @@ const normCountry = (c) => {
   const m = { "United States": "USA", "United Kingdom": "UK", US: "USA" };
   return m[c] ?? c;
 };
+
+// Mirror company logos into public/logos/landscape/ so the ecosystem page
+// doesn't depend on a third-party CDN staying up (and staying hotlinkable).
+// Existing files are kept; a failed download falls back to the remote URL
+// (the UI falls back to an initial-letter chip if that also fails).
+const LAND_LOGOS = path.join(PUB_LOGOS, "landscape");
+fs.mkdirSync(LAND_LOGOS, { recursive: true });
+const extOf = (url) => {
+  const m = url.split("?")[0].match(/\.([a-z0-9]+)$/i);
+  return m ? m[1].toLowerCase() : "png";
+};
+async function mirrorLogo(c) {
+  if (!c.logo_url) return null;
+  const file = `${c.slug}.${extOf(c.logo_url)}`;
+  const dest = path.join(LAND_LOGOS, file);
+  if (!fs.existsSync(dest)) {
+    try {
+      const res = await fetch(c.logo_url, { signal: AbortSignal.timeout(20000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      fs.writeFileSync(dest, Buffer.from(await res.arrayBuffer()));
+    } catch (e) {
+      console.warn(`  logo mirror failed for ${c.slug}: ${e.message}`);
+      return c.logo_url;
+    }
+  }
+  return `/logos/landscape/${file}`;
+}
+const logoPaths = new Map();
+{
+  const queue = [...companies];
+  await Promise.all(
+    Array.from({ length: 8 }, async () => {
+      for (;;) {
+        const c = queue.shift();
+        if (!c) return;
+        logoPaths.set(c.slug, await mirrorLogo(c));
+      }
+    }),
+  );
+}
+const mirrored = [...logoPaths.values()].filter((v) => v && v.startsWith("/logos/")).length;
+
 const slim = companies.map((c) => ({
   slug: c.slug,
   name: c.name,
@@ -95,7 +137,7 @@ const slim = companies.map((c) => ({
   targetUser: c.target_user || "",
   regulatoryStage: c.regulatory_stage || "",
   website: c.website || null,
-  logoUrl: c.logo_url || null,
+  logoUrl: logoPaths.get(c.slug) ?? null,
 }));
 fs.writeFileSync(path.join(OUT, "landscape.json"), JSON.stringify(slim));
 
@@ -113,4 +155,6 @@ fs.writeFileSync(
   JSON.stringify(cap.map((r) => ({ year: Number(r.year), usdM: Number(r.new_capital_usd_m), note: r.period_note })), null, 2),
 );
 
-console.log(`milestones: ${milestones.length} | companies: ${slim.length} | acronyms: ${acr.length} | logos copied: ${usedLogos.size}`);
+console.log(
+  `milestones: ${milestones.length} | companies: ${slim.length} | acronyms: ${acr.length} | logos copied: ${usedLogos.size} | landscape logos mirrored: ${mirrored}/${slim.length}`,
+);

@@ -8,7 +8,7 @@ const PLATES: {
   blurb: string;
 }[] = [
   { href: "/milestones", title: "Milestones", status: "live", blurb: "The 2026 milestone timeline — capital / clinical / commercial lanes, a drag-to-summarize window." },
-  { href: "/ecosystem", title: "Ecosystem", status: "live", blurb: "363 neurotech companies as logo bubbles — group by category, country (on a world map), modality, or stage — plus the capital providers." },
+  { href: "/ecosystem", title: "Ecosystem", status: "live", blurb: "363 neurotech companies — search, filter by nine facets, and rank the field by category, geography, modality, or funding stage." },
   { href: "/field-velocity", title: "Field velocity", status: "live", blurb: "Is the field speeding up? Instruments that read its underlying pace, read honestly, plus forecast-market expectations." },
   { href: "/regulatory-landscape", title: "Regulatory landscape", status: "partial", blurb: "Geopolitics and regulation: where the field forms — US / China / EU — and under what rules." },
 ];
