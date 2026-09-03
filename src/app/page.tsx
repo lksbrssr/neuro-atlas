@@ -9,6 +9,7 @@ const PLATES: {
 }[] = [
   { href: "/milestones", title: "Milestones", status: "live", blurb: "The 2026 milestone timeline — capital / clinical / commercial lanes, a drag-to-summarize window." },
   { href: "/ecosystem", title: "Ecosystem", status: "live", blurb: "363 neurotech companies as logo bubbles — group by category, country (on a world map), modality, or stage — plus the capital providers." },
+  { href: "/funding", title: "Funding index", status: "partial", blurb: "A screened 25-company BCI capital index — financing timeline, stage view, investor participation, and regulatory markers." },
   { href: "/field-velocity", title: "Field velocity", status: "live", blurb: "Is the field speeding up? Instruments that read its underlying pace, read honestly, plus forecast-market expectations." },
   { href: "/regulatory-landscape", title: "Regulatory landscape", status: "partial", blurb: "Geopolitics and regulation: where the field forms — US / China / EU — and under what rules." },
 ];
