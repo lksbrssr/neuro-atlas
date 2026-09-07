@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import MILESTONES from "@/data/milestones.json";
+import CAPITAL from "@/data/capital.json";
 import { FirmLogo } from "@/components/firm-logo";
 import { Sparkline } from "@/components/sparkline";
 import { lookupAcronym } from "@/components/abbr";
@@ -33,14 +34,14 @@ const STAGES = [
 ] as const;
 type StageKey = (typeof STAGES)[number]["key"];
 
-// Memo series (Patchwise Q1+ 2026 chart). Independent of the capital-lane
-// dots — those are sourced events, including mega-rounds that sit outside
-// this cut.
-const YEARS = [
-  { year: 2024, usdM: 260 },
-  { year: 2025, usdM: 322 },
-  { year: 2026, usdM: 653 },
-];
+// Year columns on the plate. The dollar on each column is sourced capital
+// *raised* that year (sum of capital-lane round sizes) — never valuation
+// or market cap. Neuralink $650m is a Series E raise.
+const YEARS = [2024, 2025, 2026] as const;
+
+// Naveen's Q1+ 2026 memo chart (capital.json). Independent comparison cut —
+// not a sum of the dots, and not shown as the year-column hero.
+const MEMO_CAPITAL = CAPITAL;
 
 const PLOT_TOP = 24;
 const LANE_LABEL_H = 20;
@@ -71,6 +72,11 @@ function fmtDateFull(dateStr: string): string {
 }
 function fmtUsd(m: number): string {
   return m >= 1000 ? `$${(m / 1000).toFixed(m % 1000 === 0 ? 0 : 1)}b` : `$${Math.round(m)}m`;
+}
+function capitalRaisedInYear(year: number): number {
+  return MILESTONES.filter(
+    (m) => m.stage === "capital" && m.amountUsdM && m.date && yearOf(m.date) === year,
+  ).reduce((sum, m) => sum + (m.amountUsdM ?? 0), 0);
 }
 function expandActivity(activity: string): [string, string | null][] {
   return activity.split("/").map((tok) => [tok, lookupAcronym(tok.trim())?.expansion ?? null]);
@@ -377,26 +383,27 @@ export function MilestoneTimeline() {
         {/* Year columns */}
         <div className="min-w-0 flex-1">
           <div className="flex gap-2">
-            {YEARS.map((y) => {
-              const focused = focusYear === y.year;
+            {YEARS.map((year) => {
+              const focused = focusYear === year;
               const w = `${focused ? FOCUS_W : NARROW_W}%`;
               if (focused) {
-                return <div key={y.year} className="shrink-0" style={{ width: w, transition: YEAR_EASE }}>{plot}</div>;
+                return <div key={year} className="shrink-0" style={{ width: w, transition: YEAR_EASE }}>{plot}</div>;
               }
+              const raised = capitalRaisedInYear(year);
               return (
                 <button
-                  key={y.year}
+                  key={year}
                   type="button"
-                  onClick={() => setFocusYear(focused ? 2026 : y.year)}
-                  aria-label={`Focus ${y.year}`}
+                  onClick={() => setFocusYear(year)}
+                  aria-label={`Focus ${year}: ${fmtUsd(raised)} raised`}
                   className="group relative shrink-0 overflow-hidden rounded-xl border border-dashed border-border-strong bg-surface-raised text-left hover:border-border"
                   style={{ width: w, height: totalH, transition: YEAR_EASE }}
                 >
-                  {scatter(focused ? 0.22 : 0.18)}
-                  <div className={`absolute inset-x-0 px-2 text-center ${focused ? "top-1/2 -translate-y-1/2" : "top-5"}`}>
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted">{y.year}</div>
-                    <div className={`tnum font-semibold tracking-tight ${focused ? "text-4xl" : "text-sm"}`}>{fmtUsd(y.usdM)}</div>
-                    <div className="mt-0.5 text-[10px] leading-tight text-faint">new capital{y.year === 2026 ? " · Jan–Apr" : ""}</div>
+                  {scatter(0.18)}
+                  <div className="absolute inset-x-0 top-5 px-2 text-center">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted">{year}</div>
+                    <div className="tnum text-sm font-semibold tracking-tight">{fmtUsd(raised)}</div>
+                    <div className="mt-0.5 text-[10px] leading-tight text-faint">raised{year === 2026 ? " · Jan–Apr" : ""}</div>
                   </div>
                 </button>
               );
@@ -422,23 +429,33 @@ export function MilestoneTimeline() {
         {railOpen ? (
           <aside className="hidden w-48 shrink-0 lg:block">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-faint">New capital by year</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-faint">Capital raised</span>
               <button type="button" onClick={() => setRailOpen(false)} aria-label="Collapse panel" title="Collapse panel"
                 className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-faint transition-colors hover:border-border-strong hover:text-foreground">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
               </button>
             </div>
-            {YEARS.map((c) => (
-              <button key={c.year} type="button" onClick={() => setFocusYear(c.year)}
-                className={`mb-1 flex w-full flex-col gap-0.5 rounded px-1 py-1 text-left transition-colors hover:bg-surface-raised ${focusYear === c.year ? "bg-surface-raised" : ""}`}>
+            {YEARS.map((year) => (
+              <button key={year} type="button" onClick={() => setFocusYear(year)}
+                className={`mb-1 flex w-full flex-col gap-0.5 rounded px-1 py-1 text-left transition-colors hover:bg-surface-raised ${focusYear === year ? "bg-surface-raised" : ""}`}>
                 <span className="tnum flex items-baseline justify-between text-[13px]">
-                  <span className={focusYear === c.year ? "font-semibold text-foreground" : "text-muted"}>{c.year}</span>
-                  <span className="font-semibold">{fmtUsd(c.usdM)}</span>
+                  <span className={focusYear === year ? "font-semibold text-foreground" : "text-muted"}>{year}</span>
+                  <span className="font-semibold">{fmtUsd(capitalRaisedInYear(year))}</span>
                 </span>
-                {c.year === 2026 && cumulativeCapital(2026).length > 1 && <span className="mt-0.5 block"><Sparkline series={cumulativeCapital(2026)} width={166} height={22} /></span>}
+                {year === 2026 && cumulativeCapital(2026).length > 1 && <span className="mt-0.5 block"><Sparkline series={cumulativeCapital(2026)} width={166} height={22} /></span>}
               </button>
             ))}
-            <div className="mt-1 px-1 text-[10px] text-faint">2026 is Jan–Apr</div>
+            <div className="mt-1 px-1 text-[10px] leading-snug text-faint">Sourced round sizes on this lane — not valuations or market cap. 2026 is Jan–Apr.</div>
+            <div className="mt-3 border-t border-border pt-3">
+              <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-faint">Memo cut</div>
+              {MEMO_CAPITAL.map((c) => (
+                <div key={c.year} className="tnum flex items-baseline justify-between px-1 text-[12px] text-muted">
+                  <span>{c.year}</span>
+                  <span>{fmtUsd(c.usdM)}</span>
+                </div>
+              ))}
+              <div className="mt-1 px-1 text-[10px] leading-snug text-faint">Naveen’s Q1+ 2026 chart. Independent of the dots.</div>
+            </div>
 
             <div className="mt-4 border-t border-border pt-3">
               <div className="mb-1 flex items-center justify-between">
@@ -456,7 +473,7 @@ export function MilestoneTimeline() {
                     {r.stage.key === "capital" ? (
                       <>
                         <div className="tnum text-[15px] font-semibold">{fmtUsd(r.usd)}</div>
-                        <div className="text-[10px] text-faint">{r.rounds} round{r.rounds === 1 ? "" : "s"}{r.count > r.rounds ? ` · ${r.count - r.rounds} grant` : ""}</div>
+                        <div className="text-[10px] text-faint">{r.rounds} round{r.rounds === 1 ? "" : "s"} raised{r.count > r.rounds ? ` · ${r.count - r.rounds} grant` : ""}</div>
                       </>
                     ) : (
                       <>
@@ -489,7 +506,7 @@ export function MilestoneTimeline() {
             <span className="ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-background/90" style={{ background: stageColor(tip.m.stage) }}>{tip.m.stage}</span>
           </div>
           <div className="tnum text-[12px] font-medium text-background/90">
-            {tip.m.activity}
+            {tip.m.stage === "capital" && tip.m.amountUsdM ? `${tip.m.activity} raised` : tip.m.activity}
             <span className="text-background/60">{" · "}{tip.m.date ? fmtDateFull(tip.m.date) : "Jan–Apr 2026 · exact date TBD"}</span>
           </div>
           {expandActivity(tip.m.activity).filter(([, ex]) => ex).length > 0 && (

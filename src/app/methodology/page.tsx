@@ -154,6 +154,9 @@ export default function MethodologyPage() {
         <div className="card p-5">
           <ul className="space-y-2 text-xs leading-relaxed text-muted">
             <li>
+              <span className="tnum font-medium text-foreground">2026-09-07</span> — Milestone year columns and the BCI Funding Index now label capital as amount raised. Neuralink $650m is a Series E raise, not a valuation or market cap; year heroes sum sourced round sizes, with Naveen’s $260m / $322m / $653m memo cut kept as a labeled comparison.
+            </li>
+            <li>
               <span className="tnum font-medium text-foreground">2026-09-07</span> — Funding plate hero title is BCI Funding Index (no leading “The”); shared title type is slightly smaller and no longer force-balances onto two lines, so every tab stays one line.
             </li>
             <li>

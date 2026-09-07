@@ -18,7 +18,7 @@ Extracted from the infographic **"Q1+ 2026 Market Memo: Global BCI Industry"** b
 
 - **`infographic.png`** — the source image itself.
 - **`headline_metrics.csv`** — $650m+ new capital, $14b acquisition, 50 global investors, 102% YoY growth, 24 startups, 25+ commercial milestones, 18+ clinical partners, 12 clinical indications, 1 market approval.
-- **`capital_by_year.csv`** — 2024: $260m, 2025: $322m, 2026 (Jan–Apr): $653m.
+- **`capital_by_year.csv`** — Naveen memo comparison cut of *new capital raised* (not valuations): 2024: $260m, 2025: $322m, 2026 (Jan–Apr): $653m. Milestone year-column heroes sum sourced round sizes instead of this series.
 - **`milestones.csv`** — 2026 memo rows plus screened 2024–2025 pathway events (BDD / TAP / IDE / FIH / trial / 510(k) / CE), stage-coded (`capital`, `clinical`, `commercial`). `nf_slug` joins to `neurofounders/companies.csv`.
 - **`ecosystem_firms.csv`** — the ~54 investors & strategic partners shown, best-effort typed (`vc`, `strategic_medtech`, `hospital`, `regulator`, …) and geolocated. The memo's dotted-line deal attributions are **not** encoded — too ambiguous to assert from the graphic.
 
