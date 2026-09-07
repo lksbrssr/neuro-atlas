@@ -604,10 +604,10 @@
     "slug": "science-corp",
     "activity": "$104m",
     "stage": "capital",
-    "amountUsdM": 103,
+    "amountUsdM": 104,
     "date": "2025-04-14",
     "datePrecision": "day",
-    "note": "$103.6m financing led with Khosla Ventures; counted as $103m so sourced rounds match the $322m year total",
+    "note": "$103.6m financing led with Khosla Ventures",
     "sourceUrl": "https://www.axios.com/pro/health-tech-deals/2025/04/14/science-corp-bci-100m-fundraise",
     "logo": "/logos/science-corp.jpg"
   },
@@ -718,5 +718,41 @@
     "note": "$4m seed for MouthPad, an intraoral wearable BCI alternative",
     "sourceUrl": "https://www.forbes.com/sites/naveenrao/2024/10/23/is-the-future-of-bci-right-under-our-nose/",
     "logo": null
+  },
+  {
+    "company": "Blackrock Neurotech",
+    "slug": "blackrock-neurotech",
+    "activity": "$200m",
+    "stage": "capital",
+    "amountUsdM": 200,
+    "date": "2024-04-29",
+    "datePrecision": "day",
+    "note": "Tether majority-stake strategic investment",
+    "sourceUrl": "https://blackrockneurotech.com/insights/tether-invested-200m-in-blackrock-neurotech-accelerating-development-and-commercialization-of-implantable-bci-technology/",
+    "logo": "/logos/blackrock-neurotech.jpg"
+  },
+  {
+    "company": "Neuralink",
+    "slug": "neuralink",
+    "activity": "$650m",
+    "stage": "capital",
+    "amountUsdM": 650,
+    "date": "2025-06-02",
+    "datePrecision": "day",
+    "note": "Series E",
+    "sourceUrl": "https://neuralink.com/updates/neuralink-raises-650m-series-e/",
+    "logo": "/logos/neuralink.jpg"
+  },
+  {
+    "company": "Synchron",
+    "slug": "synchron",
+    "activity": "$200m",
+    "stage": "capital",
+    "amountUsdM": 200,
+    "date": "2025-11-06",
+    "datePrecision": "day",
+    "note": "Series D led by ARCH Venture Partners, with Khosla, Bezos Expeditions, NEA, QIA, and re.Mind Capital",
+    "sourceUrl": "https://www.businesswire.com/news/home/20251106150841/en/Synchron-Raises-%24200-Million-Series-D-to-Advance-Brain-Computer-Interface-Technology",
+    "logo": "/logos/synchron.jpg"
   }
 ]
