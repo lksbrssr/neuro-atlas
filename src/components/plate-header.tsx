@@ -32,7 +32,7 @@ export function PlateHero({
         <span aria-hidden="true">•</span>
         <span className={`rounded-full px-3 py-1.5 ${s.cls}`}>{s.label}</span>
       </div>
-      <div className="grid gap-7 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)] lg:items-end">
+      <div className="grid gap-7 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)] lg:items-start">
         <div>
           <h1 className="max-w-5xl text-balance text-[clamp(2.75rem,5.4vw,5.6rem)] font-semibold leading-[0.93] tracking-[-0.055em]">
             {title}

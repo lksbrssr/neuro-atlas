@@ -38,3 +38,17 @@ test("glossary covers the regulatory markers on the funding index", async () => 
     assert.equal(Boolean(acronyms[marker]?.expansion), true, marker);
   }
 });
+
+test("plate heroes top-align title and stats so short copy does not leave a gap", async () => {
+  const src = await readFile(path.join(root, "src/components/plate-header.tsx"), "utf8");
+  assert.match(src, /lg:items-start/);
+  assert.doesNotMatch(src, /lg:items-end/);
+});
+
+test("nav and home directory name the capital plate BCI Funding Index", async () => {
+  const nav = await readFile(path.join(root, "src/components/site-nav.tsx"), "utf8");
+  const home = await readFile(path.join(root, "src/app/page.tsx"), "utf8");
+  assert.match(nav, /label: "BCI Funding Index"/);
+  assert.doesNotMatch(nav, /label: "Funding index"/);
+  assert.match(home, /title: "BCI Funding Index"/);
+});

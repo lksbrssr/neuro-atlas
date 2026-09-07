@@ -154,6 +154,9 @@ export default function MethodologyPage() {
         <div className="card p-5">
           <ul className="space-y-2 text-xs leading-relaxed text-muted">
             <li>
+              <span className="tnum font-medium text-foreground">2026-09-07</span> — Plate heroes top-align title and stats across tabs; nav and home directory label the capital plate BCI Funding Index.
+            </li>
+            <li>
               <span className="tnum font-medium text-foreground">2026-09-07</span> — Shared dark plate hero (title + stats) on Milestones, Ecosystem, Funding index, Field velocity, and Methodology. Funding-index regulatory markers use a real hover tooltip instead of the native title attribute.
             </li>
             <li>
