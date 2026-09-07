@@ -33,6 +33,9 @@ const STAGES = [
 ] as const;
 type StageKey = (typeof STAGES)[number]["key"];
 
+// Memo series (Patchwise Q1+ 2026 chart). Independent of the capital-lane
+// dots — those are sourced events, including mega-rounds that sit outside
+// this cut.
 const YEARS = [
   { year: 2024, usdM: 260 },
   { year: 2025, usdM: 322 },
