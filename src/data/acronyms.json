@@ -190,5 +190,13 @@
   "EFS": {
     "expansion": "Early Feasibility Study",
     "definition": "A small first-in-human study to evaluate a device's basic safety and function"
+  },
+  "Pivotal": {
+    "expansion": "Pivotal trial",
+    "definition": "Late-stage clinical study intended to support a marketing application"
+  },
+  "trial": {
+    "expansion": "Clinical trial",
+    "definition": "A formal study of a device or therapy in human subjects"
   }
 }

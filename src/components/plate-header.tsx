@@ -18,16 +18,18 @@ export function PlateHeader({
 }) {
   const s = STATUS_STYLES[status];
   return (
-    <header className="mb-8">
-      <div className="mb-2 flex items-center gap-2.5">
-        <p className="text-xs font-medium uppercase tracking-wider text-accent">{question}</p>
+    <header className="mb-8 sm:mb-10">
+      <div className="mb-3 flex flex-wrap items-center gap-2.5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">{question}</p>
         <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${s.cls}`}>
           {s.label}
         </span>
       </div>
-      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
+      <h1 className="max-w-5xl text-balance text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[0.94] tracking-[-0.05em]">
+        {title}
+      </h1>
       {description && (
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{description}</p>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">{description}</p>
       )}
     </header>
   );

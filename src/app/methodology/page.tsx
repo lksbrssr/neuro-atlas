@@ -13,9 +13,15 @@ const SOURCES = [
   },
   {
     name: "Q1+ 2026 BCI Market Memo",
-    what: "Milestones, deals, and ecosystem firms, Jan–Apr 2026. By Neurotech Futures & PL Neuro; enriched here with primary-source dates.",
+    what: "2026 milestone events, deals, and ecosystem firms, Jan–Apr 2026. By Neurotech Futures & PL Neuro; enriched here with primary-source dates.",
     cadence: "Point-in-time (Apr 2026)",
     url: "https://neurotechnology.substack.com/p/representations2",
+  },
+  {
+    name: "BCI Funding Index",
+    what: "A screened 25-company capital plate: sourced financings of $2m+, investor participation, and selected regulatory markers. Additive to the 363-company ecosystem, not a replacement census.",
+    cadence: "Source review through 2026-09-07",
+    url: "/funding",
   },
   {
     name: "PL R&D field-velocity framework",
