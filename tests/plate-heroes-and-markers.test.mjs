@@ -52,3 +52,16 @@ test("nav and home directory name the capital plate BCI Funding Index", async ()
   assert.doesNotMatch(nav, /label: "Funding index"/);
   assert.match(home, /title: "BCI Funding Index"/);
 });
+
+test("funding plate hero title is BCI Funding Index on one phrase, no leading The", async () => {
+  const src = await readFile(path.join(root, "src/app/funding/page.tsx"), "utf8");
+  assert.match(src, /title="BCI Funding Index"/);
+  assert.doesNotMatch(src, /title="The BCI Funding Index"/);
+});
+
+test("plate hero titles do not force a two-line balance", async () => {
+  const src = await readFile(path.join(root, "src/components/plate-header.tsx"), "utf8");
+  assert.doesNotMatch(src, /text-balance/);
+  assert.match(src, /clamp\(2\.35rem/);
+});
+

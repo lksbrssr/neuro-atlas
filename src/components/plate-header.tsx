@@ -34,7 +34,7 @@ export function PlateHero({
       </div>
       <div className="grid gap-7 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)] lg:items-start">
         <div>
-          <h1 className="max-w-5xl text-balance text-[clamp(2.75rem,5.4vw,5.6rem)] font-semibold leading-[0.93] tracking-[-0.055em]">
+          <h1 className="max-w-5xl text-[clamp(2.35rem,4.2vw,4.5rem)] font-semibold leading-[0.95] tracking-[-0.055em]">
             {title}
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/75 sm:mt-5 sm:text-lg">{description}</p>

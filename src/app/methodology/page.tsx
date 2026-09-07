@@ -154,6 +154,9 @@ export default function MethodologyPage() {
         <div className="card p-5">
           <ul className="space-y-2 text-xs leading-relaxed text-muted">
             <li>
+              <span className="tnum font-medium text-foreground">2026-09-07</span> — Funding plate hero title is BCI Funding Index (no leading “The”); shared title type is slightly smaller and no longer force-balances onto two lines, so every tab stays one line.
+            </li>
+            <li>
               <span className="tnum font-medium text-foreground">2026-09-07</span> — Plate heroes top-align title and stats across tabs; nav and home directory label the capital plate BCI Funding Index.
             </li>
             <li>
