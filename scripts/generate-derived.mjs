@@ -4,6 +4,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { buildFundingIndex, loadFundingIndexSources } from "./lib/funding-index.mjs";
 
 const ROOT = path.join(import.meta.dirname, "..");
 const DATA = path.join(ROOT, "data");
@@ -112,5 +113,36 @@ fs.writeFileSync(
   path.join(OUT, "capital.json"),
   JSON.stringify(cap.map((r) => ({ year: Number(r.year), usdM: Number(r.new_capital_usd_m), note: r.period_note })), null, 2),
 );
+
+// ── Screened funding index ───────────────────────────────────────────────────
+const fundingIndex = buildFundingIndex(await loadFundingIndexSources(path.join(DATA, "funding-index")));
+const fundingLogoAliases = {
+  "science-corporation": "science-corp",
+  "neuracle-technology": "neuracle",
+  "neucyber-neurotech": "neu-cyber-technology",
+};
+const landscapeBySlug = new Map(slim.map((company) => [company.slug, company]));
+fundingIndex.companies = fundingIndex.companies.map((company) => {
+  const landscapeCompany = landscapeBySlug.get(fundingLogoAliases[company.slug] ?? company.slug);
+  return { ...company, logo: landscapeCompany?.logoUrl ?? "" };
+});
+const observedCapitalUsdM = fundingIndex.rounds.reduce((total, round) => total + round.amountUsdM, 0);
+const years = fundingIndex.rounds.map((round) => Number(round.announcedOn.slice(0, 4)));
+fundingIndex.summary = {
+  ...fundingIndex.summary,
+  selectedCompanies: fundingIndex.companies.length,
+  indexedRounds: fundingIndex.rounds.length,
+  regulatoryMilestones: fundingIndex.milestones.length,
+  observedCapitalUsdM: Number(observedCapitalUsdM.toFixed(2)),
+  firstYear: Math.min(...years),
+  lastYear: Math.max(...years),
+  asOf: "2026-09-03",
+};
+fundingIndex.methodology = {
+  thresholdUsdM: 2,
+  scope: "Selected implanted, minimally invasive, and implant-adjacent BCI companies with at least one publicly sourced financing of $2m or more.",
+  coverage: "Publicly disclosed indexed rounds, not an exhaustive funding-to-date total. Amounts are announcement values; approximate currency conversions are labeled.",
+};
+fs.writeFileSync(path.join(OUT, "funding-index.json"), JSON.stringify(fundingIndex));
 
 console.log(`milestones: ${milestones.length} | companies: ${slim.length} | acronyms: ${acr.length} | logos copied: ${usedLogos.size}`);

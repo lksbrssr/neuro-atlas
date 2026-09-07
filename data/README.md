@@ -31,3 +31,7 @@ One image per market-memo firm where a real logo could be sourced (63/77). Prior
 ## `glossary/` — acronym tooltips
 
 **`acronyms.csv`** (`acronym, expansion, definition`) — seeded from the memo legend (FIH, BDD, IDE, TAP, JV) plus the acronyms recurring in company descriptions (EEG, MEA, DBS, TMS, fNIRS, ECoG, …). **UI convention: whenever an acronym from this file appears in the dashboard, render it with a tooltip showing expansion + definition.** Extend this file rather than hardcoding tooltips.
+
+## BCI Funding Index
+
+The source-linked, screened capital dataset lives in [`funding-index/`](./funding-index/README.md). It is additive to the 363-company landscape: `npm run data:generate` writes both `src/data/landscape.json` and `src/data/funding-index.json`, and the funding screen never removes or rewrites ecosystem companies.
