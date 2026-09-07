@@ -19,7 +19,7 @@
     "amountUsdM": 252,
     "date": "2026-01-15",
     "datePrecision": "day",
-    "note": "Seed round with OpenAI participating; company came out of stealth the same day",
+    "note": "Seed raise of $252m with OpenAI participating (the dollar on the lane). Reported ~$850m valuation is a separate figure and is not plotted. Company came out of stealth the same day",
     "sourceUrl": "https://openai.com/index/investing-in-merge-labs/",
     "logo": "/logos/merge-labs.jpg"
   },
@@ -139,7 +139,7 @@
     "amountUsdM": 21,
     "date": "2026-03-11",
     "datePrecision": "day",
-    "note": "~$21.6m angel round at a $100–200m valuation — the largest early-stage BCI round in China's history; Guosheng Capital and Dalton Venture led. Non-invasive ultrasound BCI",
+    "note": "~$21.6m angel raise (the dollar on the lane). Separate post-money valuation reported at $100–200m is not plotted. Largest early-stage BCI round in China's history; Guosheng Capital and Dalton Venture led. Non-invasive ultrasound BCI",
     "sourceUrl": "https://techcrunch.com/2026/03/11/bci-startup-gestala-raises-21-million-for-non-invasive-ultrasound-brain-tech/",
     "logo": "/logos/gestala.jpg"
   },
@@ -739,7 +739,7 @@
     "amountUsdM": 650,
     "date": "2025-06-02",
     "datePrecision": "day",
-    "note": "Series E",
+    "note": "Series E raise — $650m of new capital, not a valuation or market cap. Reported ~$9b pre-money is a separate figure.",
     "sourceUrl": "https://neuralink.com/updates/neuralink-raises-650m-series-e/",
     "logo": "/logos/neuralink.jpg"
   },

@@ -39,11 +39,11 @@ export default function Home() {
           footnote="Cumulative iBCI, peer-reviewed count 1998–2024"
         />
         <StatCard
-          label="New capital"
+          label="Capital raised"
           value="$653m"
           delta="102%"
           deltaDirection="up"
-          footnote="Jan–Apr 2026 vs. same period 2025"
+          footnote="Memo new capital raised, Jan–Apr 2026 vs. same period 2025 — not valuations"
         />
         <StatCard
           label="Companies tracked"

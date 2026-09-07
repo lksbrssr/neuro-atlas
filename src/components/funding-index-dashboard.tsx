@@ -190,7 +190,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                     </span>
                   ))}
                 </div>
-                <div className="text-right">Observed</div>
+                <div className="text-right">Raised</div>
               </div>
               <div className="min-w-[1055px] sm:min-w-[1120px]">
                 {rows.map((row, rowIndex) => {
@@ -272,7 +272,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-semibold">{formatCapital(group.capital)}</div>
-                      <div className="text-[10px] text-muted">indexed capital</div>
+                      <div className="text-[10px] text-muted">indexed capital raised</div>
                     </div>
                   </div>
                   <div className="mt-4 space-y-2">
@@ -374,7 +374,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                 {[selected.scope, selected.modality, selected.interfaceDepth].filter(Boolean).map((item) => <span key={item} className="rounded-full border border-border bg-surface-raised px-3 py-1.5 text-xs font-semibold">{item}</span>)}
               </div>
               <div className="mt-6 rounded-2xl bg-[#11131a] p-6 text-white">
-                <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/40">Indexed capital</div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/40">Indexed capital raised</div>
                 <div className="mt-1 text-4xl font-semibold tracking-[-0.05em]">{formatCapital(selected.observedCapitalUsdM)}</div>
                 <p className="mt-3 text-sm text-white/58">{selected.indication}</p>
               </div>

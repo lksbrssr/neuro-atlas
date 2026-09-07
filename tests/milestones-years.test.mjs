@@ -34,10 +34,18 @@ test("2024–25 capital lane includes mega-rounds; year bars stay independent", 
     true,
   );
 
-  // Year totals on the plate remain the memo series, not a sum of the dots.
-  assert.match(timeline, /year:\s*2024,\s*usdM:\s*260/);
-  assert.match(timeline, /year:\s*2025,\s*usdM:\s*322/);
-  assert.match(timeline, /year:\s*2026,\s*usdM:\s*653/);
+  // Year-column heroes are sourced capital *raised* (sum of dots), not the memo bars.
+  assert.match(timeline, /capitalRaisedInYear/);
+  assert.match(timeline, /raised\{year === 2026/);
+  assert.doesNotMatch(timeline, /new capital\{y\.year === 2026/);
+  // Memo cut stays as a labeled comparison, sourced from capital.json.
+  assert.match(timeline, /MEMO_CAPITAL/);
+  assert.match(timeline, /Naveen/);
+  const capitalJson = JSON.parse(await readFile(path.join(here, "..", "src", "data", "capital.json"), "utf8"));
+  assert.deepEqual(
+    capitalJson.map((row) => [row.year, row.usdM]),
+    [[2024, 260], [2025, 322], [2026, 653]],
+  );
 
   const recent = capital.filter((row) => /^(2024|2025)/.test(row.date ?? ""));
   assert.equal(
