@@ -16,7 +16,7 @@ export default function FundingPage() {
       <PlateHero
         kicker="Capital intelligence"
         meta={["V1 · 2026"]}
-        title="The BCI Funding Index"
+        title="BCI Funding Index"
         description="A screened view of who has financed 25 implanted and implant-adjacent BCI companies — with round history, investor participation, and regulatory inflection points on one plate."
         status="partial"
         stats={[
