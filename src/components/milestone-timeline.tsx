@@ -1,13 +1,13 @@
 "use client";
 
-// Timeline of the Q1+ 2026 BCI milestones. Three year columns sit side by side:
-// click a year to focus it (smooth width slide). 2024/2025 are context (headline
-// capital over a blurred not-yet-ingested area); 2026 focused shows the full-year
-// lane timeline that scrolls horizontally (the scrollbar itself signals there's
-// more), with a live "today" line and a faint cumulative-capital line + EOY
-// extrapolation in the Capital lane. The right summary rail is collapsible.
-// Legend pills expand inline into subcategories (acronyms carry a tooltip; ✕
-// collapses). Undated milestones sit in a "date TBD" shelf.
+// Timeline of implanted-BCI milestones across 2024–2026. Three year columns sit
+// side by side: click a year to focus it (smooth width slide). The focused year
+// shows the full-year lane timeline that scrolls horizontally (the scrollbar
+// itself signals there's more). 2026 also draws a live "today" line and a faint
+// cumulative-capital line + EOY extrapolation in the Capital lane. The right
+// summary rail is collapsible. Legend pills expand inline into subcategories
+// (acronyms carry a tooltip; ✕ collapses). Undated milestones sit in a
+// "date TBD" shelf.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import MILESTONES from "@/data/milestones.json";
@@ -17,12 +17,13 @@ import { lookupAcronym } from "@/components/abbr";
 
 type Milestone = (typeof MILESTONES)[number];
 
-const T0 = Date.UTC(2026, 0, 1);
-const T1 = Date.UTC(2026, 11, 31);
-const MONTHS = Array.from({ length: 12 }, (_, i) => ({
-  label: new Date(Date.UTC(2026, i, 1)).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }),
-  t: Date.UTC(2026, i, 1),
-}));
+const yearOf = (dateStr: string) => Number(dateStr.slice(0, 4));
+const boundsOf = (year: number) => ({ t0: Date.UTC(year, 0, 1), t1: Date.UTC(year, 11, 31) });
+const monthsOf = (year: number) =>
+  Array.from({ length: 12 }, (_, i) => ({
+    label: new Date(Date.UTC(year, i, 1)).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }),
+    t: Date.UTC(year, i, 1),
+  }));
 
 const STAGES = [
   { key: "capital", label: "Capital", color: "#22b8cf", soft: "rgba(34,184,207,0.12)" },
@@ -56,8 +57,8 @@ const SCATTER = [
 ];
 
 const dateOf = (s: string) => new Date(s + "T00:00:00Z").getTime();
-const pct = (dateStr: string) => Math.min(Math.max((dateOf(dateStr) - T0) / (T1 - T0), 0), 1) * 100;
-const pctToT = (p: number) => T0 + (p / 100) * (T1 - T0);
+const pctIn = (dateStr: string, t0: number, t1: number) => Math.min(Math.max((dateOf(dateStr) - t0) / (t1 - t0), 0), 1) * 100;
+const pctToT = (p: number, t0: number, t1: number) => t0 + (p / 100) * (t1 - t0);
 function fmtDate(t: number): string {
   return new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 }
@@ -90,11 +91,11 @@ const ALL_SUBCATS: Record<StageKey, string[]> = (() => {
   return out;
 })();
 
-const CUM_2026 = (() => {
-  const caps = MILESTONES.filter((m) => m.stage === "capital" && m.amountUsdM && m.date).sort((a, b) => (a.date! < b.date! ? -1 : 1));
+function cumulativeCapital(year: number) {
+  const caps = MILESTONES.filter((m) => m.stage === "capital" && m.amountUsdM && m.date && yearOf(m.date) === year).sort((a, b) => (a.date! < b.date! ? -1 : 1));
   let s = 0;
   return caps.map((m) => { s += m.amountUsdM!; return { x: m.date as string, y: s }; });
-})();
+}
 
 export function MilestoneTimeline() {
   const [sel, setSel] = useState<Record<StageKey, Set<string>>>({
@@ -103,7 +104,7 @@ export function MilestoneTimeline() {
     commercial: new Set(ALL_SUBCATS.commercial),
   });
   const [openStage, setOpenStage] = useState<StageKey | null>(null);
-  const [focusYear, setFocusYear] = useState(2026);
+  const [focusYear, setFocusYearRaw] = useState(2026);
   const [railOpen, setRailOpen] = useState(true);
   const [now, setNow] = useState<number | null>(null);
   const [dock, setDock] = useState<{ x: number; y: number; w: number } | null>(null);
@@ -111,6 +112,10 @@ export function MilestoneTimeline() {
   const [tip, setTip] = useState<{ m: Milestone; x: number; y: number; below: boolean } | null>(null);
   const [pillTip, setPillTip] = useState<{ text: string; x: number; y: number } | null>(null);
   const [selRange, setSelRange] = useState<{ a: number; b: number } | null>(null);
+  const setFocusYear = (year: number) => {
+    setFocusYearRaw(year);
+    setSelRange(null);
+  };
 
   const plotRef = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
@@ -122,11 +127,12 @@ export function MilestoneTimeline() {
 
   const { lanes, totalH, undated } = useMemo(() => {
     let y = PLOT_TOP;
-    const lanes = STAGES.filter((s) => sel[s.key].size > 0).map((stage) => {
-      const evs = MILESTONES.filter((m) => m.stage === stage.key && m.date && matches(m)).sort((a, b) => (a.date! < b.date! ? -1 : 1));
+    const lanes = STAGES.filter((s) => sel[s.key].size > 0).flatMap((stage) => {
+      const evs = MILESTONES.filter((m) => m.stage === stage.key && m.date && yearOf(m.date) === focusYear && matches(m)).sort((a, b) => (a.date! < b.date! ? -1 : 1));
+      if (evs.length === 0) return [];
       const rowLast: number[] = [];
       const placed = evs.map((m) => {
-        const left = pct(m.date!);
+        const left = pctIn(m.date!, boundsOf(focusYear).t0, boundsOf(focusYear).t1);
         let row = rowLast.findIndex((last) => left - last >= MIN_GAP_PCT);
         if (row === -1) { row = rowLast.length; rowLast.push(left); } else { rowLast[row] = left; }
         return { m, left, row };
@@ -135,19 +141,20 @@ export function MilestoneTimeline() {
       const height = LANE_LABEL_H + nRows * ROW_H + LANE_PAD_BOTTOM;
       const top = y;
       y += height + LANE_GAP;
-      return { stage, placed, height, top };
+      return [{ stage, placed, height, top }];
     });
     const undated = MILESTONES.filter((m) => !m.date && matches(m));
     return { lanes, totalH: Math.max(y, PLOT_TOP + 120), undated };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel]);
+  }, [sel, focusYear]);
 
   const agg = useMemo(() => {
+    const { t0, t1: yearEnd } = boundsOf(focusYear);
     const [t1, t2] = selRange
-      ? [pctToT(Math.min(selRange.a, selRange.b)), pctToT(Math.max(selRange.a, selRange.b))]
-      : [T0, T1];
+      ? [pctToT(Math.min(selRange.a, selRange.b), t0, yearEnd), pctToT(Math.max(selRange.a, selRange.b), t0, yearEnd)]
+      : [t0, yearEnd];
     const rows = STAGES.filter((s) => sel[s.key].size > 0).map((stage) => {
-      const evs = MILESTONES.filter((m) => m.stage === stage.key && m.date && matches(m) && dateOf(m.date) >= t1 && dateOf(m.date) <= t2);
+      const evs = MILESTONES.filter((m) => m.stage === stage.key && m.date && yearOf(m.date) === focusYear && matches(m) && dateOf(m.date) >= t1 && dateOf(m.date) <= t2);
       const usd = evs.reduce((s, m) => s + (m.amountUsdM ?? 0), 0);
       const rounds = evs.filter((m) => m.amountUsdM).length;
       const byType: Record<string, number> = {};
@@ -156,7 +163,7 @@ export function MilestoneTimeline() {
       return { stage, count: evs.length, usd, rounds, breakdown };
     });
     return { t1, t2, rows };
-  }, [sel, selRange]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [sel, selRange, focusYear]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const clickGroup = (key: StageKey) => {
     if (openStage !== key) { setOpenStage(key); return; }
@@ -190,7 +197,9 @@ export function MilestoneTimeline() {
   };
 
   const capitalLine = (H: number) => {
-    const pts = [{ x: 0, y: 0 }, ...CUM_2026.map((p) => ({ x: pct(p.x), y: p.y }))];
+    const { t0, t1 } = boundsOf(focusYear);
+    const series = cumulativeCapital(focusYear);
+    const pts = [{ x: 0, y: 0 }, ...series.map((p) => ({ x: pctIn(p.x, t0, t1), y: p.y }))];
     const last = pts[pts.length - 1];
     const slope = last.x > 0 ? last.y / last.x : 0;
     const yEoy = slope * 100;
@@ -248,8 +257,9 @@ export function MilestoneTimeline() {
           <div className="pointer-events-none absolute bottom-0 top-0 rounded-md border-x" style={{ left: `${Math.min(selRange.a, selRange.b)}%`, width: `${Math.abs(selRange.a - selRange.b)}%`, background: "var(--accent-soft)", borderColor: "var(--accent)", opacity: 0.6, zIndex: 3 }} />
         )}
 
-        {MONTHS.map((mo) => {
-          const left = ((mo.t - T0) / (T1 - T0)) * 100;
+        {monthsOf(focusYear).map((mo) => {
+          const { t0, t1 } = boundsOf(focusYear);
+          const left = ((mo.t - t0) / (t1 - t0)) * 100;
           return (
             <div key={mo.label} className="absolute bottom-0 top-0" style={{ left: `${left}%`, zIndex: 1 }}>
               <div className="absolute bottom-0 top-5 border-l border-border/70" />
@@ -258,8 +268,9 @@ export function MilestoneTimeline() {
           );
         })}
 
-        {now != null && (() => {
-          const p = ((now - T0) / (T1 - T0)) * 100;
+        {now != null && focusYear === 2026 && (() => {
+          const { t0, t1 } = boundsOf(focusYear);
+          const p = ((now - t0) / (t1 - t0)) * 100;
           if (p < 0 || p > 100) return null;
           return (
             <div className="pointer-events-none absolute bottom-0 top-0" style={{ left: `${p}%`, zIndex: 6 }}>
@@ -274,7 +285,7 @@ export function MilestoneTimeline() {
             const top = l.top + LANE_LABEL_H + row * ROW_H;
             const scale = dockScale(left, top + MARKER / 2);
             const color = l.stage.color;
-            const key = `${m.company}-${m.activity}`;
+            const key = `${m.company}-${m.activity}-${m.date}`;
             const isHover = hovered === key;
             return (
               <a
@@ -356,7 +367,7 @@ export function MilestoneTimeline() {
             </div>
           );
         })}
-        <span className="ml-auto hidden text-[11px] text-faint md:block">click a year to focus · drag across to summarize · hover a logo for the name</span>
+        <span className="ml-auto hidden text-[11px] text-faint md:block">click a year to focus · drag across to summarize · hover a logo for the name and marker</span>
       </div>
 
       <div className="flex gap-4">
@@ -366,7 +377,7 @@ export function MilestoneTimeline() {
             {YEARS.map((y) => {
               const focused = focusYear === y.year;
               const w = `${focused ? FOCUS_W : NARROW_W}%`;
-              if (focused && y.year === 2026) {
+              if (focused) {
                 return <div key={y.year} className="shrink-0" style={{ width: w, transition: YEAR_EASE }}>{plot}</div>;
               }
               return (
@@ -384,7 +395,6 @@ export function MilestoneTimeline() {
                     <div className={`tnum font-semibold tracking-tight ${focused ? "text-4xl" : "text-sm"}`}>{fmtUsd(y.usdM)}</div>
                     <div className="mt-0.5 text-[10px] leading-tight text-faint">new capital{y.year === 2026 ? " · Jan–Apr" : ""}</div>
                   </div>
-                  {focused && <div className="absolute inset-x-0 bottom-6 text-center text-[11px] text-faint">detailed timeline coming soon</div>}
                 </button>
               );
             })}
@@ -394,7 +404,7 @@ export function MilestoneTimeline() {
             <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-dashed border-border pt-3">
               <span className="mr-1 text-[10px] font-semibold uppercase tracking-wider text-faint">date TBD</span>
               {undated.map((m) => (
-                <a key={`${m.company}-${m.activity}`} href={m.sourceUrl ?? undefined} target="_blank" rel="noreferrer"
+                <a key={`${m.company}-${m.activity}-${m.date ?? "undated"}`} href={m.sourceUrl ?? undefined} target="_blank" rel="noreferrer"
                   onMouseEnter={(e) => showTip(e, m)} onMouseLeave={() => setTip(null)}
                   className={`grid place-items-center rounded-full border-2 border-dashed bg-surface transition-transform hover:scale-110 ${m.sourceUrl ? "cursor-pointer hover:border-solid" : "cursor-default"}`}
                   style={{ width: MARKER, height: MARKER, borderColor: stageColor(m.stage) }} aria-label={`${m.company} — ${m.activity} (date TBD)`}>
@@ -422,7 +432,7 @@ export function MilestoneTimeline() {
                   <span className={focusYear === c.year ? "font-semibold text-foreground" : "text-muted"}>{c.year}</span>
                   <span className="font-semibold">{fmtUsd(c.usdM)}</span>
                 </span>
-                {c.year === 2026 && CUM_2026.length > 1 && <span className="mt-0.5 block"><Sparkline series={CUM_2026} width={166} height={22} /></span>}
+                {c.year === 2026 && cumulativeCapital(2026).length > 1 && <span className="mt-0.5 block"><Sparkline series={cumulativeCapital(2026)} width={166} height={22} /></span>}
               </button>
             ))}
             <div className="mt-1 px-1 text-[10px] text-faint">2026 is Jan–Apr</div>
@@ -432,7 +442,7 @@ export function MilestoneTimeline() {
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-faint">{selRange ? "Selected window" : "Full period"}</span>
                 {selRange && <button type="button" onClick={() => setSelRange(null)} className="text-[10px] font-medium text-accent hover:underline">clear</button>}
               </div>
-              <div className="tnum mb-3 text-[11px] text-muted">{fmtDate(agg.t1)} – {fmtDate(agg.t2)}, 2026</div>
+              <div className="tnum mb-3 text-[11px] text-muted">{fmtDate(agg.t1)} – {fmtDate(agg.t2)}, {focusYear}</div>
               <div className="space-y-3">
                 {agg.rows.map((r) => (
                   <div key={r.stage.key}>

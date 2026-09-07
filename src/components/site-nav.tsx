@@ -9,7 +9,6 @@ const TABS: { href: string; label: string }[] = [
   { href: "/ecosystem", label: "Ecosystem" },
   { href: "/funding", label: "Funding index" },
   { href: "/field-velocity", label: "Field velocity" },
-  { href: "/regulatory-landscape", label: "Regulatory landscape" },
 ];
 
 function BrandMark() {

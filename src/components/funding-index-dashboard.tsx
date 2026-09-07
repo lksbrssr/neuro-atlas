@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FirmLogo } from "@/components/firm-logo";
+import { lookupAcronym } from "@/components/abbr";
 import {
   buildCompanyRows,
   formatCapital,
@@ -11,6 +12,11 @@ import {
 } from "@/lib/funding-index";
 
 const date = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
+
+function markerTitle(marker: string, indication?: string) {
+  const expansion = lookupAcronym(marker)?.expansion ?? marker;
+  return indication ? `${marker} — ${expansion} · ${indication}` : `${marker} — ${expansion}`;
+}
 
 type PrimaryView = "companies" | "investors";
 type CompanyView = "timeline" | "stage";
@@ -117,28 +123,28 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
       <section className="sticky top-0 z-30 border-b border-border bg-background/95 px-5 py-4 backdrop-blur-md sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-[1480px] flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-center xl:justify-between">
           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
-            <div className="inline-flex rounded-full bg-nav p-1" aria-label="Index lens">
+            <div className="inline-flex rounded-full border border-border bg-nav p-0.5" aria-label="Index lens">
               {(["companies", "investors"] as PrimaryView[]).map((view) => (
                 <button
                   key={view}
                   type="button"
                   aria-pressed={primaryView === view}
                   onClick={() => setPrimaryView(view)}
-                  className={`rounded-full px-4 py-2 text-xs font-semibold capitalize transition ${primaryView === view ? "bg-accent text-accent-foreground shadow-sm" : "text-foreground/65 hover:text-foreground"}`}
+                  className={`rounded-full px-4 py-1.5 text-sm font-medium capitalize transition-colors ${primaryView === view ? "bg-foreground text-background" : "text-muted hover:text-foreground"}`}
                 >
                   {view}
                 </button>
               ))}
             </div>
             {primaryView === "companies" && (
-              <div className="inline-flex rounded-full border border-border bg-surface-raised p-1" aria-label="Company view">
+              <div className="inline-flex rounded-full border border-border bg-nav p-0.5" aria-label="Company view">
                 {(["timeline", "stage"] as CompanyView[]).map((view) => (
                   <button
                     key={view}
                     type="button"
                     aria-pressed={companyView === view}
                     onClick={() => setCompanyView(view)}
-                    className={`rounded-full px-4 py-2 text-xs font-semibold capitalize transition ${companyView === view ? "bg-accent text-accent-foreground" : "text-foreground/65 hover:text-foreground"}`}
+                    className={`rounded-full px-4 py-1.5 text-sm font-medium capitalize transition-colors ${companyView === view ? "bg-foreground text-background" : "text-muted hover:text-foreground"}`}
                   >
                     {view}
                   </button>
@@ -177,7 +183,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                     type="button"
                     aria-pressed={scope === item}
                     onClick={() => setScope(item)}
-                    className={`whitespace-nowrap rounded-full px-2 py-1.5 text-[10px] font-semibold sm:px-3 sm:text-[11px] ${scope === item ? "bg-accent-soft text-accent" : "text-foreground/65 hover:text-foreground"}`}
+                    className={`whitespace-nowrap rounded-full px-2 py-1.5 text-[10px] font-medium sm:px-3 sm:text-[11px] ${scope === item ? "bg-foreground text-background" : "text-muted hover:text-foreground"}`}
                   >
                     {item}
                   </button>
@@ -251,7 +257,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                             key={`${milestone.announcedOn}-${milestone.marker}`}
                             className="absolute z-20 -translate-x-1/2 rounded bg-[#151821] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-sm"
                             style={{ left: `${getTimelinePosition(milestone.announcedOn, data.summary.firstYear, data.summary.lastYear)}%`, top: `${29 - (index % 2) * 22}px` }}
-                            title={`${milestone.marker} · ${milestone.indication}`}
+                            title={markerTitle(milestone.marker, milestone.indication)}
                           >
                             {milestone.marker}
                           </span>
@@ -405,7 +411,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                   <div className="mt-3 space-y-3">
                     {selectedMilestones.map((milestone) => (
                       <article key={`${milestone.announcedOn}-${milestone.marker}`} className="rounded-2xl border border-border bg-positive-soft p-4">
-                        <div className="flex items-center justify-between gap-3"><span className="rounded bg-[#11131a] px-2 py-1 text-[10px] font-bold text-white">{milestone.marker}</span><span className="text-xs text-muted">{date.format(new Date(`${milestone.announcedOn}T00:00:00Z`))}</span></div>
+                        <div className="flex items-center justify-between gap-3"><span className="rounded bg-[#11131a] px-2 py-1 text-[10px] font-bold text-white" title={markerTitle(milestone.marker, milestone.indication)}>{milestone.marker}</span><span className="text-xs text-muted">{date.format(new Date(`${milestone.announcedOn}T00:00:00Z`))}</span></div>
                         <p className="mt-3 text-sm font-medium">{milestone.indication}</p>
                         {milestone.note && <p className="mt-1.5 text-xs leading-relaxed text-muted">{milestone.note}</p>}
                         <a href={milestone.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex text-xs font-semibold underline decoration-black/20 underline-offset-4">Source ↗</a>

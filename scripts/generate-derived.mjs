@@ -136,7 +136,7 @@ fundingIndex.summary = {
   observedCapitalUsdM: Number(observedCapitalUsdM.toFixed(2)),
   firstYear: Math.min(...years),
   lastYear: Math.max(...years),
-  asOf: "2026-09-03",
+  asOf: "2026-09-07",
 };
 fundingIndex.methodology = {
   thresholdUsdM: 2,
