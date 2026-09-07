@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PlateHeader } from "@/components/plate-header";
+import { PlateHero } from "@/components/plate-header";
 import { Abbr } from "@/components/abbr";
 
 export const metadata: Metadata = { title: "Methodology — Neuro Atlas" };
@@ -59,14 +59,18 @@ const PRINCIPLES = [
 export default function MethodologyPage() {
   return (
     <>
-      <PlateHeader
+      <PlateHero
+        kicker="How this is built"
+        meta={["Versioned"]}
         title="Methodology"
-        question="How this is built"
-        status="live"
         description="What each reading means, where the data comes from, and how to contribute. The methodology is versioned: when a method changes, the change is logged here."
+        status="live"
+        stats={[
+          { value: String(SOURCES.length), label: "named sources" },
+          { value: String(PRINCIPLES.length), label: "working principles" },
+        ]}
       />
-
-      <section className="mb-8">
+      <section className="mt-8 mb-8">
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">Principles</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {PRINCIPLES.map((p) => (
@@ -149,6 +153,9 @@ export default function MethodologyPage() {
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">Changelog</h2>
         <div className="card p-5">
           <ul className="space-y-2 text-xs leading-relaxed text-muted">
+            <li>
+              <span className="tnum font-medium text-foreground">2026-09-07</span> — Shared dark plate hero (title + stats) on Milestones, Ecosystem, Funding index, Field velocity, and Methodology. Funding-index regulatory markers use a real hover tooltip instead of the native title attribute.
+            </li>
             <li>
               <span className="tnum font-medium text-foreground">2026-08-24</span> — v0.2:
               plates introduced; milestone timeline (Jan–Apr 2026), faceted landscape

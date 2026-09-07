@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { FirmLogo } from "@/components/firm-logo";
 import { lookupAcronym } from "@/components/abbr";
 import {
@@ -28,6 +28,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
   const [scope, setScope] = useState("All");
   const [modality, setModality] = useState("All");
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [markerTip, setMarkerTip] = useState<{ title: string; body: string; x: number; y: number } | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   const modalities = useMemo(
@@ -84,44 +85,21 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
   );
   const maxInvestorRounds = Math.max(...data.investors.map((investor) => investor.roundCount), 1);
 
-  return (
-    <div className="-m-5 min-h-screen rounded-2xl bg-background text-foreground sm:-m-7 lg:-m-9">
-      <section className="border-b border-border bg-[#101217] px-5 pb-8 pt-8 text-white sm:px-8 sm:pb-10 sm:pt-10 lg:px-12 lg:pb-12 lg:pt-12">
-        <div className="mx-auto max-w-[1480px]">
-          <div className="mb-8 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/60">
-            <span className="rounded-full bg-accent px-3 py-1.5 text-white">Capital intelligence</span>
-            <span>V1 · 2026</span>
-            <span aria-hidden="true">•</span>
-            <span>Partial public-round coverage</span>
-          </div>
-          <div className="grid gap-7 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)] lg:items-end">
-            <div>
-              <h1 className="max-w-5xl text-balance text-[clamp(2.75rem,5.4vw,5.6rem)] font-semibold leading-[0.93] tracking-[-0.055em]">
-                The BCI Funding Index
-              </h1>
-              <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/75 sm:mt-5 sm:text-lg">
-                A screened view of who has financed 25 implanted and implant-adjacent BCI companies — with round history, investor participation, and regulatory inflection points on one plate.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/12 bg-surface-raised/12">
-              {[
-                [String(data.summary.selectedCompanies), "selected companies"],
-                [formatCapital(data.summary.observedCapitalUsdM), "capital in indexed rounds"],
-                [String(data.summary.indexedRounds), "sourced financings"],
-                [String(data.summary.regulatoryMilestones), "regulatory markers"],
-              ].map(([value, label]) => (
-                <div key={label} className="bg-[#171a21] p-4 sm:p-6">
-                  <div className="text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">{value}</div>
-                  <div className="mt-1 text-[11px] uppercase tracking-[0.15em] text-white/65">{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+  const showMarkerTip = (event: MouseEvent<HTMLElement>, marker: string, indication?: string) => {
+    const entry = lookupAcronym(marker);
+    const r = event.currentTarget.getBoundingClientRect();
+    setMarkerTip({
+      title: entry ? `${marker} — ${entry.expansion}` : marker,
+      body: [entry?.definition, indication].filter(Boolean).join(" · "),
+      x: r.left + r.width / 2,
+      y: r.top - 6,
+    });
+  };
 
-      <section className="sticky top-0 z-30 border-b border-border bg-background/95 px-5 py-4 backdrop-blur-md sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-[1480px] flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-center xl:justify-between">
+  return (
+    <div>
+      <section className="sticky top-0 z-30 -mx-5 mt-8 border-y border-border bg-background/95 px-5 py-4 backdrop-blur-md sm:-mx-7 sm:px-7 lg:-mx-9 lg:px-9">
+        <div className="flex flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-center xl:justify-between">
           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
             <div className="inline-flex rounded-full border border-border bg-nav p-0.5" aria-label="Index lens">
               {(["companies", "investors"] as PrimaryView[]).map((view) => (
@@ -194,7 +172,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
         </div>
       </section>
 
-      <section className="px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
+      <section className="py-8 lg:py-10">
         <div className="mx-auto max-w-[1480px]">
           {primaryView === "companies" && companyView === "timeline" && (
             <div className="overflow-x-auto rounded-3xl border border-border bg-surface-raised shadow-[0_20px_60px_rgba(28,34,55,0.08)]">
@@ -255,9 +233,11 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                         {milestones.map((milestone, index) => (
                           <span
                             key={`${milestone.announcedOn}-${milestone.marker}`}
-                            className="absolute z-20 -translate-x-1/2 rounded bg-[#151821] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-sm"
+                            className="absolute z-20 -translate-x-1/2 cursor-help rounded bg-[#151821] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-sm"
                             style={{ left: `${getTimelinePosition(milestone.announcedOn, data.summary.firstYear, data.summary.lastYear)}%`, top: `${29 - (index % 2) * 22}px` }}
-                            title={markerTitle(milestone.marker, milestone.indication)}
+                            onMouseEnter={(event) => { event.stopPropagation(); showMarkerTip(event, milestone.marker, milestone.indication); }}
+                            onMouseLeave={() => setMarkerTip(null)}
+                            aria-label={markerTitle(milestone.marker, milestone.indication)}
                           >
                             {milestone.marker}
                           </span>
@@ -274,7 +254,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
               </div>
               <div className="flex flex-wrap items-center gap-5 border-t border-border bg-nav/40 px-5 py-3 text-[10px] text-muted">
                 <span><b className="mr-1.5 inline-block h-2.5 w-5 rounded-full bg-accent align-middle" />Financing (width scales with disclosed amount)</span>
-                <span><b className="mr-1.5 rounded bg-[#151821] px-1 py-0.5 text-[9px] text-white">IDE</b>Regulatory marker</span>
+                <span className="inline-flex items-center"><b className="mr-1.5 cursor-help rounded bg-[#151821] px-1 py-0.5 text-[9px] text-white" onMouseEnter={(event) => showMarkerTip(event, "IDE")} onMouseLeave={() => setMarkerTip(null)}>IDE</b>Regulatory marker</span>
                 <span className="ml-auto">{rows.length} of {data.summary.selectedCompanies} companies</span>
               </div>
             </div>
@@ -363,6 +343,16 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
         </div>
       </section>
 
+      {markerTip && (
+        <div
+          className="pointer-events-none fixed z-[80] w-64 -translate-x-1/2 -translate-y-full rounded-lg bg-foreground px-3 py-2 text-left shadow-lg"
+          style={{ left: markerTip.x, top: markerTip.y }}
+        >
+          <div className="text-[11px] font-semibold leading-snug text-background">{markerTip.title}</div>
+          {markerTip.body && <div className="mt-0.5 text-[10px] leading-snug text-background/70">{markerTip.body}</div>}
+        </div>
+      )}
+
       {selected && (
         <div className="fixed inset-0 z-50">
           <button type="button" aria-label="Close company detail" onClick={() => setSelectedSlug(null)} className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
@@ -411,7 +401,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
                   <div className="mt-3 space-y-3">
                     {selectedMilestones.map((milestone) => (
                       <article key={`${milestone.announcedOn}-${milestone.marker}`} className="rounded-2xl border border-border bg-positive-soft p-4">
-                        <div className="flex items-center justify-between gap-3"><span className="rounded bg-[#11131a] px-2 py-1 text-[10px] font-bold text-white" title={markerTitle(milestone.marker, milestone.indication)}>{milestone.marker}</span><span className="text-xs text-muted">{date.format(new Date(`${milestone.announcedOn}T00:00:00Z`))}</span></div>
+                        <div className="flex items-center justify-between gap-3"><span className="cursor-help rounded bg-[#11131a] px-2 py-1 text-[10px] font-bold text-white" onMouseEnter={(event) => showMarkerTip(event, milestone.marker, milestone.indication)} onMouseLeave={() => setMarkerTip(null)} aria-label={markerTitle(milestone.marker, milestone.indication)}>{milestone.marker}</span><span className="text-xs text-muted">{date.format(new Date(`${milestone.announcedOn}T00:00:00Z`))}</span></div>
                         <p className="mt-3 text-sm font-medium">{milestone.indication}</p>
                         {milestone.note && <p className="mt-1.5 text-xs leading-relaxed text-muted">{milestone.note}</p>}
                         <a href={milestone.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex text-xs font-semibold underline decoration-black/20 underline-offset-4">Source ↗</a>

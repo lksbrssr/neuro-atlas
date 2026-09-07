@@ -1,36 +1,55 @@
-const STATUS_STYLES: Record<string, { label: string; cls: string }> = {
-  live: { label: "Live", cls: "bg-positive-soft text-positive" },
-  partial: { label: "Partial data", cls: "bg-warning-soft text-warning" },
-  planned: { label: "Coming soon", cls: "bg-accent-soft text-accent" },
+const STATUS: Record<string, { label: string; cls: string }> = {
+  live: { label: "Live", cls: "bg-white/12 text-white" },
+  partial: { label: "Partial public coverage", cls: "bg-white/12 text-white" },
+  planned: { label: "Coming soon", cls: "bg-white/12 text-white" },
 };
 
-export function PlateHeader({
+export type PlateStat = { value: string; label: string };
+
+export function PlateHero({
+  kicker,
+  meta,
   title,
-  question,
-  status,
   description,
+  status,
+  stats,
 }: {
+  kicker: string;
+  meta?: string[];
   title: string;
-  /** The single question this plate answers. */
-  question: string;
+  description: string;
   status: "live" | "partial" | "planned";
-  description?: string;
+  stats: PlateStat[];
 }) {
-  const s = STATUS_STYLES[status];
+  const s = STATUS[status];
   return (
-    <header className="mb-8 sm:mb-10">
-      <div className="mb-3 flex flex-wrap items-center gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">{question}</p>
-        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${s.cls}`}>
-          {s.label}
-        </span>
+    <section className="-mx-5 -mt-5 rounded-t-2xl border-b border-border bg-[#101217] px-5 pb-8 pt-8 text-white sm:-mx-7 sm:-mt-7 sm:px-7 sm:pb-10 sm:pt-10 lg:-mx-9 lg:-mt-9 lg:px-9 lg:pb-12 lg:pt-12">
+      <div className="mb-8 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/60">
+        <span className="rounded-full bg-accent px-3 py-1.5 text-white">{kicker}</span>
+        {(meta ?? []).map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+        <span aria-hidden="true">•</span>
+        <span className={`rounded-full px-3 py-1.5 ${s.cls}`}>{s.label}</span>
       </div>
-      <h1 className="max-w-5xl text-balance text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[0.94] tracking-[-0.05em]">
-        {title}
-      </h1>
-      {description && (
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">{description}</p>
-      )}
-    </header>
+      <div className="grid gap-7 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)] lg:items-end">
+        <div>
+          <h1 className="max-w-5xl text-balance text-[clamp(2.75rem,5.4vw,5.6rem)] font-semibold leading-[0.93] tracking-[-0.055em]">
+            {title}
+          </h1>
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/75 sm:mt-5 sm:text-lg">{description}</p>
+        </div>
+        {stats.length > 0 && (
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/12 bg-white/10">
+            {stats.map(({ value, label }) => (
+              <div key={label} className="bg-[#171a21] p-4 sm:p-6">
+                <div className="text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">{value}</div>
+                <div className="mt-1 text-[11px] uppercase tracking-[0.15em] text-white/65">{label}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
