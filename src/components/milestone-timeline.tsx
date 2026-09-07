@@ -14,6 +14,7 @@ import MILESTONES from "@/data/milestones.json";
 import { FirmLogo } from "@/components/firm-logo";
 import { Sparkline } from "@/components/sparkline";
 import { lookupAcronym } from "@/components/abbr";
+import { clampCenteredTooltipX } from "@/lib/tooltip-position";
 
 type Milestone = (typeof MILESTONES)[number];
 
@@ -178,8 +179,7 @@ export function MilestoneTimeline() {
 
   const showTip = (e: React.MouseEvent<HTMLElement>, m: Milestone) => {
     const r = e.currentTarget.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const x = Math.min(Math.max(r.left + r.width / 2, 156), vw - 156);
+    const x = clampCenteredTooltipX(r.left + r.width / 2, 288);
     const below = r.top < 190;
     setTip({ m, x, y: below ? r.bottom + 8 : r.top - 8, below });
   };
@@ -348,7 +348,7 @@ export function MilestoneTimeline() {
                       const expansion = lookupAcronym(sub)?.expansion;
                       return (
                         <button key={sub} type="button" onClick={() => toggleSub(s.key, sub)}
-                          onMouseEnter={(e) => { if (!expansion) return; const r = e.currentTarget.getBoundingClientRect(); setPillTip({ text: expansion, x: r.left + r.width / 2, y: r.top - 6 }); }}
+                          onMouseEnter={(e) => { if (!expansion) return; const r = e.currentTarget.getBoundingClientRect(); setPillTip({ text: expansion, x: clampCenteredTooltipX(r.left + r.width / 2, Math.min(280, expansion.length * 7 + 24)), y: r.top - 6 }); }}
                           onMouseLeave={() => setPillTip(null)} aria-pressed={on}
                           className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-all ${on ? "border-border-strong" : "border-border opacity-40"}`}
                           style={on ? { borderColor: s.color } : undefined}>

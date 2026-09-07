@@ -10,6 +10,7 @@ import {
   type FundingCompanyRow,
   type FundingIndexData,
 } from "@/lib/funding-index";
+import { clampCenteredTooltipX } from "@/lib/tooltip-position";
 
 const date = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
 
@@ -91,7 +92,7 @@ export function FundingIndexDashboard({ data }: { data: FundingIndexData }) {
     setMarkerTip({
       title: entry ? `${marker} — ${entry.expansion}` : marker,
       body: [entry?.definition, indication].filter(Boolean).join(" · "),
-      x: r.left + r.width / 2,
+      x: clampCenteredTooltipX(r.left + r.width / 2, 256),
       y: r.top - 6,
     });
   };

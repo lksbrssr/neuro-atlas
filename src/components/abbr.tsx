@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import ACRONYMS from "@/data/acronyms.json";
+import { clampCenteredTooltipX } from "@/lib/tooltip-position";
 
 type Entry = { expansion: string; definition: string };
 const GLOSSARY = ACRONYMS as Record<string, Entry>;
@@ -25,12 +26,12 @@ export function Abbr({ term }: { term: string }) {
       tabIndex={0}
       onMouseEnter={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
-        setPos({ x: r.left + r.width / 2, y: r.top - 6 });
+        setPos({ x: clampCenteredTooltipX(r.left + r.width / 2, 224), y: r.top - 6 });
       }}
       onMouseLeave={() => setPos(null)}
       onFocus={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
-        setPos({ x: r.left + r.width / 2, y: r.top - 6 });
+        setPos({ x: clampCenteredTooltipX(r.left + r.width / 2, 224), y: r.top - 6 });
       }}
       onBlur={() => setPos(null)}
     >
