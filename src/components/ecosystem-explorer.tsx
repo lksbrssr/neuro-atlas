@@ -11,6 +11,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import COMPANIES from "@/data/landscape.json";
 import { FirmLogo } from "@/components/firm-logo";
 import { AutoAbbr } from "@/components/abbr";
+import { clampCenteredTooltipX } from "@/lib/tooltip-position";
 
 type Company = (typeof COMPANIES)[number];
 
@@ -293,7 +294,7 @@ export function EcosystemExplorer() {
 
   const showTip = (e: React.MouseEvent<HTMLElement>, c: Company) => {
     const r = e.currentTarget.getBoundingClientRect();
-    setTip({ c, x: r.left + r.width / 2, y: r.top - 6 });
+    setTip({ c, x: clampCenteredTooltipX(r.left + r.width / 2, 224), y: r.top - 6 });
   };
 
   return (
