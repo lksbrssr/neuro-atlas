@@ -174,6 +174,20 @@ export function PerformanceCurves({ data, provenance }: { data: PerformanceData;
         </> : <p>{r.candidateMetric ?? r.reason}</p>}
       </CurveCard>
       {data.measurements.map(s => <MeasurementCard key={s.id} series={s} />)}
+      <article className="pc-card card pc-placeholder" data-coming-soon="channel-count-frontier" aria-labelledby="channel-count-title">
+        <span className="pc-eyebrow">Planned capability metric</span>
+        <h3 className="pc-card-title" id="channel-count-title">Channel count frontier</h3>
+        <p className="pc-coverage">Maximum simultaneously recorded channels in a human, over time. Not yet wired; channels are not recorded neurons.</p>
+        <div className="pc-preview pc-placeholder-preview">
+          {/* Decorative placeholder only: no observations, values or inferred frontier. */}
+          <svg viewBox="0 0 720 300" aria-hidden="true" focusable="false">
+            <path d="M100 28V256H698 M100 85H698 M100 142H698 M100 199H698" fill="none" stroke="var(--border-strong)" strokeWidth="2" />
+            <path d="M112 240C240 236 260 206 350 198S490 136 540 120S650 72 684 42" fill="none" stroke="var(--accent)" strokeWidth="5" />
+          </svg>
+          <span className="pc-coming-soon-label">Coming soon</span>
+        </div>
+        <p className="pc-chart-note">Source series not assembled yet. Preview is illustrative, not data.</p>
+      </article>
     </div>
     <details className="pc-provenance"><summary>Export &amp; source provenance</summary>
       <p>Bounded, committed PL R&amp;D snapshot. Refreshed deliberately from a validated provider export, not an automatically updating feed.</p>

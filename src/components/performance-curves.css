@@ -6,6 +6,11 @@
 .pc-intro { max-width: 56rem; color: var(--muted); font-size: .85rem; line-height: 1.7; margin: .75rem 0 1.2rem; }
 .pc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: start; }
 .pc-card { min-width: 0; scroll-margin-top: 5rem; overflow: hidden; }
+.pc-placeholder { padding: 1.25rem; }
+.pc-placeholder-preview { position: relative; }
+.pc-placeholder-preview svg { filter: blur(4px); opacity: .35; }
+.pc-coming-soon-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 650; color: var(--foreground); }
+.pc-legacy-chart svg { max-width: 100%; height: auto; }
 .pc-trigger { cursor: pointer; list-style: none; padding: 1.25rem; }
 .pc-card-title { display: block; font-size: 1rem; font-weight: 650; line-height: 1.35; letter-spacing: -.025em; margin-top: .4rem; min-height: 2.7rem; }
 .pc-coverage { display: block; font-size: .7rem; line-height: 1.6; color: var(--muted); margin-top: .6rem; min-height: 5.6rem; }
@@ -56,8 +61,6 @@
 .performance-curves :is(summary, a, button, select, [tabindex]):focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: .3rem; }
 @media (max-width: 900px) { .pc-grid { grid-template-columns: 1fr; } .pc-trigger { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .25rem 1rem; } .pc-trigger > :not(.pc-preview) { grid-column: 1; } .pc-preview { grid-column: 2; grid-row: 1 / 5; align-self: center; margin: 0; } .pc-coverage, .pc-card-title { display: block; min-height: 0; } }
 @media (max-width: 560px) { .pc-trigger { display: block; padding: 1rem; } .pc-preview { margin: .9rem -.2rem; } .pc-detail { padding: 0 1rem 1rem; } .pc-methodology dl { grid-template-columns: 1fr; } .pc-section-header { gap: .65rem; } }
-.pc-pace-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (max-width: 900px) { .pc-pace-grid { grid-template-columns: 1fr; } }
 .pc-trigger { display: block; width: 100%; text-align: left; color: inherit; background: none; }
 .pc-card-share { padding: 0 1.25rem; }
 .pc-modal { position: fixed; inset: 0; margin: auto; width: min(1000px, calc(100% - 2rem)); max-width: none; max-height: calc(100dvh - 2rem); padding: 0; border: 1px solid var(--border-strong); border-radius: 1rem; background: var(--surface); color: var(--foreground); box-shadow: 0 24px 90px #0005; overflow-y: auto; overscroll-behavior: contain; }

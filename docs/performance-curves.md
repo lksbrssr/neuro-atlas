@@ -16,7 +16,7 @@ The original performance objects remain **7 + 7 + 11 = 25 selected observations*
 
 Idea vintage and Latency compression were already **reading** records in the shared export. Atlas now renders those original objects instead of its old unwired static rows. Their original definitions, source queries, observation/check dates and source links are retained. Patent vintage remains explicitly **unwired**; no patent series is invented. A non-reading state suppresses retained values, plots and observation dates.
 
-The duplicate **The Implant Ledger** and **Open Neural Data Hours** coming-soon pitches were removed. Their implemented content was not removed. The distinct human **Channel-Count Frontier** roadmap item remains; it is not the historical neuron series. Remaining commitments/markets rows and Expectations retain the older Atlas extracts.
+The duplicate **The Implant Ledger** and **Open Neural Data Hours** coming-soon pitches were removed. Their implemented content was not removed. The distinct human **Channel count frontier** roadmap item is now the fourth card in Performance curves, with a blurred, explicitly illustrative chart and **Coming soon** overlay; it is not the historical neuron series and has no modal or share controls. Remaining commitments/markets rows and Expectations retain the older Atlas extracts.
 
 ## Source and provenance
 
@@ -48,6 +48,14 @@ There is no runtime feed fetch, scheduled refresh, writable runtime cache or cla
 
    This verifies snapshot bytes/hash, deep-compares the original neuron and two measurement objects, both pace records and definitions, and shared methodology. Tests pin immutable source-object digests and prove the verifier rejects altered pace objects. Update digests only after independently verifying a real source change.
 4. Run tests, typecheck, build and browser QA. `npm run data:generate` still owns older Atlas extracts, not this snapshot. Funding tests can remove the trailing newline from `src/data/milestones.json`; restore that unrelated generated-only diff.
+
+## Metrics layout
+
+All four Metrics sections use the same `pc-section-header` heading treatment and `pc-grid`: Performance curves, Idea vintage & latency compression, Revealed commitments, and Markets. Desktop grids always have three equal tracks, independent of card count. Performance has four cards (three sourced + one planned), so the planned card starts row two. Pace has two cards, leaving the third track empty; each older Atlas section has one card, leaving tracks two and three empty. Empty tracks are CSS space, not fake charts or focusable placeholders. At 900px and below, cards stack in one column. Existing evidence and the five URL-addressed chart modals are unchanged.
+
+Layout regression: `UV_THREADPOOL_SIZE=1 GOMAXPROCS=2 taskset -c 0,1 node --import tsx --test --test-concurrency=1 tests/metrics-layout.test.mjs`. This checks rendered sections, source retention, the decorative-only placeholder, the desktop CSS cascade, and the mobile one-column rule; real bounding-box checks still require browser QA.
+
+During browser QA, additionally compare card widths and x/y positions at 1440px: section counts are 4 / 2 / 1 / 1, all cards have the same one-track width, and the fourth Performance card aligns below the first. Check 390px/320px stacking, readable Coming soon overlay, and no document overflow. Use the existing five-chart modal probe below for URL/history/focus regression.
 
 ## Modal navigation and accessibility
 
