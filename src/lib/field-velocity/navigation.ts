@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-export const performanceAnchors = ["performance_curves", "simultaneously-recorded-neurons", "tissue-mapped", "neural-recording-hours", "expectations"] as const;
+export const performanceAnchors = ["performance_curves", "simultaneously-recorded-neurons", "tissue-mapped", "neural-recording-hours", "idea_vintage", "latency_compression", "expectations"] as const;
 const changedEvent = "atlas-performance-location";
 
 /** Relative to the actual current origin/path/query; never hardcode a deployment. */
@@ -16,15 +16,31 @@ export function performanceUrl(currentUrl: string, anchor: string) {
 export function navigatePerformance(anchor: string) {
   const url = performanceUrl(window.location.href, anchor);
   if (url === window.location.href) return;
-  window.history.pushState(null, "", url);
+  const isChart = anchor !== "performance_curves" && anchor !== "expectations";
+  window.history.pushState({ ...window.history.state, atlasModalFrom: isChart ? window.location.href : null }, "", url);
   window.dispatchEvent(new Event(changedEvent));
 }
 
+export function closePerformance() {
+  if (window.history.state?.atlasModalFrom) window.history.back();
+  else {
+    window.history.replaceState(window.history.state, "", performanceUrl(window.location.href, "performance_curves"));
+    window.dispatchEvent(new Event(changedEvent));
+  }
+}
+
+let subscriptions = 0;
+let previousRestoration: ScrollRestoration;
 function subscribe(callback: () => void) {
+  if (subscriptions++ === 0) {
+    previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+  }
   window.addEventListener("hashchange", callback);
   window.addEventListener("popstate", callback);
   window.addEventListener(changedEvent, callback);
   return () => {
+    if (--subscriptions === 0) window.history.scrollRestoration = previousRestoration;
     window.removeEventListener("hashchange", callback);
     window.removeEventListener("popstate", callback);
     window.removeEventListener(changedEvent, callback);

@@ -7,22 +7,6 @@ const DEFS = Object.fromEntries(INSTRUMENTS.instruments.map((i) => [i.id, i]));
 type Workbench = { title: string; pick?: boolean; target: string; build: string; pitch: string };
 const WORKBENCH: Workbench[] = [
   {
-    title: "The Implant Ledger",
-    pick: true,
-    target: "10,000 implants",
-    build: "Manual curation · ~40 records · quarterly",
-    pitch:
-      "The field's two public counts disagree by 2× — Neurofounders says roughly 50 commercial, bciintel says ~107 — and almost the entire gap is Precision's ~100 intraoperative array placements, which one counts as chronic and the other excludes. Nobody has published a taxonomy. A ledger separating chronic / acute-intraoperative / temporary-percutaneous / enrolled-not-implanted, by company and country, resolves a live public dispute on the first day it ships.",
-  },
-  {
-    title: "Open Neural Data Hours",
-    pick: true,
-    target: "100M hours",
-    build: "Days of engineering, then automated",
-    pitch:
-      "The performance cards above cover selected sourced datasets, not an archive-wide inventory. A broader hours ledger would need session-duration metadata, explicit modality and access boundaries, and deduplication of overlapping releases. Catalog counts and storage bytes alone do not establish recording-hours.",
-  },
-  {
     title: "The Channel-Count Frontier",
     target: "OS1 device capability",
     build: "Manual literature build, then low-touch",
@@ -41,14 +25,14 @@ export function VelocityInstrumentsSection({ performance }: { performance: React
       {performance}
       <p className="mb-5 max-w-2xl text-sm leading-relaxed text-muted">
         Other metrics that read the field&apos;s underlying pace. These earlier Atlas extracts
-        remain separate from the shared performance snapshot above. Where a reading exists,
+        remain separate from the shared performance, Idea vintage and Latency compression snapshot above. Where a reading exists,
         it carries a source and a chart you can drag to measure; where it doesn&apos;t,
         we name the metric we intend to use and what is blocking it — an honest
         &apos;unwired&apos; is a correct answer.
       </p>
 
       <div className="flex flex-col gap-1">
-        {RECORDS.records.filter(r => r.instrument !== "performance_curves").map((r) => {
+        {RECORDS.records.filter(r => !["performance_curves", "idea_vintage", "latency_compression"].includes(r.instrument)).map((r) => {
           const def = DEFS[r.instrument];
           const isReading = r.state === "reading";
           return (
@@ -152,7 +136,7 @@ export function VelocityInstrumentsSection({ performance }: { performance: React
 
       <p className="mt-5 text-xs leading-relaxed text-faint">
         Instruments and readings inherited from PL R&amp;D&apos;s field-velocity framework
-        (plrd.org). Idea-vintage and latency pipelines land next.
+        (plrd.org). The remaining roadmap item above is not an implemented metric.
       </p>
     </>
   );

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useId, useRef, useState } from "react";
+import { ChartModal } from "@/components/chart-modal";
 import type { PerformanceData } from "@/lib/field-velocity/performance";
 import type { MeasurementPoint, MeasurementSeries } from "@/lib/field-velocity/schema";
 import { usePerformanceHash, navigatePerformance, performanceUrl } from "@/lib/field-velocity/navigation";
@@ -15,8 +16,8 @@ export function pointValue(point: MeasurementPoint) {
   return `${point.qualifier ? prefix[point.qualifier] : ""}${number(point.value)}`;
 }
 
-type PlotPoint = { date: string; value: number; label: string; track: string; trackIndex: number };
-type PlotData = { title: string; unit: string; scale: "log" | "linear"; line: boolean; points: PlotPoint[]; tracks: { id: string; label: string }[] };
+type PlotPoint = { date: string; value: number; label: string; track: string; trackIndex: number; lo?: number; hi?: number; reliable?: boolean };
+export type PlotData = { xLabel?: string; title: string; unit: string; scale: "log" | "linear"; line: boolean; points: PlotPoint[]; tracks: { id: string; label: string }[] };
 
 /** Axes always use the full source set; filtering never moves an observation. */
 export function chartGeometry(data: PlotData) {
@@ -24,9 +25,9 @@ export function chartGeometry(data: PlotData) {
   const times = data.points.map(p => Date.parse(p.date));
   const minTime = Math.min(...times), maxTime = Math.max(...times);
   const padding = Math.max((maxTime - minTime) * 0.035, 86400000 * 30);
-  const values = data.points.map(p => p.value);
+  const values = data.points.flatMap(p => [p.value, ...(p.lo != null ? [p.lo] : []), ...(p.hi != null ? [p.hi] : [])]);
   const minValue = Math.min(...values), maxValue = Math.max(...values);
-  const low = Math.floor(Math.log10(minValue)), high = Math.max(low + 1, Math.ceil(Math.log10(maxValue)));
+  const low = Math.floor(Math.log10(Math.max(minValue, Number.MIN_VALUE))), high = Math.max(low + 1, Math.ceil(Math.log10(maxValue)));
   const magnitude = 10 ** Math.floor(Math.log10(maxValue / 4));
   const step = Math.ceil(maxValue / 4 / magnitude) * magnitude;
   const ticks = data.scale === "log" ? Array.from({ length: high - low + 1 }, (_, i) => 10 ** (low + i)) : [0, 1, 2, 3, 4].map(i => i * step);
@@ -64,13 +65,14 @@ function CurvePlot({ data, compact = false }: { data: PlotData; compact?: boolea
           <text x={g.left - 9} y={g.y(tick) + 4} textAnchor="end">{number(tick)}</text>
         </g>)}
         {data.line && <polyline data-frontier-line="true" points={points.map(p => `${g.x(p.date)},${g.y(p.value)}`).join(" ")} fill="none" stroke="var(--accent)" strokeWidth={2.5} />}
-        {points.map((p, i) => <circle key={`${p.track}:${p.date}:${i}`} data-curve-point={compact ? undefined : `${p.track}:${p.date}`} data-value={compact ? undefined : p.value} cx={g.x(p.date)} cy={g.y(p.value)} r={active === p ? 7 : 5} fill={colors[p.trackIndex % colors.length]} stroke="var(--surface)" strokeWidth={1.5}
+        {points.filter(p => p.lo != null && p.hi != null).map(p => <line key={`interval:${p.date}`} data-confidence={compact ? undefined : p.date} x1={g.x(p.date)} x2={g.x(p.date)} y1={g.y(p.lo!)} y2={g.y(p.hi!)} stroke="var(--accent)" strokeWidth={compact ? 2 : 3} opacity={.4} />)}
+        {points.map((p, i) => <circle key={`${p.track}:${p.date}:${i}`} data-curve-point={compact ? undefined : `${p.track}:${p.date}`} data-value={compact ? undefined : p.value} cx={g.x(p.date)} cy={g.y(p.value)} r={active === p ? 7 : 5} data-under-indexed={p.reliable === false || undefined} fill={p.reliable === false ? "var(--surface)" : colors[p.trackIndex % colors.length]} stroke={p.reliable === false ? colors[p.trackIndex % colors.length] : "var(--surface)"} strokeWidth={1.5}
           tabIndex={compact ? undefined : 0} role={compact ? undefined : "img"} aria-label={compact ? undefined : p.label} aria-describedby={!compact && active === p ? readoutId : undefined}
           onFocus={compact ? undefined : () => setFocused(p)} onBlur={compact ? undefined : () => setFocused(null)} onMouseEnter={compact ? undefined : () => setHovered(p)} onMouseLeave={compact ? undefined : () => setHovered(null)} />)}
         {!compact && clusters.filter(c => c.length > 1).map(c => <text key={`${c[0].track}:${c[0].date}`} x={Math.min(g.width - 100, g.x(c[0].date))} y={g.y(c[0].value) + 20}>{c.length} checkpoints</text>)}
         <text x={g.left} y={g.height - 20}>{new Date(g.minTime).getUTCFullYear()}</text>
         <text x={g.width - g.right} y={g.height - 20} textAnchor="end">{new Date(g.maxTime).getUTCFullYear()}</text>
-        <text x={(g.width + g.left - g.right) / 2} y={g.height - 3} textAnchor="middle">{data.line ? "Year · historical frontier" : "Date · source basis varies"}</text>
+        <text x={(g.width + g.left - g.right) / 2} y={g.height - 3} textAnchor="middle">{data.xLabel ?? (data.line ? "Year · historical frontier" : "Date · source basis varies")}</text>
       </svg>
     </div>
     {!compact && <p className="pc-point-readout" id={readoutId} role="status">{active?.label ?? "Hover or tab to any marker for its value, date and source. All observations also appear in the source table below."}</p>}
@@ -79,45 +81,38 @@ function CurvePlot({ data, compact = false }: { data: PlotData; compact?: boolea
   </div>;
 }
 
-function CurveCard({ id, title, eyebrow, coverage, plot, children }: { id: string; title: string; eyebrow: string; coverage: string; plot?: PlotData; children: React.ReactNode }) {
-  const ref = useRef<HTMLDetailsElement>(null);
+export function CurveCard({ id, title, eyebrow, coverage, plot, children }: { id: string; title: string; eyebrow: string; coverage: string; plot?: PlotData; children: React.ReactNode }) {
+  const ref = useRef<HTMLButtonElement>(null);
   const hash = usePerformanceHash();
   const open = hash === `#${id}`;
   const [copyStatus, setCopyStatus] = useState("");
-  useEffect(() => {
-    if (!open) return;
-    const frame = requestAnimationFrame(() => ref.current?.scrollIntoView({ block: "start" }));
-    return () => cancelAnimationFrame(frame);
-  }, [open]);
-  return <details ref={ref} open={open} id={id} className="pc-card card" data-performance-card={id} onKeyDown={e => {
-    if (e.key === "Escape" && open) {
-      navigatePerformance("performance_curves");
-      ref.current?.querySelector("summary")?.focus();
-      e.stopPropagation();
-    }
-  }}>
-    <summary onClick={e => { e.preventDefault(); navigatePerformance(open ? "performance_curves" : id); }}>
+  const share = <div className="pc-share">
+    <a href={`#${id}`} aria-label={`Direct link to ${title}`} onClick={event => {
+      if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); navigatePerformance(id); }
+    }}>Direct link ↗</a>
+    <button type="button" aria-label={`Copy link to ${title}`} onClick={async () => {
+      try {
+        await navigator.clipboard.writeText(performanceUrl(window.location.href, id));
+        setCopyStatus("Link copied");
+      } catch { setCopyStatus("Copy unavailable — use the direct link"); }
+    }}>Copy link</button>
+    <span role="status">{copyStatus}</span>
+  </div>;
+  return <article className="pc-card card" data-performance-card={id}>
+    <button ref={ref} type="button" className="pc-trigger" aria-haspopup="dialog" aria-expanded={open} onClick={() => navigatePerformance(id)}>
       <span className="pc-eyebrow">{eyebrow}</span>
-      <h3>{title}</h3>
-      <p className="pc-coverage">{coverage}</p>
+      <span className="pc-card-title">{title}</span>
+      <span className="pc-coverage">{coverage}</span>
       {plot && <CurvePlot data={plot} compact />}
-      <span className="pc-expand"><span className="pc-expand-label">View chart, definitions &amp; sources</span><span className="pc-collapse-label">Close detail</span><span aria-hidden="true">↗</span></span>
-    </summary>
-    <div className="pc-detail">
-      <div className="pc-share">
-        <a href={`#${id}`} aria-label={`Direct link to ${title}`}>Direct link ↗</a>
-        <button type="button" aria-label={`Copy link to ${title}`} onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(performanceUrl(window.location.href, id));
-            setCopyStatus("Link copied");
-          } catch { setCopyStatus("Copy unavailable — use the direct link"); }
-        }}>Copy link</button>
-        <span role="status">{copyStatus}</span>
-      </div>
+      <span className="pc-expand">View chart, definitions &amp; sources <span aria-hidden="true">↗</span></span>
+    </button>
+    <div className="pc-card-share">{share}</div>
+    {open && <ChartModal id={id} title={title} returnFocus={ref}>
+      {share}
       {plot && <CurvePlot data={plot} />}
       {children}
-    </div>
-  </details>;
+    </ChartModal>}
+  </article>;
 }
 
 function MeasurementCard({ series }: { series: MeasurementSeries }) {

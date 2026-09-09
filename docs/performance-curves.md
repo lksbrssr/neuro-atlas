@@ -1,77 +1,83 @@
-# Shared performance curves
+# Shared field-velocity charts
 
-`/field-velocity` → **Metrics** now shows three compact preview cards. Native disclosure expands each card across the full grid; its larger chart, definitions, methodology, source table and caveats are visible together. No redesign of Milestones, the Funding Index/Companies, or Ecosystem is included.
+`/field-velocity` → **Metrics** has compact chart cards that open an in-place, URL-addressed modal. The grid never expands or scrolls to a chart. The existing Milestones, Funding Index, Ecosystem and implemented implant content are preserved.
 
-## Exact scope
+## Exact source scope
 
-| Curve | Canonical object | Observations | Plot semantics |
+| Chart | Canonical object | Observations | Semantics |
 | --- | --- | ---: | --- |
-| Simultaneously recorded neurons | `records[instrument=performance_curves]` | 7 | Historical 1957–2014 frontier; log neurons; source trend is not a current acceleration claim. |
+| Simultaneously recorded neurons | `records[instrument=performance_curves]` | 7 | Historical 1957–2014 frontier; log neurons; not a current acceleration claim. |
 | Neural tissue mapped — selected datasets | `measurementSeries[id=tissue-mapped]` | 7 | Scatter; log mm³; species and volume bases remain distinct. |
 | Neural recording hours — selected datasets | `measurementSeries[id=neural-recording-hours]` | 11 | Scatter; linear session-hours; release/modality/access and reused-corpus distinctions retained. |
+| Idea vintage | `records[instrument=idea_vintage]` | 27 | Publication years 2000–2026; median reference age in years, source intervals retained as whiskers. 24 reliable observations through 2023; 2024–2026 explicitly under-indexed, shown as hollow markers. |
+| Latency compression | `records[instrument=latency_compression]` | 4 | Selected BCI modalities; preclinical demonstration year on x, years to first-in-human implant on y. Different animal models, including sheep for Synchron. Scatter, no inferred pooled growth curve. |
 
-These are **25 selected observations, not a global inventory or total**. Implanted BCI participants belong to adoption/revealed commitments and are deliberately not added as a performance curve. No annual points, post-2014 neuron maxima, sums, fitted slopes or global growth rates are inferred. TUSZ releases are not summed. POYO remains **more than 100 hours**, not an exact total; its original qualifier is displayed in the table and marker readout.
+The original performance objects remain **7 + 7 + 11 = 25 selected observations**, not a global inventory or total. No additional annual points, post-2014 neuron maxima, fitted slopes, sums or growth rates are inferred. Tissue and recording-hours stay scatter plots. TUSZ releases are not summed. POYO remains **more than 100 hours**, not an exact total, in both readout and table.
 
-The remaining Atlas metrics and Expectations still use their older static extracts. They have **not** been silently migrated to the newer provider. The superseded neuron row is removed from that older rendering so the performance curve occurs once. The old archive-wide hours workbench pitch is distinguished from these selected dataset checkpoints.
+Idea vintage and Latency compression were already **reading** records in the shared export. Atlas now renders those original objects instead of its old unwired static rows. Their original definitions, source queries, observation/check dates and source links are retained. Patent vintage remains explicitly **unwired**; no patent series is invented. A non-reading state suppresses retained values, plots and observation dates.
+
+The duplicate **The Implant Ledger** and **Open Neural Data Hours** coming-soon pitches were removed. Their implemented content was not removed. The distinct human **Channel-Count Frontier** roadmap item remains; it is not the historical neuron series. Remaining commitments/markets rows and Expectations retain the older Atlas extracts.
 
 ## Source and provenance
 
-- Canonical candidate provider: `protocol/plrd.org#152`, commit `4b3ac510355212ff4d127badafa994a182aa862f` (unmerged when imported).
-- Validated sibling consumer: `protocol/plneuro.xyz#23`, commit `7c8f709091b1475ed19ac4bac98caf869642db01` (unmerged when imported).
-- Snapshot: `src/data/field-velocity/neurotech.snapshot.json`. Exact bytes from the real provider `loadFieldVelocity()` → `fieldVelocityForArea(..., "neurotech")` export, not handwritten numbers or a fixture pretending to be an API result.
-- Export assembled: `2026-09-09T19:06:18.064Z`. This is **export time**, not observation freshness.
-- Export SHA-256: `2b16a8ebf5ada867a79129243fc3f3afada7ad6e75a639ca0d005849607815ee`.
-- Adjacent `.provenance.json` records the provider commit, source URLs, schema origin, exact byte count/hash and refresh command.
-- `schema.ts` is reused from the pinned PL Neuro consumer, preserving unknown additive fields. Atlas adds validation of the selected neuron frontier before refresh and render.
-- `selectPerformance()` retains the original source objects, definitions and methodology. Only this projection is passed to the client; the full feed is parsed in the server page.
+- Candidate provider: `protocol/plrd.org#152`, commit `4b3ac510355212ff4d127badafa994a182aa862f` (unmerged).
+- Independently compared sibling: `protocol/plneuro.xyz#23`, commit `38f5509a2226db73aa458a0fbc54d0c20e3d74f4` (unmerged).
+- Snapshot: `src/data/field-velocity/neurotech.snapshot.json`; exact bytes of the real provider `loadFieldVelocity()` → `fieldVelocityForArea(..., "neurotech")` export.
+- Export assembled: `2026-09-09T19:06:18.064Z`. This is export time, not observation freshness.
+- Unchanged SHA-256: `2b16a8ebf5ada867a79129243fc3f3afada7ad6e75a639ca0d005849607815ee`.
+- Adjacent `.provenance.json` records provider commit, source URLs, original schema origin, byte count/hash and refresh command. Activating two already-present records did not require changing snapshot bytes or inventing a new export date.
+- The schema retains unknown additive fields. `selectPerformance()` and `selectPace()` preserve original objects and validate chart-specific year/scale/value semantics before import or rendering.
 
-There is **no runtime feed fetch**, no scheduled refresh, no writable runtime cache and no claim of current live data. The public disclosure is a neutral collapsed **Export & source provenance**, not a fallback warning. The neuron card is explicitly historical and retains its 2014 observation / 2022 source-check dates; tissue/hours retain all source date bases, precision, notes and checked dates.
+There is no runtime feed fetch, scheduled refresh, writable runtime cache or claim of live data. The neutral, collapsed **Export & source provenance** disclosure remains below Performance curves. The full feed is parsed on the server; only selected projections reach chart clients.
 
-## Deliberate refresh
+## Deliberate refresh and parity
 
-1. Obtain a complete export from the actual provider API (`GET /api/field-velocity/neurotech/`) at a reviewed commit, or execute the provider's real loader and public projection in that checkout. Record `git rev-parse HEAD` from that provider checkout. Do not assume the unmerged API is already deployed on production, and do not replace unavailable data with fabricated responses.
-2. Validate and import, passing the exact 40-character provider commit:
+1. Obtain a complete export from the real provider API (`GET /api/field-velocity/neurotech/`) at a reviewed commit, or execute its actual loader and public projection in that checkout. Record the exact `git rev-parse HEAD`. Do not assume the unmerged API is deployed.
+2. Validate and import:
 
    ```sh
-   npm run performance:sync -- /path/to/provider-export.json <provider-commit-sha>
+   npm run performance:sync -- /path/to/provider-export.json <40-character-provider-commit>
    ```
 
-   The refresh rejects invalid schemas, wrong area/version, absent/duplicate measurements, invalid date precision/basis, unsafe source URLs, nonpositive/nonfinite points, misleading plot kinds, unordered neuron years and exports over 1 MiB. Invalid input leaves both last-good snapshot and provenance unchanged. Valid exports retain their exact original bytes. This is an explicit local build-time operation, not a runtime endpoint.
-3. Compare against the **independently exported** provider and the reviewed PL Neuro snapshot:
+   Validation covers feed/area/version, sources, date bases/precision, categories, units, qualifiers, scale/plot semantics, sorted unique years and nonempty neuron/Idea vintage/Latency readings. Exports over 1 MiB are rejected. Invalid data leaves snapshot and provenance unchanged; valid input retains exact original bytes.
+3. Compare against an independently exported provider and reviewed sibling snapshot:
 
    ```sh
    npm run performance:verify -- /path/to/provider-export.json /path/to/plneuro/neurotech.snapshot.json
    ```
 
-   This checks snapshot bytes against provenance and deep-compares the original performance record, both measurement objects (including every source note/date/qualifier), the shared definition and methodology. It is not a same-file count comparison.
-4. Run tests, typecheck, build and browser QA. When the reviewed source really changes, update the immutable selected-object digest in `tests/performance-data.test.mjs` only after confirming the source-to-consumer comparison, then record the new source commit and source changes here. Do not loosen the assertions to accept divergence.
+   This verifies snapshot bytes/hash, deep-compares the original neuron and two measurement objects, both pace records and definitions, and shared methodology. Tests pin immutable source-object digests and prove the verifier rejects altered pace objects. Update digests only after independently verifying a real source change.
+4. Run tests, typecheck, build and browser QA. `npm run data:generate` still owns older Atlas extracts, not this snapshot. Funding tests can remove the trailing newline from `src/data/milestones.json`; restore that unrelated generated-only diff.
 
-`npm run data:generate` still owns the older Atlas extracts, not this snapshot. Do not edit the generated snapshot independently or wire it to that legacy generator.
+## Modal navigation and accessibility
 
-## Interaction and accessibility
+- Stable fragments remain `#simultaneously-recorded-neurons`, `#tissue-mapped`, `#neural-recording-hours`; added fragments are `#idea_vintage`, `#latency_compression`. `#performance_curves` and `#expectations` retain their tab/section meaning.
+- Only the selected chart mounts its full detail. Native `dialog.showModal()` puts it in the top layer and makes the underlying page inert. Its sticky header has a visible **× Close** button; backdrop and Escape also close it.
+- Focus enters Close, wraps through controls and keyboard-reachable markers, then returns with `preventScroll` to the trigger or prior control. Body scroll is locked with scrollbar-width compensation. Reference-counted scroll ownership survives graph-to-graph subscription overlap.
+- Every compact card and open modal has visible **Direct link** and **Copy link**, outside the trigger. URL construction preserves the actual origin/path/query and uses the existing fragment identifiers. Ordinary clicks use history without native anchor scrolling; modifier clicks retain normal browser link behavior.
+- Opening pushes the graph URL. Closing a locally opened card goes Back to its prior location, preserving prior fragments; closing a directly loaded graph replaces its fragment with `#performance_curves` without leaving the site. Browser Back/Forward restores the selected modal and Metrics/Expectations state.
+- Automatic history scroll restoration is suspended while the field-velocity location store is subscribed, then restored on unmount. No scroll-to-card effects or matching graph IDs on in-flow cards remain. The compact grid and page scroll position stay fixed when a modal opens/closes.
+- Hover/focus source readouts, keyboard priority over a stationary pointer, fixed-axis track isolation and original source tables remain. Wide charts and tables scroll inside labeled, focusable regions on narrow screens; they do not widen the document. Light/dark and reduced-motion modes retain functionality.
 
-- Mini previews contain no focusable markers or nested links/buttons. Native `summary` supports Enter/Space; Escape closes an expanded card and restores its summary focus. Opening chooses one full-width graph and leaves the others compact.
-- Expanded markers are individually keyboard reachable, including coincident evidence. Hover and focus use the same visible source readout; keyboard focus wins over a stationary pointer, then hover returns on blur.
-- Track isolation never changes coordinates or axes. Tissue/hours remain scatter plots, never cross-dataset lines. Every source observation also has exactly one table row.
-- Wide full-detail charts/tables scroll within focusable labeled regions at narrow widths; they do not widen the page. Date-precision plotting anchors are explicit.
-- Anchors: `#performance_curves`, `#simultaneously-recorded-neurons`, `#tissue-mapped`, `#neural-recording-hours`. Every expanded graph has visible **Direct link** and **Copy link** controls outside its summary. Copied URLs use the actual current origin/path/query, never a hardcoded deployment or localhost.
-- Opening a card pushes its graph hash; closing pushes `#performance_curves`. Fresh URLs and Browser Back/Forward restore the chosen graph, select Metrics even after Expectations, and scroll to that graph. `#expectations` tracks the adjacent tab. The shared SubTabs component gains optional controlled state; other plates retain their existing local-state behavior.
-- Light/dark styles use existing Atlas tokens. No animation is required, so reduced-motion mode retains all functionality.
-
-## Verification commands
+## Verification
 
 ```sh
 npm ci
 npm test
 npm run typecheck
 npm run build
+npm run performance:verify -- /path/to/provider-export.json /path/to/plneuro/neurotech.snapshot.json
 npm run lint
 ```
 
-`typecheck` runs Next's route-type generator before TypeScript so a clean checkout has its `LayoutProps` type. Existing funding tests regenerate `src/data/milestones.json` without a trailing newline; restore that unrelated generated-only change after tests before committing.
+Next 16 needs route generation before `tsc`; `typecheck` runs `next typegen && tsc --noEmit`. In a constrained container, `CIRCLE_NODE_TOTAL=3 NEXT_TELEMETRY_DISABLED=1 UV_THREADPOOL_SIZE=1 taskset -c 0,1 npm run build` bounds workers without source/config edits (check available CPU affinity first).
 
-Initial implementation verification: 53 tests pass; typecheck/build pass. The untouched baseline has three ESLint errors in `milestone-timeline.tsx` / `theme-toggle.tsx` (React effect/immutability rules). Changed files pass ESLint. The inherited dependency tree also reports two high and one critical npm advisories; no unrelated framework/dependency upgrade is included.
+The unchanged baseline has three ESLint errors in `milestone-timeline.tsx` / `theme-toggle.tsx`. Changed files pass ESLint. The inherited dependency tree still reports two high and one critical advisory; no unrelated framework upgrade is included. `jsdom` is a dev-only dependency for DOM lifecycle regressions; native modal inertness, actual keyboard navigation and browser history are also exercised in headed Chrome.
 
-Headed browser QA uses browser-harness only: 1440px, 390px and 320px; all cards open/close full-width, 25 keyboard markers, source rows exactly once, fixed-axis track filtering, mixed hover/focus, deep links, provenance, dark/reduced-motion, and Milestones/Funding/Ecosystem route regressions. The hosted authentication gate is unchanged. Use a loopback-only local QA adapter to exercise a local build; do not disable hosted auth or extract deployment credentials.
+### Headed browser QA
 
-Repeatable harness probes live in `scripts/qa/performance-browser.py` and `scripts/qa/performance-share-browser.py`. After acquiring a dedicated browser-harness window/lock, execute each through the harness's Python stdin (not standalone Python or a new browser). `ATLAS_QA_URL` defaults to `http://127.0.0.1:3387/field-velocity`; `ATLAS_QA_OUTPUT` defaults to `.qa`. The share probe tests all three graphs at all three widths: fresh URL expansion/scroll, actual clipboard readback, open/close URL changes, graph-to-graph Back/Forward, and recovery from Expectations. Browser reports/screenshots are local evidence, not committed generated assets.
+Use browser-harness in an owned window/lock; never spawn a separate browser. `scripts/qa/modal-browser.py` is the consolidated probe (older performance QA entrypoints delegate to it). From the repository root, execute its contents through browser-harness Python stdin. `ATLAS_QA_URL` defaults to `http://127.0.0.1:3397/field-velocity`; output defaults to `.qa`.
+
+The probe exercises all five charts at 1440px, 390px and 320px: fresh links, exact source-point counts, actual clipboard readback, focus wrap/restore, visible Close/Escape/backdrop, unchanged card geometry and scroll coordinates across open/Back/Forward/close, no document overflow, graph-to-graph history, Expectations recovery, fixed-axis filtering, mixed hover/focus, dark/reduced-motion and route regressions. Clipboard read permission is scoped to the loopback QA origin and restored afterward. Generated reports and screenshots are local evidence, not committed build assets.
+
+Hosted Basic Auth is unchanged. Use only the established loopback local QA adapter; never deploy an auth bypass or alter production authentication. Production alias remains `https://neuro-atlas-app.vercel.app` (gated). Before rebuilding the local production bundle, stop the exact task-owned Next server and verify its port is closed; a process-manager kill may leave the server alive.

@@ -14,6 +14,9 @@ const feed = JSON.parse(bytes);
 const provenance = JSON.parse(readFileSync("src/data/field-velocity/neurotech.snapshot.json.provenance.json", "utf8"));
 const point = f => f.measurementSeries[0].tracks[0].points[0];
 const invalid = {
+  "missing Idea vintage points": f => { f.records.find(r => r.instrument === "idea_vintage").series = []; },
+  "unordered Latency years": f => { f.records.find(r => r.instrument === "latency_compression").series[1].x = 1900; },
+  "invalid Idea vintage interval": f => { f.records.find(r => r.instrument === "idea_vintage").series[0].lo = 20; },
   "wrong area": f => { f.area.key = "ai"; },
   "wrong schema version": f => { f.schemaVersion = 2; },
   "missing measurements": f => { delete f.measurementSeries; },
@@ -94,5 +97,5 @@ for (const state of ["unwired", "not_applicable"]) test(`${state} overrides reta
   Object.assign(changed.records[0], { state, candidateMetric: "Future frontier", blocker: "No comparable reading", reason: "Not applicable" });
   const html = renderToStaticMarkup(React.createElement(PerformanceCurves, { data: selectPerformance(parseFeed(changed)), provenance }));
   assert.doesNotMatch(html, /data-frontier-line|data-source-observation="neuron|2014-01-01|Up to ~3,200/);
-  assert.equal((html.match(/data-source-observation=/g) ?? []).length, 18);
+  assert.equal((html.match(/data-source-observation=/g) ?? []).length, 0);
 });

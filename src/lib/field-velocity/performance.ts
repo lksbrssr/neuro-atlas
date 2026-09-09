@@ -19,3 +19,21 @@ export function selectPerformance(feed: FieldVelocityFeed) {
   };
 }
 export type PerformanceData = ReturnType<typeof selectPerformance>;
+
+export const paceIds = ["idea_vintage", "latency_compression"] as const;
+export function selectPace(feed: FieldVelocityFeed) {
+  const records = paceIds.map(id => feed.records.find(r => r.instrument === id)!);
+  for (const record of records) {
+    if (record.state !== "reading") continue;
+    if (!record.series?.length || record.seriesScale !== "linear") throw new Error("Missing pace series or linear scale");
+    for (const [index, point] of record.series.entries()) {
+      if (typeof point.x !== "number" || !Number.isInteger(point.x) || point.x < 1000 || point.x > 9999 || !Number.isFinite(point.y) || point.y < 0 || (index > 0 && Number(record.series[index - 1].x) >= point.x)) throw new Error("Invalid pace year or value");
+    }
+  }
+  return {
+    records,
+    definitions: paceIds.map(id => feed.instruments.find(d => d.id === id)!),
+    methodology: feed.methodology,
+  };
+}
+export type PaceData = ReturnType<typeof selectPace>;

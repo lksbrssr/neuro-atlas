@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { parseFeed } from "../src/lib/field-velocity/schema";
-import { selectPerformance } from "../src/lib/field-velocity/performance";
+import { selectPerformance, selectPace } from "../src/lib/field-velocity/performance";
 
 export const MAX_EXPORT_BYTES = 1024 * 1024;
 
@@ -15,6 +15,7 @@ export function syncSnapshot(input: string, providerCommit: string, output = "sr
   if (bytes.length > MAX_EXPORT_BYTES) throw new Error("Export exceeds 1 MiB limit");
   const feed = parseFeed(JSON.parse(bytes.toString("utf8")));
   selectPerformance(feed);
+  selectPace(feed);
   const provenance = {
     generatedBy: "npm run performance:sync -- <provider-export.json> <provider-commit-sha>",
     providerCommit,

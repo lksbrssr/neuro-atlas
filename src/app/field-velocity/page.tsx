@@ -2,18 +2,19 @@ import type { Metadata } from "next";
 import { PlateHero } from "@/components/plate-header";
 import { VelocityTabs } from "@/components/sections/velocity-tabs";
 import INSTRUMENTS from "@/data/velocity/instruments.json";
-import RECORDS from "@/data/velocity/neurotech_records.json";
 import POINTS from "@/data/velocity/neurotech_inflection_points.json";
 import SNAPSHOT from "@/data/field-velocity/neurotech.snapshot.json";
 import PROVENANCE from "@/data/field-velocity/neurotech.snapshot.json.provenance.json";
 import { parseFeed } from "@/lib/field-velocity/schema";
-import { selectPerformance } from "@/lib/field-velocity/performance";
+import { selectPerformance, selectPace } from "@/lib/field-velocity/performance";
 import { PerformanceCurves } from "@/components/performance-curves";
+import { PaceReadings } from "@/components/pace-readings";
 
 export const metadata: Metadata = { title: "Field velocity — Neuro Atlas" };
 
-const readings = RECORDS.records.filter((row) => row.state === "reading").length;
-const unwired = RECORDS.records.filter((row) => row.state === "unwired").length;
+const feed = parseFeed(SNAPSHOT);
+const readings = feed.records.filter((row) => row.state === "reading").length;
+const unwired = feed.records.filter((row) => row.state === "unwired").length;
 
 export default function FieldVelocityPage() {
   return (
@@ -32,7 +33,7 @@ export default function FieldVelocityPage() {
         ]}
       />
       <div className="mt-8">
-        <VelocityTabs performance={<PerformanceCurves data={selectPerformance(parseFeed(SNAPSHOT))} provenance={PROVENANCE} />} />
+        <VelocityTabs performance={<><PerformanceCurves data={selectPerformance(feed)} provenance={PROVENANCE} /><PaceReadings data={selectPace(feed)} /></>} />
       </div>
     </>
   );
