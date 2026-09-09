@@ -58,6 +58,7 @@ const milestones = msRows.map((r) => {
     note: r.note || null,
     sourceUrl: r.source_url || null,
     logo: logoFile ? `/logos/${logoFile}` : null,
+    scope: r.scope || "bci",
   };
 });
 fs.writeFileSync(path.join(OUT, "milestones.json"), JSON.stringify(milestones, null, 2));

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { buildCompanyRows, buildFundingIndex, formatCapital, getTimelinePosition, loadFundingIndexSources } from "../scripts/lib/funding-index.mjs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFile, rm } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 
 test("excludes disclosed rounds below the $2m screen", () => {
@@ -75,7 +75,6 @@ test("derived-data generation emits the funding index without shrinking the ecos
   const here = path.dirname(fileURLToPath(import.meta.url));
   const root = path.join(here, "..");
   const output = path.join(root, "src", "data", "funding-index.json");
-  await rm(output, { force: true });
 
   const result = spawnSync(process.execPath, [path.join(root, "scripts", "generate-derived.mjs")], { cwd: root, encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr);

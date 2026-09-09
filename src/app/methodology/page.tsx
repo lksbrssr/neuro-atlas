@@ -134,18 +134,22 @@ export default function MethodologyPage() {
         <div className="card p-5">
           <p className="text-sm leading-relaxed text-muted">
             This atlas is built in the open. The data layer is CSV and JSON with
-            provenance fields —{" "}
-            <a
-              href="https://github.com/lksbrssr/neuro-atlas"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium text-accent hover:underline"
-            >
-              open an issue with a source, or PR a row
-            </a>
-            . Corrections with a primary source beat opinions; a dated number with a
+            provenance fields. Corrections with a primary source beat opinions; a dated number with a
             link beats both.
           </p>
+          <div className="mt-4">
+            <a
+              href="https://github.com/lksbrssr/neuro-atlas/pulls"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-raised px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-accent hover:text-accent"
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"/>
+              </svg>
+              Open a Pull Request on GitHub ↗
+            </a>
+          </div>
         </div>
       </section>
 
@@ -153,6 +157,9 @@ export default function MethodologyPage() {
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">Changelog</h2>
         <div className="card p-5">
           <ul className="space-y-2 text-xs leading-relaxed text-muted">
+            <li>
+              <span className="tnum font-medium text-foreground">2026-09-10</span> — Reconciled Milestones with the BCI Funding Index: added NeuCyber ($29m government backing), Neurosoft Bioelectronics ($7.5m seed), and Science Corp PRIMA CE mark. Added an interactive &apos;BCI only&apos; vs &apos;All neurotech&apos; scope filter to the Milestone timeline and updated header copy to accurately reflect neural interfaces and broader neurotechnology. Added community GitHub Pull Request contribution buttons across plates and navigation.
+            </li>
             <li>
               <span className="tnum font-medium text-foreground">2026-09-07</span> — Milestone year columns and the BCI Funding Index now label capital as amount raised. Neuralink $650m is a Series E raise, not a valuation or market cap; year heroes sum sourced round sizes, with Naveen’s $260m / $322m / $653m memo cut kept as a labeled comparison.
             </li>

@@ -8,8 +8,9 @@
     "date": "2026-01-15",
     "datePrecision": "day",
     "note": "Acquisition by Boston Scientific at ~$14.5b enterprise value ($374/share cash+stock); per memo author 'not a BCI play' but a neural-access bet by a DBS company",
-    "sourceUrl": "https://news.bostonscientific.com/2026-01-15-Boston-Scientific-announces-agreement-to-acquire-Penumbra",
-    "logo": "/logos/penumbra.png"
+    "sourceUrl": "https://news.bostonscientific.com/2026-01-15-Boston-Scientific-announces-agreement-to-acquire-Penumbra,-Inc",
+    "logo": "/logos/penumbra.png",
+    "scope": "broader"
   },
   {
     "company": "Merge Labs",
@@ -21,7 +22,8 @@
     "datePrecision": "day",
     "note": "Seed raise of $252m with OpenAI participating (the dollar on the lane). Reported ~$850m valuation is a separate figure and is not plotted. Company came out of stealth the same day",
     "sourceUrl": "https://openai.com/index/investing-in-merge-labs/",
-    "logo": "/logos/merge-labs.jpg"
+    "logo": "/logos/merge-labs.jpg",
+    "scope": "bci"
   },
   {
     "company": "Science Corp",
@@ -33,7 +35,8 @@
     "datePrecision": "day",
     "note": "Series C to accelerate commercialization of the PRIMA BCI retinal implant",
     "sourceUrl": "https://www.businesswire.com/news/home/20260305896789/en/Science-Corporation-Closes-%24230-Million-Series-C-to-Accelerate-Commercialization-of-Its-PRIMA-BCI-Retinal-Implant-the-Worlds-Most-Advanced-Vision-Restoration-Technology",
-    "logo": "/logos/science-corp.jpg"
+    "logo": "/logos/science-corp.jpg",
+    "scope": "bci"
   },
   {
     "company": "Neurosoft Bioelectronics",
@@ -45,7 +48,8 @@
     "datePrecision": "day",
     "note": "BCI ecosystem partnership: Science Corp's full BCI stack supports Neurosoft's neural-data platform",
     "sourceUrl": "https://www.businesswire.com/news/home/20260220875211/en/Science-Corp.-and-Neurosoft-Bioelectronics-Announce-Novel-BCI-Ecosystem-Partnership",
-    "logo": "/logos/neurosoft-bioelectronics.jpg"
+    "logo": "/logos/neurosoft-bioelectronics.jpg",
+    "scope": "bci"
   },
   {
     "company": "Envoy Medical",
@@ -57,7 +61,8 @@
     "datePrecision": "day",
     "note": "Upsized public offering (Nasdaq: COCH): $30m upfront plus up to $48m via milestone-linked warrants",
     "sourceUrl": "https://ir.envoymedical.com/news-events/press-releases/detail/80/envoy-medical-announces-closing-of-up-to-78-0-million-upsized-public-offering",
-    "logo": null
+    "logo": null,
+    "scope": "broader"
   },
   {
     "company": "StairMed",
@@ -69,7 +74,8 @@
     "datePrecision": "day",
     "note": "RMB 500m (~$72.8m) strategic round led by Alibaba; Tencent, FountainBridge, OrbiMed, Oriza Seed, Qiming, LAV, Source Code participating — part of China BCI investment crossing $100m",
     "sourceUrl": "https://www.prnewswire.com/news-releases/stairmed-secures-rmb-500-million-financing-led-by-alibaba-joined-by-tencent-302732525.html",
-    "logo": "/logos/stairmed.jpg"
+    "logo": "/logos/stairmed.jpg",
+    "scope": "bci"
   },
   {
     "company": "Axoft",
@@ -81,7 +87,8 @@
     "datePrecision": "day",
     "note": "Raise alongside first patient test in China",
     "sourceUrl": "https://www.bloomberg.com/news/articles/2026-04-29/us-brain-implant-company-axoft-tests-on-patient-in-china-raises-more-money",
-    "logo": "/logos/axoft.jpg"
+    "logo": "/logos/axoft.jpg",
+    "scope": "bci"
   },
   {
     "company": "Onward Medical",
@@ -93,7 +100,8 @@
     "datePrecision": "day",
     "note": "€40m (~$47.2m) private placement with institutional investors",
     "sourceUrl": "https://www.massdevice.com/onward-raise-47m-in-private-placement/",
-    "logo": "/logos/onward-medical.jpg"
+    "logo": "/logos/onward-medical.jpg",
+    "scope": "broader"
   },
   {
     "company": "Precision Neuroscience",
@@ -105,7 +113,8 @@
     "datePrecision": "day",
     "note": "Partnership with Medtronic to integrate Layer 7 BCI with Medtronic neurosurgical platform",
     "sourceUrl": "https://www.globenewswire.com/news-release/2026/01/12/3217312/0/en/Precision-Neuroscience-and-Medtronic-Partner-to-Integrate-Layer-7-Brain-Computer-Interface-with-Medtronic-Neurosurgical-Platform.html",
-    "logo": "/logos/precision-neuroscience.jpg"
+    "logo": "/logos/precision-neuroscience.jpg",
+    "scope": "bci"
   },
   {
     "company": "Neuracle",
@@ -117,7 +126,8 @@
     "datePrecision": "day",
     "note": "World's first market approval of an invasive BCI: NMPA registration for implantable BCI for hand-motor augmentation — the memo's '1 market approval'",
     "sourceUrl": "https://www.bloomberg.com/news/articles/2026-03-13/china-approves-first-brain-implant-for-commercial-use",
-    "logo": "/logos/neuracle.png"
+    "logo": "/logos/neuracle.png",
+    "scope": "bci"
   },
   {
     "company": "Synchron",
@@ -129,7 +139,8 @@
     "datePrecision": "day",
     "note": "First pivotal trial of a permanently implanted BCI (Stentrode), initiated in 2026 toward the first PMA filing — following the $200m Series D that closed Nov 6, 2025",
     "sourceUrl": "https://www.techtimes.com/articles/317929/20260606/synchron-brain-implant-targets-2026-pivotal-trial-first-fda-approved-bci.htm",
-    "logo": "/logos/synchron.jpg"
+    "logo": "/logos/synchron.jpg",
+    "scope": "bci"
   },
   {
     "company": "Gestala",
@@ -141,7 +152,8 @@
     "datePrecision": "day",
     "note": "~$21.6m angel raise (the dollar on the lane). Separate post-money valuation reported at $100–200m is not plotted. Largest early-stage BCI round in China's history; Guosheng Capital and Dalton Venture led. Non-invasive ultrasound BCI",
     "sourceUrl": "https://techcrunch.com/2026/03/11/bci-startup-gestala-raises-21-million-for-non-invasive-ultrasound-brain-tech/",
-    "logo": "/logos/gestala.jpg"
+    "logo": "/logos/gestala.jpg",
+    "scope": "bci"
   },
   {
     "company": "Enspire DBS",
@@ -153,7 +165,8 @@
     "datePrecision": "day",
     "note": "$10.3m Series B1 led by Genesys Capital; Cleveland Clinic spinout advancing DBS-enabled stroke rehabilitation",
     "sourceUrl": "https://www.prnewswire.com/news-releases/enspire-dbs-therapy-announces-10-3-million-series-b1-financing-to-advance-pivotal-development-of-dbs-enabled-stroke-rehabilitation-302659081.html",
-    "logo": "/logos/enspire-dbs.jpg"
+    "logo": "/logos/enspire-dbs.jpg",
+    "scope": "broader"
   },
   {
     "company": "EpiAneura",
@@ -165,7 +178,8 @@
     "datePrecision": "day",
     "note": "Epia Neuro launched out of stealth (founder Michel Maharbiz, ex-iota Biosciences); minimally-invasive implant for post-stroke rehabilitation, FIH planned later in 2026 at Lenox Hill",
     "sourceUrl": "https://www.businesswire.com/news/home/20260402282679/en/Epia-Neuro-Launches-to-Develop-Intent-Driven-Neural-Technology-to-Restore-Function-After-Stroke-and-Address-Cognitive-Decline",
-    "logo": null
+    "logo": null,
+    "scope": "broader"
   },
   {
     "company": "Blue Arbor Technologies",
@@ -177,7 +191,8 @@
     "datePrecision": "day",
     "note": "$5m strategic investment from Ottobock to advance the RESTORE neuromuscular interface",
     "sourceUrl": "https://www.businesswire.com/news/home/20260225970384/en/Blue-Arbor-Technologies-Announces-Strategic-Partnership-with-Ottobock-and-%245-Million-Investment-to-Advance-RESTORE-Neuromuscular-Interface-System",
-    "logo": "/logos/blue-arbor-technologies.jpg"
+    "logo": "/logos/blue-arbor-technologies.jpg",
+    "scope": "broader"
   },
   {
     "company": "Blue Arbor Technologies",
@@ -189,7 +204,8 @@
     "datePrecision": "day",
     "note": "RESTORE first-in-human implant performed Dec 2025 at the Medical University of Vienna; announced Feb 25, 2026 alongside the Ottobock partnership",
     "sourceUrl": "https://www.businesswire.com/news/home/20260225970384/en/Blue-Arbor-Technologies-Announces-Strategic-Partnership-with-Ottobock-and-%245-Million-Investment-to-Advance-RESTORE-Neuromuscular-Interface-System",
-    "logo": "/logos/blue-arbor-technologies.jpg"
+    "logo": "/logos/blue-arbor-technologies.jpg",
+    "scope": "broader"
   },
   {
     "company": "Ruten Neuro",
@@ -201,7 +217,8 @@
     "datePrecision": "day",
     "note": "$2m round; Japanese-founded startup developing an invasive BMI (Swallow Autopilot) for dysphagia",
     "sourceUrl": "https://ohyashima.com/technology/ruten-raises-2-million-to-develop-bmi-for-swallowing-disorders/",
-    "logo": "/logos/ruten-neuro.jpg"
+    "logo": "/logos/ruten-neuro.jpg",
+    "scope": "bci"
   },
   {
     "company": "Motif Neurotech",
@@ -213,7 +230,8 @@
     "datePrecision": "day",
     "note": "Selected as a performer team for ARPA-H's EVIDENT initiative (a $139.4m behavioral-health program)",
     "sourceUrl": "https://arpa-h.gov/news-and-events/arpa-h-announces-first-research-teams-139-million-initiative-transform-behavioral",
-    "logo": "/logos/motif-neurotech.jpg"
+    "logo": "/logos/motif-neurotech.jpg",
+    "scope": "broader"
   },
   {
     "company": "Motif Neurotech",
@@ -225,7 +243,8 @@
     "datePrecision": "day",
     "note": "FDA IDE approval to begin the first-in-patient trial of DOT, a mm-scale wireless stimulator, for treatment-resistant depression",
     "sourceUrl": "https://www.businesswire.com/news/home/20260427361988/en/Motif-Neurotech-Receives-FDA-Approval-to-Begin-First-Clinical-Trial-of-its-Therapeutic-BCI-for-Treatment-Resistant-Depression",
-    "logo": "/logos/motif-neurotech.jpg"
+    "logo": "/logos/motif-neurotech.jpg",
+    "scope": "broader"
   },
   {
     "company": "CorTec",
@@ -237,7 +256,8 @@
     "datePrecision": "day",
     "note": "Second human implantation of its Brain Interchange BCI system",
     "sourceUrl": "https://www.globenewswire.com/news-release/2026/02/10/3235251/0/en/CorTec-Announces-Successful-Second-Human-Implantation-of-Its-Brain-Computer-Interface-BCI-System.html",
-    "logo": "/logos/cortec.jpg"
+    "logo": "/logos/cortec.jpg",
+    "scope": "bci"
   },
   {
     "company": "CorTec",
@@ -249,7 +269,8 @@
     "datePrecision": "day",
     "note": "FDA Breakthrough Device Designation (Apr 8) then acceptance into the Total Product Life Cycle Advisory Program (Apr 23) — first BCI designated for stroke motor rehabilitation",
     "sourceUrl": "https://www.globenewswire.com/news-release/2026/04/23/3279854/0/en/CorTec-s-Brain-Interchange-Accepted-into-FDA-Total-Product-Life-Cycle-Advisory-Program-TAP.html",
-    "logo": "/logos/cortec.jpg"
+    "logo": "/logos/cortec.jpg",
+    "scope": "bci"
   },
   {
     "company": "INBRAIN Neuroelectronics",
@@ -261,7 +282,8 @@
     "datePrecision": "day",
     "note": "Completed enrolment of the world's first-in-human study of graphene neural interfaces for brain decoding & mapping (tumour-resection surgery, Manchester)",
     "sourceUrl": "https://www.businesswire.com/news/home/20260420000990/en/INBRAIN-Neuroelectronics-Completes-Enrolment-of-Worlds-First-in-Human-Study-of-Graphene-Neural-Interfaces-for-Brain-Decoding-Mapping",
-    "logo": "/logos/inbrain-neuroelectronics.jpg"
+    "logo": "/logos/inbrain-neuroelectronics.jpg",
+    "scope": "bci"
   },
   {
     "company": "Phantom Neuro",
@@ -273,7 +295,8 @@
     "datePrecision": "day",
     "note": "FDA approval to begin the CYBORG first-in-human trial of Phantom X, a subcutaneous EMG sensor array (Cabrini Health, Melbourne)",
     "sourceUrl": "https://insidebci.com/news/2026-04-15-phantom-neuro-gets-green-light-for-first-human-trial-of-its-subcutaneous-prosthetic-sensor/",
-    "logo": "/logos/phantom-neuro.jpg"
+    "logo": "/logos/phantom-neuro.jpg",
+    "scope": "broader"
   },
   {
     "company": "NeuroXess",
@@ -285,7 +308,8 @@
     "datePrecision": "day",
     "note": "Second fully-implanted 'three-full' BCI clinical case (BCI-FES restored self-feeding/painting in a paralyzed patient); the first battery-integrated implant was Dec 2025",
     "sourceUrl": "https://www.neuroxess.com/news/kejixiangshan/",
-    "logo": "/logos/neuroxess.jpg"
+    "logo": "/logos/neuroxess.jpg",
+    "scope": "bci"
   },
   {
     "company": "Paradromics",
@@ -297,7 +321,8 @@
     "datePrecision": "day",
     "note": "APEX academic partnership program launched (Stanford, Mass General, Pitt, UC Davis, Michigan); the first Connexus human implant followed on June 17, 2026",
     "sourceUrl": "https://paradromics.com/news/paradromics-launches-apex-partnership-program-to-boost-neurotechnology-discovery/",
-    "logo": "/logos/paradromics.jpg"
+    "logo": "/logos/paradromics.jpg",
+    "scope": "bci"
   },
   {
     "company": "Nia Therapeutics",
@@ -309,7 +334,8 @@
     "datePrecision": "day",
     "note": "FDA Breakthrough Device Designation for its Smart Neurostimulation System — first neurostim device designated for TBI-related memory loss",
     "sourceUrl": "https://www.businesswire.com/news/home/20260313678930/en/Nia-Therapeutics-Receives-FDA-Breakthrough-Device-Designation-for-AI-Guided-Brain-Implant-to-Treat-Memory-Loss",
-    "logo": "/logos/nia-therapeutics.jpg"
+    "logo": "/logos/nia-therapeutics.jpg",
+    "scope": "broader"
   },
   {
     "company": "ReVision Implant",
@@ -321,7 +347,8 @@
     "datePrecision": "day",
     "note": "FDA Breakthrough Device Designation for the Occular visual cortical prosthesis; also grants access to the FDA's TAP pilot",
     "sourceUrl": "https://insidebci.com/news/2026-03-16-revision-implant-secures-fda-breakthrough-device-designation-for-visual-cortical-prosthesis/",
-    "logo": "/logos/revision-implant.jpg"
+    "logo": "/logos/revision-implant.jpg",
+    "scope": "bci"
   },
   {
     "company": "Motif Neurotech",
@@ -333,7 +360,8 @@
     "datePrecision": "day",
     "note": "MintNeuro partnership to advance miniature BCI therapy for mental health — noted by memo author as omitted from the visual (just out of window); included for completeness",
     "sourceUrl": "https://www.prnewswire.com/news-releases/mintneuro-and-motif-neurotech-partner-to-advance-miniature-brain-computer-interface-therapy-for-mental-health-302758663.html",
-    "logo": "/logos/motif-neurotech.jpg"
+    "logo": "/logos/motif-neurotech.jpg",
+    "scope": "broader"
   },
   {
     "company": "Neuralink",
@@ -345,7 +373,8 @@
     "datePrecision": "day",
     "note": "First human implant of N1 / Telepathy (PRIME)",
     "sourceUrl": "https://fortune.com/2024/01/30/elon-musk-first-human-neuralink-implant-recovering-well",
-    "logo": "/logos/neuralink.jpg"
+    "logo": "/logos/neuralink.jpg",
+    "scope": "bci"
   },
   {
     "company": "Onward Medical",
@@ -357,7 +386,8 @@
     "datePrecision": "day",
     "note": "10th FDA Breakthrough Device Designation, for ARC-BCI (thought-driven lower-limb mobility after SCI)",
     "sourceUrl": "https://uk.advfn.com/stock-market/EURONEXT/ONWD/share-news/ONWARD-Medical-Awarded-10th-Breakthrough-Device-Designation-for-Brain-Computer/93384300",
-    "logo": "/logos/onward-medical.jpg"
+    "logo": "/logos/onward-medical.jpg",
+    "scope": "broader"
   },
   {
     "company": "Onward Medical",
@@ -369,7 +399,8 @@
     "datePrecision": "day",
     "note": "Accepted into FDA TAP for ARC-BCI",
     "sourceUrl": "https://kommunikasjon.ntb.no/pressemelding/18056584/onward-medical-accepted-to-new-us-fda-tap-program-for-development-of-its-arc-bci-system?publisherId=4954260",
-    "logo": "/logos/onward-medical.jpg"
+    "logo": "/logos/onward-medical.jpg",
+    "scope": "broader"
   },
   {
     "company": "INBRAIN Neuroelectronics",
@@ -381,7 +412,8 @@
     "datePrecision": "month",
     "note": "Accepted into FDA TAP (company timeline: January 2024; digest files it under March)",
     "sourceUrl": "https://inbrain-neuroelectronics.com/",
-    "logo": "/logos/inbrain-neuroelectronics.jpg"
+    "logo": "/logos/inbrain-neuroelectronics.jpg",
+    "scope": "bci"
   },
   {
     "company": "Blue Arbor Technologies",
@@ -393,7 +425,8 @@
     "datePrecision": "day",
     "note": "Breakthrough Device Designation and TAP enrollment for RESTORE neuromuscular interface (upper-limb loss)",
     "sourceUrl": "https://www.businesswire.com/news/home/20240424910905/en/Blue-Arbor-Technologies-Receives-FDA-Breakthrough-Device-Designation-and-TAP-Enrollment-for-the-RESTORE%E2%84%A2-Neuromuscular-Interface-System",
-    "logo": "/logos/blue-arbor-technologies.jpg"
+    "logo": "/logos/blue-arbor-technologies.jpg",
+    "scope": "broader"
   },
   {
     "company": "CorTec",
@@ -405,7 +438,8 @@
     "datePrecision": "day",
     "note": "FDA IDE for University of Washington early-feasibility study of Brain Interchange in stroke rehabilitation",
     "sourceUrl": "https://www.medicaldevice-network.com/news/fda-cortec-implant-study",
-    "logo": "/logos/cortec.jpg"
+    "logo": "/logos/cortec.jpg",
+    "scope": "bci"
   },
   {
     "company": "Paradromics",
@@ -417,7 +451,8 @@
     "datePrecision": "day",
     "note": "Accepted into FDA TAP for Connexus (two prior BDDs: speech, computer control). Patient registry launched.",
     "sourceUrl": "https://www.paradromics.com/news/paradromics-accepted-to-fda-regulatory-accelerator-program-and-announces-new-patient-registry",
-    "logo": "/logos/paradromics.jpg"
+    "logo": "/logos/paradromics.jpg",
+    "scope": "bci"
   },
   {
     "company": "Neuralink",
@@ -429,7 +464,8 @@
     "datePrecision": "day",
     "note": "Breakthrough Device Designation for Blindsight cortical vision prosthesis",
     "sourceUrl": "https://www.ny1.com/nyc/all-boroughs/health/2024/09/18/fda-breakthrough-devices-neuralink-blindsight-elon-musk",
-    "logo": "/logos/neuralink.jpg"
+    "logo": "/logos/neuralink.jpg",
+    "scope": "bci"
   },
   {
     "company": "Neuralink",
@@ -441,7 +477,8 @@
     "datePrecision": "day",
     "note": "Health Canada approval to launch CAN-PRIME at UHN (Toronto Western)",
     "sourceUrl": "https://www.clinicaltrialsarena.com/news/neuralink-health-canada-trial",
-    "logo": "/logos/neuralink.jpg"
+    "logo": "/logos/neuralink.jpg",
+    "scope": "bci"
   },
   {
     "company": "Neuralink",
@@ -453,7 +490,8 @@
     "datePrecision": "day",
     "note": "CONVOY early-feasibility study start (N1 control of an investigational assistive robotic arm; NCT06710626)",
     "sourceUrl": "https://www.hipa.ai/study/NCT06710626",
-    "logo": "/logos/neuralink.jpg"
+    "logo": "/logos/neuralink.jpg",
+    "scope": "bci"
   },
   {
     "company": "Newronika",
@@ -465,7 +503,8 @@
     "datePrecision": "day",
     "note": "FDA IDE to initiate US pivotal trial of adaptive DBS (AlphaDBS / Parkinson's)",
     "sourceUrl": "https://www.prnewswire.com/news-releases/newronika-receives-investigational-device-exemption-ide-from-fda-to-initiate-us-clinical-trial-of-adaptive-dbs-system-302368037.html",
-    "logo": "/logos/newronika.jpg"
+    "logo": "/logos/newronika.jpg",
+    "scope": "broader"
   },
   {
     "company": "Newronika",
@@ -477,7 +516,8 @@
     "datePrecision": "day",
     "note": "CE Mark for AlphaDBS (adaptive DBS, Parkinson's)",
     "sourceUrl": "https://www.prnewswire.com/news-releases/newronika-receives-ce-mark-approval-for-alphadbs-advancing-adaptive-deep-brain-stimulation-for-parkinsons-disease-302408082.html",
-    "logo": "/logos/newronika.jpg"
+    "logo": "/logos/newronika.jpg",
+    "scope": "broader"
   },
   {
     "company": "Precision Neuroscience",
@@ -489,7 +529,8 @@
     "datePrecision": "day",
     "note": "FDA 510(k) clearance for Layer 7 Cortical Interface, implantation up to 30 days",
     "sourceUrl": "https://precisionneuro.io/articles/company-news/precision-neuroscience-receives-fda-clearance-for-high-resolution-cortical-electrode-array",
-    "logo": "/logos/precision-neuroscience.jpg"
+    "logo": "/logos/precision-neuroscience.jpg",
+    "scope": "bci"
   },
   {
     "company": "Onward Medical",
@@ -501,7 +542,8 @@
     "datePrecision": "day",
     "note": "FDA IDE for Empower BP pivotal study of implanted ARC-IM (blood-pressure instability after SCI)",
     "sourceUrl": "https://www.globenewswire.com/news-release/2025/08/18/3135202/0/en/ONWARD-Medical-Receives-FDA-IDE-Approval-to-Initiate-the-Empower-BP-Pivotal-Study-with-the-ARC-IM-System.html",
-    "logo": "/logos/onward-medical.jpg"
+    "logo": "/logos/onward-medical.jpg",
+    "scope": "broader"
   },
   {
     "company": "Paradromics",
@@ -513,7 +555,8 @@
     "datePrecision": "day",
     "note": "FDA IDE for Connect-One Early Feasibility Study of Connexus (speech + computer control)",
     "sourceUrl": "https://www.paradromics.com/news/paradromics-receives-fda-approval-for-the-connect-one-clinical-study-with-the-connexus-brain-computer-interface",
-    "logo": "/logos/paradromics.jpg"
+    "logo": "/logos/paradromics.jpg",
+    "scope": "bci"
   },
   {
     "company": "Precision Neuroscience",
@@ -525,7 +568,8 @@
     "datePrecision": "day",
     "note": "Series C led by General Equity Holdings to advance the Layer 7 cortical implant",
     "sourceUrl": "https://www.globenewswire.com/news-release/2024/12/16/2997364/0/en/Precision-Neuroscience-Raises-102-Million-to-Advance-AI-Powered-Brain-Implant.html",
-    "logo": "/logos/precision-neuroscience.jpg"
+    "logo": "/logos/precision-neuroscience.jpg",
+    "scope": "bci"
   },
   {
     "company": "Onward Medical",
@@ -537,7 +581,8 @@
     "datePrecision": "day",
     "note": "€50m (~$54m) upsized private placement; Ottobock cornerstone (~10%). Label: public equity raise, not a priced VC round.",
     "sourceUrl": "https://www.globenewswire.com/news-release/2024/10/24/2968347/0/en/ONWARD-Medical-Successfully-Raises-EUR-50-Million-in-an-Upsized-Capital-Increase-with-Cornerstone-Investment-from-Ottobock-SE-Co-KGaA.html",
-    "logo": "/logos/onward-medical.jpg"
+    "logo": "/logos/onward-medical.jpg",
+    "scope": "broader"
   },
   {
     "company": "INBRAIN Neuroelectronics",
@@ -549,7 +594,8 @@
     "datePrecision": "day",
     "note": "Series B to advance graphene-based BCI",
     "sourceUrl": "https://www.businesswire.com/news/home/20241029660063/en/INBRAIN-Neuroelectronics-Raises-%2450M-Series-B-to-Advance-Graphene-Based-Brain-Computer-Interface-Technology",
-    "logo": "/logos/inbrain-neuroelectronics.jpg"
+    "logo": "/logos/inbrain-neuroelectronics.jpg",
+    "scope": "bci"
   },
   {
     "company": "Motif Neurotech",
@@ -561,7 +607,8 @@
     "datePrecision": "day",
     "note": "$18.75m Series A (rounded) for the DOT microstimulator in treatment-resistant depression",
     "sourceUrl": "https://www.businesswire.com/news/home/20240124154216/en/Motif-Neurotech-Raises-%2418.75-Million-in-Series-A-Financing-to-Advance-Implantable-Device-for-Treatment-Resistant-Depression",
-    "logo": "/logos/motif-neurotech.jpg"
+    "logo": "/logos/motif-neurotech.jpg",
+    "scope": "broader"
   },
   {
     "company": "Forest Neurotech",
@@ -573,7 +620,8 @@
     "datePrecision": "day",
     "note": "$14m philanthropic FRO funding commitment from Convergent Research — not a priced equity round",
     "sourceUrl": "https://www.businesswire.com/news/home/20240311581698/en/Convergent-Research-Announces-Major-New-Funding-Commitment-to-Forest-Neurotech",
-    "logo": null
+    "logo": null,
+    "scope": "broader"
   },
   {
     "company": "Nia Therapeutics",
@@ -585,7 +633,8 @@
     "datePrecision": "day",
     "note": "Series A",
     "sourceUrl": "https://pci.upenn.edu/nia-therapeutics-raises-8-5-million/",
-    "logo": "/logos/nia-therapeutics.jpg"
+    "logo": "/logos/nia-therapeutics.jpg",
+    "scope": "broader"
   },
   {
     "company": "Neuracle",
@@ -597,7 +646,8 @@
     "datePrecision": "day",
     "note": "RMB 60m (~$8.5m) venture round; USD is an announcement-date conversion",
     "sourceUrl": "https://wiharper.com/brain-computer-interface-company-neuracle-raises-rmb-60-million/",
-    "logo": "/logos/neuracle.png"
+    "logo": "/logos/neuracle.png",
+    "scope": "bci"
   },
   {
     "company": "Science Corp",
@@ -609,7 +659,8 @@
     "datePrecision": "day",
     "note": "$103.6m financing led with Khosla Ventures",
     "sourceUrl": "https://www.axios.com/pro/health-tech-deals/2025/04/14/science-corp-bci-100m-fundraise",
-    "logo": "/logos/science-corp.jpg"
+    "logo": "/logos/science-corp.jpg",
+    "scope": "bci"
   },
   {
     "company": "NeuroPace",
@@ -621,7 +672,8 @@
     "datePrecision": "day",
     "note": "$65m underwritten public offering of common stock (Nasdaq: NPCE). Label: listed-company offering, not a VC round.",
     "sourceUrl": "https://investors.neuropace.com/news/news-details/2025/NeuroPace-Announces-Pricing-of-Public-Offering-of-65-Million-of-Common-Stock-02-14-2025/",
-    "logo": null
+    "logo": null,
+    "scope": "broader"
   },
   {
     "company": "Echo Neurotech",
@@ -633,7 +685,8 @@
     "datePrecision": "day",
     "note": "Series A reported as approximately $50m; Andreessen Horowitz among backers",
     "sourceUrl": "https://www.bloomberg.com/news/articles/2025-01-30/andreessen-horowitz-backs-rival-to-musk-s-neuralink-in-new-funding-round",
-    "logo": null
+    "logo": null,
+    "scope": "bci"
   },
   {
     "company": "StairMed",
@@ -645,7 +698,8 @@
     "datePrecision": "day",
     "note": "RMB 350m ($48m) Series B",
     "sourceUrl": "https://www.chinadaily.com.cn/a/202502/12/WS67abf242a310a2ab06eaba81.html",
-    "logo": "/logos/stairmed.jpg"
+    "logo": "/logos/stairmed.jpg",
+    "scope": "bci"
   },
   {
     "company": "SubSense",
@@ -657,7 +711,8 @@
     "datePrecision": "day",
     "note": "$17m seed launch round for a non-surgical nanoparticle BCI",
     "sourceUrl": "https://endpoints.news/subsense-launches-with-17m-to-build-a-noninvasive-brain-computer-interface/",
-    "logo": null
+    "logo": null,
+    "scope": "bci"
   },
   {
     "company": "Newronika",
@@ -669,7 +724,8 @@
     "datePrecision": "day",
     "note": "€13.6m (~$14.1m) Series B for adaptive DBS; USD rounded",
     "sourceUrl": "https://www.massdevice.com/newronika-closes-14m-series-b/",
-    "logo": "/logos/newronika.jpg"
+    "logo": "/logos/newronika.jpg",
+    "scope": "broader"
   },
   {
     "company": "Coherence Neuro",
@@ -681,7 +737,8 @@
     "datePrecision": "day",
     "note": "$10m seed led by Artesian and Topology Ventures",
     "sourceUrl": "https://www.massdevice.com/coherence-neuro-raises-10m-seed-round-for-bci-that-aids-in-cancer-treatment/",
-    "logo": null
+    "logo": null,
+    "scope": "broader"
   },
   {
     "company": "SubSense",
@@ -693,7 +750,8 @@
     "datePrecision": "day",
     "note": "$10m seed extension",
     "sourceUrl": "https://hitconsultant.net/2025/12/11/subsense-raises-10m-to-replace-brain-implants-with-nasal-nanoparticles/",
-    "logo": null
+    "logo": null,
+    "scope": "bci"
   },
   {
     "company": "NeuroBionics",
@@ -705,7 +763,8 @@
     "datePrecision": "day",
     "note": "$5m seed first close; a later second close took the seed total to $10m. Label: first close.",
     "sourceUrl": "https://neurobionics.io/press/neurobionics-seed-press-release/",
-    "logo": null
+    "logo": null,
+    "scope": "broader"
   },
   {
     "company": "Augmental",
@@ -717,7 +776,8 @@
     "datePrecision": "day",
     "note": "$4m seed for MouthPad, an intraoral wearable BCI alternative",
     "sourceUrl": "https://www.forbes.com/sites/naveenrao/2024/10/23/is-the-future-of-bci-right-under-our-nose/",
-    "logo": null
+    "logo": null,
+    "scope": "broader"
   },
   {
     "company": "Blackrock Neurotech",
@@ -729,7 +789,8 @@
     "datePrecision": "day",
     "note": "Tether majority-stake strategic investment",
     "sourceUrl": "https://blackrockneurotech.com/insights/tether-invested-200m-in-blackrock-neurotech-accelerating-development-and-commercialization-of-implantable-bci-technology/",
-    "logo": "/logos/blackrock-neurotech.jpg"
+    "logo": "/logos/blackrock-neurotech.jpg",
+    "scope": "bci"
   },
   {
     "company": "Neuralink",
@@ -741,7 +802,8 @@
     "datePrecision": "day",
     "note": "Series E raise — $650m of new capital, not a valuation or market cap. Reported ~$9b pre-money is a separate figure.",
     "sourceUrl": "https://neuralink.com/updates/neuralink-raises-650m-series-e/",
-    "logo": "/logos/neuralink.jpg"
+    "logo": "/logos/neuralink.jpg",
+    "scope": "bci"
   },
   {
     "company": "Synchron",
@@ -753,6 +815,46 @@
     "datePrecision": "day",
     "note": "Series D led by ARCH Venture Partners, with Khosla, Bezos Expeditions, NEA, QIA, and re.Mind Capital",
     "sourceUrl": "https://www.businesswire.com/news/home/20251106150841/en/Synchron-Raises-%24200-Million-Series-D-to-Advance-Brain-Computer-Interface-Technology",
-    "logo": "/logos/synchron.jpg"
+    "logo": "/logos/synchron.jpg",
+    "scope": "bci"
+  },
+  {
+    "company": "NeuCyber NeuroTech",
+    "slug": "neucyber-neurotech",
+    "activity": "$29m",
+    "stage": "capital",
+    "amountUsdM": 29,
+    "date": "2026-03-20",
+    "datePrecision": "day",
+    "note": "RMB 200m ($29m) Beijing municipal government backing for flexible neural interface",
+    "sourceUrl": "https://www.reuters.com/business/healthcare-pharmaceuticals/beijing-backed-brain-chip-firm-says-it-is-3-years-behind-musks-neuralink-2026-03-20/",
+    "logo": null,
+    "scope": "bci"
+  },
+  {
+    "company": "Neurosoft Bioelectronics",
+    "slug": "neurosoft-bioelectronics",
+    "activity": "$7.5m",
+    "stage": "capital",
+    "amountUsdM": 7.5,
+    "date": "2026-05-20",
+    "datePrecision": "day",
+    "note": "$7.5m seed round backed by Skybound Venture Capital, Protocol Labs, IAG Capital Partners, and Connecticut Innovations",
+    "sourceUrl": "https://tech.eu/2026/05/20/neurosoft-bioelectronics-raises-75m-for-scalable-brain-computer-interfaces/",
+    "logo": "/logos/neurosoft-bioelectronics.jpg",
+    "scope": "bci"
+  },
+  {
+    "company": "Science Corp",
+    "slug": "science-corp",
+    "activity": "CE",
+    "stage": "commercial",
+    "amountUsdM": null,
+    "date": "2026-07-22",
+    "datePrecision": "day",
+    "note": "PRIMA photovoltaic retinal implant received CE mark approval for commercial use in Europe",
+    "sourceUrl": "https://science.xyz/news/ce-mark/",
+    "logo": "/logos/science-corp.jpg",
+    "scope": "bci"
   }
 ]

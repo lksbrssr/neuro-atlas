@@ -73,9 +73,14 @@ function fmtDateFull(dateStr: string): string {
 function fmtUsd(m: number): string {
   return m >= 1000 ? `$${(m / 1000).toFixed(m % 1000 === 0 ? 0 : 1)}b` : `$${Math.round(m)}m`;
 }
-function capitalRaisedInYear(year: number): number {
+function capitalRaisedInYear(year: number, scope: "all" | "bci" = "all"): number {
   return MILESTONES.filter(
-    (m) => m.stage === "capital" && m.amountUsdM && m.date && yearOf(m.date) === year,
+    (m) =>
+      m.stage === "capital" &&
+      m.amountUsdM &&
+      m.date &&
+      yearOf(m.date) === year &&
+      (scope === "all" || (m as { scope?: string }).scope === "bci"),
   ).reduce((sum, m) => sum + (m.amountUsdM ?? 0), 0);
 }
 function expandActivity(activity: string): [string, string | null][] {
@@ -101,8 +106,15 @@ const ALL_SUBCATS: Record<StageKey, string[]> = (() => {
   return out;
 })();
 
-function cumulativeCapital(year: number) {
-  const caps = MILESTONES.filter((m) => m.stage === "capital" && m.amountUsdM && m.date && yearOf(m.date) === year).sort((a, b) => (a.date! < b.date! ? -1 : 1));
+function cumulativeCapital(year: number, scope: "all" | "bci" = "all") {
+  const caps = MILESTONES.filter(
+    (m) =>
+      m.stage === "capital" &&
+      m.amountUsdM &&
+      m.date &&
+      yearOf(m.date) === year &&
+      (scope === "all" || (m as { scope?: string }).scope === "bci"),
+  ).sort((a, b) => (a.date! < b.date! ? -1 : 1));
   let s = 0;
   return caps.map((m) => { s += m.amountUsdM!; return { x: m.date as string, y: s }; });
 }
@@ -113,6 +125,7 @@ export function MilestoneTimeline() {
     clinical: new Set(ALL_SUBCATS.clinical),
     commercial: new Set(ALL_SUBCATS.commercial),
   });
+  const [scopeFilter, setScopeFilter] = useState<"all" | "bci">("all");
   const [openStage, setOpenStage] = useState<StageKey | null>(null);
   const [focusYear, setFocusYearRaw] = useState(2026);
   const [railOpen, setRailOpen] = useState(true);
@@ -133,7 +146,10 @@ export function MilestoneTimeline() {
 
   useEffect(() => setNow(Date.now()), []);
 
-  const matches = (m: Milestone) => subcatsOf(m).some((sub) => sel[m.stage as StageKey]?.has(sub));
+  const matches = (m: Milestone) => {
+    if (scopeFilter === "bci" && (m as { scope?: string }).scope !== "bci") return false;
+    return subcatsOf(m).some((sub) => sel[m.stage as StageKey]?.has(sub));
+  };
 
   const { lanes, totalH, undated } = useMemo(() => {
     let y = PLOT_TOP;
@@ -156,7 +172,7 @@ export function MilestoneTimeline() {
     const undated = MILESTONES.filter((m) => !m.date && matches(m));
     return { lanes, totalH: Math.max(y, PLOT_TOP + 120), undated };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, focusYear]);
+  }, [sel, focusYear, scopeFilter]);
 
   const agg = useMemo(() => {
     const { t0, t1: yearEnd } = boundsOf(focusYear);
@@ -173,7 +189,7 @@ export function MilestoneTimeline() {
       return { stage, count: evs.length, usd, rounds, breakdown };
     });
     return { t1, t2, rows };
-  }, [sel, selRange, focusYear]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [sel, selRange, focusYear, scopeFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const clickGroup = (key: StageKey) => {
     if (openStage !== key) { setOpenStage(key); return; }
@@ -207,7 +223,7 @@ export function MilestoneTimeline() {
 
   const capitalLine = (H: number) => {
     const { t0, t1 } = boundsOf(focusYear);
-    const series = cumulativeCapital(focusYear);
+    const series = cumulativeCapital(focusYear, scopeFilter);
     const pts = [{ x: 0, y: 0 }, ...series.map((p) => ({ x: pctIn(p.x, t0, t1), y: p.y }))];
     const last = pts[pts.length - 1];
     const slope = last.x > 0 ? last.y / last.x : 0;
@@ -330,12 +346,41 @@ export function MilestoneTimeline() {
 
   return (
     <div>
-      {/* Legend */}
-      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+      {/* Scope filter and stage legend */}
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        {/* Scope filter toggle */}
+        <div className="inline-flex rounded-full border border-border bg-surface-raised p-0.5 text-xs">
+          <button
+            type="button"
+            onClick={() => setScopeFilter("all")}
+            className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+              scopeFilter === "all"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted hover:text-foreground"
+            }`}
+          >
+            All neurotech <span className="tnum ml-1 opacity-75">{MILESTONES.length}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setScopeFilter("bci")}
+            className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+              scopeFilter === "bci"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted hover:text-foreground"
+            }`}
+          >
+            BCI only <span className="tnum ml-1 opacity-75">{MILESTONES.filter((m) => (m as { scope?: string }).scope === "bci").length}</span>
+          </button>
+        </div>
+
+        <span className="mx-0.5 hidden h-4 w-px bg-border sm:inline-block" aria-hidden />
+
+        {/* Stage filters */}
         {STAGES.map((s) => {
           const subs = ALL_SUBCATS[s.key];
           const selected = sel[s.key];
-          const total = MILESTONES.filter((m) => m.stage === s.key).length;
+          const total = MILESTONES.filter((m) => m.stage === s.key && (scopeFilter === "all" || (m as { scope?: string }).scope === "bci")).length;
           const open = openStage === s.key;
           const noneOn = selected.size === 0;
           return (
@@ -353,7 +398,7 @@ export function MilestoneTimeline() {
                     <span className="mx-0.5 h-5 w-px shrink-0 bg-border-strong" aria-hidden />
                     {subs.map((sub) => {
                       const on = selected.has(sub);
-                      const count = MILESTONES.filter((m) => m.stage === s.key && subcatsOf(m).includes(sub)).length;
+                      const count = MILESTONES.filter((m) => m.stage === s.key && (scopeFilter === "all" || (m as { scope?: string }).scope === "bci") && subcatsOf(m).includes(sub)).length;
                       const expansion = lookupAcronym(sub)?.expansion;
                       return (
                         <button key={sub} type="button" onClick={() => toggleSub(s.key, sub)}
@@ -376,7 +421,7 @@ export function MilestoneTimeline() {
             </div>
           );
         })}
-        <span className="ml-auto hidden text-[11px] text-faint md:block">click a year to focus · drag across to summarize · hover a logo for the name and marker</span>
+        <span className="ml-auto hidden text-[11px] text-faint md:block">click a year to focus · drag across to summarize · hover a logo for details</span>
       </div>
 
       <div className="flex gap-4">
@@ -389,7 +434,7 @@ export function MilestoneTimeline() {
               if (focused) {
                 return <div key={year} className="shrink-0" style={{ width: w, transition: YEAR_EASE }}>{plot}</div>;
               }
-              const raised = capitalRaisedInYear(year);
+              const raised = capitalRaisedInYear(year, scopeFilter);
               return (
                 <button
                   key={year}
@@ -440,9 +485,9 @@ export function MilestoneTimeline() {
                 className={`mb-1 flex w-full flex-col gap-0.5 rounded px-1 py-1 text-left transition-colors hover:bg-surface-raised ${focusYear === year ? "bg-surface-raised" : ""}`}>
                 <span className="tnum flex items-baseline justify-between text-[13px]">
                   <span className={focusYear === year ? "font-semibold text-foreground" : "text-muted"}>{year}</span>
-                  <span className="font-semibold">{fmtUsd(capitalRaisedInYear(year))}</span>
+                  <span className="font-semibold">{fmtUsd(capitalRaisedInYear(year, scopeFilter))}</span>
                 </span>
-                {year === 2026 && cumulativeCapital(2026).length > 1 && <span className="mt-0.5 block"><Sparkline series={cumulativeCapital(2026)} width={166} height={22} /></span>}
+                {year === 2026 && cumulativeCapital(2026, scopeFilter).length > 1 && <span className="mt-0.5 block"><Sparkline series={cumulativeCapital(2026, scopeFilter)} width={166} height={22} /></span>}
               </button>
             ))}
             <div className="mt-1 px-1 text-[10px] leading-snug text-faint">Sourced round sizes on this lane — not valuations or market cap. 2026 is Jan–Apr.</div>
@@ -503,7 +548,10 @@ export function MilestoneTimeline() {
           <div className="mb-1 flex items-center gap-2">
             <FirmLogo src={tip.m.logo} name={tip.m.company} size={18} />
             <span className="text-[13px] font-semibold text-background">{tip.m.company}</span>
-            <span className="ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-background/90" style={{ background: stageColor(tip.m.stage) }}>{tip.m.stage}</span>
+            <span className="ml-auto flex items-center gap-1">
+              <span className="rounded-full bg-background/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-background/80">{(tip.m as { scope?: string }).scope === "bci" ? "BCI" : "Neuro"}</span>
+              <span className="rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-background/90" style={{ background: stageColor(tip.m.stage) }}>{tip.m.stage}</span>
+            </span>
           </div>
           <div className="tnum text-[12px] font-medium text-background/90">
             {tip.m.stage === "capital" && tip.m.amountUsdM ? `${tip.m.activity} raised` : tip.m.activity}
