@@ -1,5 +1,7 @@
 # Field velocity — Neurotech
 
+**Legacy extraction:** the files below still supply Atlas's other metrics/Expectations. The rendered Performance curves section now uses the separately validated shared export at `src/data/field-velocity/neurotech.snapshot.json`; see [`docs/performance-curves.md`](../../docs/performance-curves.md). Do not refresh that snapshot with the legacy derived-data generator.
+
 Extracted from **protocol/plrd.org** (`main` @ `06cb5d2`), the source behind the impact preview at plrd.org/impact-preview-eb61fba1b98e/ (Neurotech field-velocity tab). Source modules: `src/lib/velocity-instruments.ts`, `src/lib/inflection-points.ts`, `src/lib/market-signals.ts`.
 
 ## Files

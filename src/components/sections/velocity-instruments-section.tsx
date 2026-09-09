@@ -20,7 +20,7 @@ const WORKBENCH: Workbench[] = [
     target: "100M hours",
     build: "Days of engineering, then automated",
     pitch:
-      "No archive publishes recording-hours, but it's derivable — NWB session metadata in DANDI (1,159 dandisets, 2.2 PB) carries start/stop times and sampling rates, and the API exposes asset metadata without downloading data. Add IBL, Allen, DABI, OpenNeuro. This would be the first public estimate of how much open neural data exists, in the unit your own milestone is denominated in.",
+      "The performance cards above cover selected sourced datasets, not an archive-wide inventory. A broader hours ledger would need session-duration metadata, explicit modality and access boundaries, and deduplication of overlapping releases. Catalog counts and storage bytes alone do not establish recording-hours.",
   },
   {
     title: "The Channel-Count Frontier",
@@ -34,19 +34,21 @@ const WORKBENCH: Workbench[] = [
 const ROW = "grid gap-5 rounded-xl px-5 py-5 md:grid-cols-[1fr_340px] md:items-center";
 const zebra = (i: number) => (i % 2 === 1 ? "bg-black/[0.025] dark:bg-white/[0.03]" : "");
 
-export function VelocityInstrumentsSection() {
+export function VelocityInstrumentsSection({ performance }: { performance: React.ReactNode }) {
   let i = 0;
   return (
     <>
+      {performance}
       <p className="mb-5 max-w-2xl text-sm leading-relaxed text-muted">
-        Instruments that read the field&apos;s underlying pace. Where a reading is live it
-        carries a date, a source, and a chart you can drag to measure; where it isn&apos;t,
+        Other metrics that read the field&apos;s underlying pace. These earlier Atlas extracts
+        remain separate from the shared performance snapshot above. Where a reading exists,
+        it carries a source and a chart you can drag to measure; where it doesn&apos;t,
         we name the metric we intend to use and what is blocking it — an honest
         &apos;unwired&apos; is a correct answer.
       </p>
 
       <div className="flex flex-col gap-1">
-        {RECORDS.records.map((r) => {
+        {RECORDS.records.filter(r => r.instrument !== "performance_curves").map((r) => {
           const def = DEFS[r.instrument];
           const isReading = r.state === "reading";
           return (
