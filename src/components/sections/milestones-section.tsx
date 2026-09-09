@@ -5,12 +5,12 @@ export function MilestonesSection() {
   return (
     <>
       <SectionIntro title="Milestone timeline">
-        Every tracked deal, partnership, first-in-human event, and approval in the
-        implanted-BCI field, on one shared time axis — color marks the
-        stage. Click a year to focus it. Click a stage in the legend to expand its
-        subcategories and filter by any subset; hover any logo for details, including
-        spelled-out regulatory markers; click to open the primary source.
-        Anything without a confirmed date sits in the &apos;date TBD&apos; shelf
+        Tracked deals, partnerships, first-in-human trials, and regulatory milestones across
+        neural interfaces and neurotechnology, on one shared time axis — color marks the
+        stage. Filter by BCI only or view the broader neurotech ecosystem. Click a year to focus it.
+        Click a stage in the legend to expand its subcategories and filter by any subset;
+        hover any logo for details, including spelled-out regulatory markers; click to open the
+        primary source. Anything without a confirmed date sits in the &apos;date TBD&apos; shelf
         rather than being faked onto the axis.
       </SectionIntro>
       <MilestoneTimeline />
