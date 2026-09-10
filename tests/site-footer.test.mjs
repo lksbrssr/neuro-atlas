@@ -1,0 +1,42 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { JSDOM } from "jsdom";
+
+test("every Atlas route inherits one footer outside the main content landmark", () => {
+  const layout = readFileSync("src/app/layout.tsx", "utf8");
+  assert.equal((layout.match(/<SiteFooter\s*\/>/g) ?? []).length, 1);
+  assert.ok(layout.indexOf("<SiteFooter") > layout.indexOf("</main>"));
+});
+
+test("the shared footer provides PL destinations and a visible investment disclaimer", async () => {
+  assert.ok(existsSync("src/components/site-footer.tsx"), "The shared site footer is missing");
+  const { SiteFooter } = await import("../src/components/site-footer.tsx");
+  const { document } = new JSDOM(renderToStaticMarkup(React.createElement(SiteFooter))).window;
+  const footer = document.querySelector("footer");
+  assert.ok(footer, "Use a semantic contentinfo landmark");
+  const expectedLinks = new Map([
+    ["PL R&D", "https://www.plrd.org/"],
+    ["PL Neuro", "https://www.plneuro.xyz/"],
+    ["Protocol Labs", "https://www.protocol.ai/"],
+    ["X / Twitter", "https://x.com/protocollabs_rd"],
+    ["GitHub", "https://github.com/lksbrssr/neuro-atlas"],
+    ["Privacy Policy", "https://www.protocol.ai/legal/#privacy-policy"],
+    ["Terms of Service", "https://www.protocol.ai/legal/#terms-conditions"],
+  ]);
+  for (const [label, href] of expectedLinks) {
+    const link = [...footer.querySelectorAll("a")].find((a) => a.textContent.trim() === label);
+    assert.ok(link, `Missing ${label}`);
+    assert.equal(link.getAttribute("href"), href);
+  }
+  const text = footer.textContent.replace(/\s+/g, " ");
+  assert.match(text, /for informational purposes only/i);
+  assert.match(text, /not investment advice/i);
+  assert.match(text, /not an offer, solicitation, or recommendation/i);
+  assert.match(text, /no commitment or guarantee of future performance or outcomes/i);
+  assert.match(text, /inclusion does not imply endorsement/i);
+  assert.equal(footer.querySelector("details, button"), null, "No hidden disclaimer or nonfunctional cookie control");
+  assert.doesNotMatch(text, /CC-BY|all rights reserved/i, "Do not impose a new license on sourced data");
+});
