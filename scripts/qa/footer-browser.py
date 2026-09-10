@@ -18,8 +18,9 @@ def contrast(foreground, background):
         return sum(a*b for a,b in zip(v, [.2126,.7152,.0722]))
     a,b = sorted([luminance(mixed), luminance(bg)])
     return (b+.05)/(a+.05)
-for width, height in [(1440,1000), (390,1000), (320,1000)]:
+for width, height, touch in [(1440,1000,False), (390,1000,True), (320,1000,True), (1440,1000,True)]:
     cdp('Emulation.setDeviceMetricsOverride', width=width, height=height, deviceScaleFactor=1, mobile=False)
+    cdp('Emulation.setTouchEmulationEnabled', enabled=touch)
     for theme in ['light','dark']:
         js(f"(() => {{ document.documentElement.classList.remove('light','dark'); document.documentElement.classList.add('{theme}'); document.documentElement.style.colorScheme='{theme}'; }})()")
         # Existing link colors transition for 150ms; measure the settled theme.
@@ -38,15 +39,22 @@ for width, height in [(1440,1000), (390,1000), (320,1000)]:
             footerCount:document.querySelectorAll('footer').length,outsideMain:!f.closest('main'),
             overflow:document.documentElement.scrollWidth>innerWidth,
             footer:f.getBoundingClientRect().toJSON(),
+            coarse:matchMedia('(pointer: coarse)').matches,columnGap:getComputedStyle(f.querySelector('nav')).columnGap,
             links:[...f.querySelectorAll('a')].map(a=>({label:a.textContent.trim(),href:a.href,rect:a.getBoundingClientRect().toJSON(),color:composite(a)})),
             background:getComputedStyle(document.body).backgroundColor,text:f.innerText};
         })()""")
         assert report['footerCount']==1 and report['outsideMain'] and not report['overflow'], report
+        assert report['coarse'] == touch, report
+        assert report['columnGap'] == ('24px' if width >= 640 else '16px'), report['columnGap']
         for a in report['links']:
-            assert a['rect']['left'] >= 0 and a['rect']['right'] <= width and a['rect']['height'] >= 44, a
+            assert a['rect']['left'] >= 0 and a['rect']['right'] <= width, a
+            assert a['rect']['height'] >= (44 if touch else 28), a
+            if not touch:
+                assert a['rect']['height'] == 28, a
             ratio = contrast(a['color'], report['background'])
             assert ratio >= 4.5, f"Insufficient contrast: {a['label']} = {ratio:.2f}:1"
-        capture_screenshot(path=str(out/f'footer-{width}-{theme}.png'))
+        suffix = '-touch' if touch and width == 1440 else ''
+        capture_screenshot(path=str(out/f'footer-{width}-{theme}{suffix}.png'))
         reports.append(report)
 # Each real plate inherits one footer, with no extra copy nested inside its content.
 for route in ['/', '/milestones', '/ecosystem', '/funding', '/field-velocity', '/methodology']:
@@ -56,4 +64,4 @@ for route in ['/', '/milestones', '/ecosystem', '/funding', '/field-velocity', '
     assert report['footerCount']==1 and report['outsideMain'] and report['links']==7, report
     reports.append(report)
 (out/'report.json').write_text(json.dumps(reports, indent=2))
-print(json.dumps({'verdict':'PASS','screenshots':6,'routeChecks':6,'report':str(out/'report.json')}))
+print(json.dumps({'verdict':'PASS','screenshots':8,'routeChecks':6,'report':str(out/'report.json')}))

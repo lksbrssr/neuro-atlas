@@ -34,7 +34,7 @@ export function SiteFooter() {
               A field guide to neurotechnology.
             </p>
           </div>
-          <nav aria-label="Footer" className="grid grid-cols-3 gap-4 sm:gap-10">
+          <nav aria-label="Footer" className="grid grid-cols-3 gap-4 sm:gap-6">
             {linkGroups.map((group) => (
               <div key={group.label}>
                 <h2 className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-foreground/70">
@@ -45,7 +45,7 @@ export function SiteFooter() {
                     <li key={link.href}>
                       <a
                         href={link.href}
-                        className="inline-flex min-h-11 items-center rounded-sm py-2 text-[13px] leading-5 text-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                        className="inline-flex min-h-7 items-center rounded-sm py-1 text-[13px] leading-5 text-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent pointer-coarse:min-h-11 pointer-coarse:py-2"
                       >
                         {link.label}
                       </a>
