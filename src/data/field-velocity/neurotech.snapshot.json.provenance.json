@@ -1,0 +1,14 @@
+{
+  "generatedBy": "npm run performance:sync -- <provider-export.json> <provider-commit-sha>",
+  "providerCommit": "4b3ac510355212ff4d127badafa994a182aa862f",
+  "schemaSource": "https://github.com/protocol/plneuro.xyz/blob/7c8f709091b1475ed19ac4bac98caf869642db01/src/lib/field-velocity/schema.ts",
+  "source": {
+    "url": "https://www.plrd.org/impact-preview-eb61fba1b98e/?area=neurotech#field-velocity",
+    "repository": "https://github.com/protocol/plrd.org",
+    "methodologyUrl": "https://www.plrd.org/impact-preview-eb61fba1b98e/#methodology"
+  },
+  "exportGeneratedAt": "2026-09-09T19:06:18.064Z",
+  "sha256": "2b16a8ebf5ada867a79129243fc3f3afada7ad6e75a639ca0d005849607815ee",
+  "bytes": 57392,
+  "mode": "committed-snapshot"
+}

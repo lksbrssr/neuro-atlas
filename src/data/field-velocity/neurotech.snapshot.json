@@ -1,0 +1,1101 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-09T19:06:18.064Z",
+  "area": {
+    "key": "neurotech",
+    "label": "Neurotech"
+  },
+  "source": {
+    "url": "https://www.plrd.org/impact-preview-eb61fba1b98e/?area=neurotech#field-velocity",
+    "repository": "https://github.com/protocol/plrd.org",
+    "methodologyUrl": "https://www.plrd.org/impact-preview-eb61fba1b98e/#methodology"
+  },
+  "instruments": [
+    {
+      "id": "performance_curves",
+      "label": "Performance curves",
+      "subtitle": "Cost or capability per unit, tracked over time.",
+      "description": "How much a fixed unit of output costs, or how much capability one unit buys, tracked over time: dollars per genome sequenced, per watt of solar, per kWh of battery, transistors per chip. These are real rates with units attached, and they tend to fall along steady curves, which makes them the most predictable trend in a field. Multiple field-specific cost and capability measures can coexist; a field need not have a single gating unit. Compare like-for-like units and observation windows before reading a rate of change."
+    },
+    {
+      "id": "latency_compression",
+      "label": "Latency compression",
+      "subtitle": "The lag between pipeline stages, and whether it is shrinking.",
+      "description": "The time it takes work to move from one stage to the next, and whether that lag is getting shorter: a preprint to a replication, a published method to a working open-source implementation, a demo to a shipped product. This tracks the pipeline itself rather than how much is flowing through it, so a shrinking lag is a direct read on acceleration."
+    },
+    {
+      "id": "idea_vintage",
+      "label": "Idea vintage",
+      "subtitle": "Whether the age of the ideas new work builds on is turning.",
+      "description": "The median age of the references cited by new work in a field, computed from the text a field already produces. We do not read the level, because a field accumulates its own canon and reference age drifts upward as a literature ages, so the level says more about a field’s age than its pace. Instead we fit a two-segment trend and read the slope of the most recent segment only: a falling recent median (newer work leaning on fresher ideas) reads as accelerating, a rising one as decelerating, and we say so only when the slope clears its own noise band. Two honest caveats. A rising reference age is not always stagnation: it is also what a field does as it grows by absorbing entrants from adjacent disciplines, who bring older foundational citations with them. And the reliable window structurally excludes the two most recent years, which OpenAlex has not finished indexing, so the freshest reading a field can have is always about two years old. Because that lag is built in rather than a sign the reading was never refreshed, this instrument is exempt from the staleness flag the other instruments carry; it still only shows a direction when the recent-segment trend is statistically clear. We read this two ways. Paper vintage uses academic references (the live reading). Patent vintage is the invention-side twin: the median age of the patents a new patent cites as prior art, which is examiner-curated and venue-neutral, so it does not drift as a field adopts preprints, though it carries the same lag. It does not apply to open-source, public-goods native fields, which deliberately do not patent, so a low patent reading there would measure enclosure rather than slowness."
+    },
+    {
+      "id": "revealed_commitments",
+      "label": "Revealed commitments",
+      "subtitle": "Where people put money and careers, not just attention.",
+      "description": "Where people actually place bets: talent switching into the field, external capital forming around it, and job postings that name the technology. Money and careers are commitments and carry more signal than press or social attention, which is easy to manufacture."
+    },
+    {
+      "id": "markets",
+      "label": "Markets",
+      "subtitle": "What forecast markets imply about when a milestone arrives.",
+      "description": "What forecast markets and prediction platforms imply about when a milestone will arrive, and whether that date is pulling in. Asking the same milestone at several time horizons gives a term structure, a kind of yield curve for a field, where an earlier implied date means expected acceleration. These need careful reading: markets can be thin, questions can resolve ambiguously, and for an org whose main channel is attention, our own work can move the very markets we are reading."
+    }
+  ],
+  "records": [
+    {
+      "instrument": "performance_curves",
+      "state": "reading",
+      "metric": "Simultaneously recorded neurons",
+      "value": "Up to ~3,200 neurons (2014 dataset record)",
+      "trend": "Doubling roughly every 7 years, 1957 to 2014",
+      "direction": "accelerating",
+      "window": "1957 → 2014",
+      "measuredAt": "2014-01-01",
+      "checkedAt": "2022-10-01",
+      "series": [
+        {
+          "x": 1957,
+          "y": 2
+        },
+        {
+          "x": 1970,
+          "y": 8
+        },
+        {
+          "x": 1981,
+          "y": 18
+        },
+        {
+          "x": 1991,
+          "y": 82
+        },
+        {
+          "x": 1993,
+          "y": 148
+        },
+        {
+          "x": 2009,
+          "y": 744
+        },
+        {
+          "x": 2014,
+          "y": 3200
+        }
+      ],
+      "seriesScale": "log",
+      "sources": [
+        {
+          "label": "Stevenson — Tracking Advances in Neural Recording (UConn)",
+          "url": "https://stevenson.lab.uconn.edu/scaling/"
+        },
+        {
+          "label": "Stevenson & Kording (2011), Nature Neuroscience",
+          "url": "https://www.nature.com/articles/nn.2731"
+        }
+      ]
+    },
+    {
+      "instrument": "latency_compression",
+      "state": "reading",
+      "metric": "Years from a BCI modality's first pivotal preclinical animal demonstration to its first-in-human implant. Most entries are nonhuman-primate; the animal model is recorded per entry (Synchron's pivotal preclinical work was in sheep).",
+      "value": "Median ~3.3 years, preclinical demonstration to first-in-human (4 modalities)",
+      "trend": "Early cohort (≤2010) ~4.1y; recent (>2010) ~3.3y. A falling lag means the field reaches humans faster.",
+      "direction": "accelerating",
+      "window": "1992 → 2024",
+      "measuredAt": "2024-01-29",
+      "checkedAt": "2026-08-04",
+      "series": [
+        {
+          "x": 1992,
+          "y": 6
+        },
+        {
+          "x": 2002,
+          "y": 2.25
+        },
+        {
+          "x": 2016,
+          "y": 3.67
+        },
+        {
+          "x": 2021,
+          "y": 2.83
+        }
+      ],
+      "seriesScale": "linear",
+      "provenance": {
+        "query": "per-modality: first pivotal preclinical animal demonstration → first-in-human implant",
+        "generated": "2026-08-04"
+      },
+      "sources": [
+        {
+          "label": "Curated corpus: BCI modality preclinical → first-in-human",
+          "url": "https://github.com/protocol/plrd.org/blob/main/src/data/velocity/corpora/neuro-latency-modalities.json"
+        }
+      ]
+    },
+    {
+      "instrument": "idea_vintage",
+      "state": "reading",
+      "metric": "median age of references in new work (years)",
+      "value": "9.0 years (2023)",
+      "trend": "6.3y avg (2000–2002) → 8.7y avg (2021–2023); lower = fresher ideas",
+      "direction": "decelerating",
+      "window": "2000–2023",
+      "measuredAt": "2023-12-31",
+      "checkedAt": "2026-08-04T17:40:40+00:00",
+      "series": [
+        {
+          "x": 2000,
+          "y": 6,
+          "lo": 5,
+          "hi": 6,
+          "reliable": true
+        },
+        {
+          "x": 2001,
+          "y": 6,
+          "lo": 5,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2002,
+          "y": 7,
+          "lo": 6,
+          "hi": 8,
+          "reliable": true
+        },
+        {
+          "x": 2003,
+          "y": 5,
+          "lo": 4,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2004,
+          "y": 5,
+          "lo": 5,
+          "hi": 6,
+          "reliable": true
+        },
+        {
+          "x": 2005,
+          "y": 5,
+          "lo": 5,
+          "hi": 6,
+          "reliable": true
+        },
+        {
+          "x": 2006,
+          "y": 5,
+          "lo": 4,
+          "hi": 6,
+          "reliable": true
+        },
+        {
+          "x": 2007,
+          "y": 7,
+          "lo": 5,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2008,
+          "y": 6,
+          "lo": 5,
+          "hi": 6,
+          "reliable": true
+        },
+        {
+          "x": 2009,
+          "y": 6,
+          "lo": 5,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2010,
+          "y": 6,
+          "lo": 5,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2011,
+          "y": 6,
+          "lo": 5,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2012,
+          "y": 6,
+          "lo": 5,
+          "hi": 6,
+          "reliable": true
+        },
+        {
+          "x": 2013,
+          "y": 6,
+          "lo": 5,
+          "hi": 6,
+          "reliable": true
+        },
+        {
+          "x": 2014,
+          "y": 6,
+          "lo": 5,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2015,
+          "y": 7,
+          "lo": 6,
+          "hi": 8,
+          "reliable": true
+        },
+        {
+          "x": 2016,
+          "y": 6,
+          "lo": 5,
+          "hi": 7,
+          "reliable": true
+        },
+        {
+          "x": 2017,
+          "y": 7,
+          "lo": 6,
+          "hi": 8,
+          "reliable": true
+        },
+        {
+          "x": 2018,
+          "y": 8,
+          "lo": 7,
+          "hi": 9,
+          "reliable": true
+        },
+        {
+          "x": 2019,
+          "y": 7,
+          "lo": 7,
+          "hi": 8,
+          "reliable": true
+        },
+        {
+          "x": 2020,
+          "y": 8,
+          "lo": 7,
+          "hi": 9,
+          "reliable": true
+        },
+        {
+          "x": 2021,
+          "y": 8,
+          "lo": 7,
+          "hi": 9,
+          "reliable": true
+        },
+        {
+          "x": 2022,
+          "y": 9,
+          "lo": 8,
+          "hi": 10,
+          "reliable": true
+        },
+        {
+          "x": 2023,
+          "y": 9,
+          "lo": 8,
+          "hi": 10,
+          "reliable": true
+        },
+        {
+          "x": 2024,
+          "y": 8,
+          "lo": 7,
+          "hi": 10,
+          "reliable": false
+        },
+        {
+          "x": 2025,
+          "y": 7,
+          "lo": 6,
+          "hi": 9,
+          "reliable": false
+        },
+        {
+          "x": 2026,
+          "y": 8,
+          "lo": 6,
+          "hi": 9,
+          "reliable": false
+        }
+      ],
+      "seriesScale": "linear",
+      "provenance": {
+        "query": "brain-computer interface|connectome|neural implant|whole brain emulation",
+        "generated": "2026-08-04T17:40:40+00:00"
+      },
+      "sources": [
+        {
+          "label": "OpenAlex (CC0)",
+          "url": "https://openalex.org"
+        },
+        {
+          "label": "scripts/velocity/field_velocity_openalex.py",
+          "url": "https://github.com/protocol/plrd.org/blob/main/scripts/velocity/field_velocity_openalex.py"
+        }
+      ],
+      "patentVintage": {
+        "state": "unwired",
+        "candidateMetric": "Median age of the patents cited as prior art on new neurotech patents, per year (USPTO PatentsView), read with the same recent-segment changepoint as paper vintage, plus an assignee-country split to show where neurotech IP is forming",
+        "blocker": "PatentsView bulk ingestion is not built, and the patent cohort (a frozen CPC + keyword query) is not yet defined."
+      }
+    },
+    {
+      "instrument": "revealed_commitments",
+      "state": "reading",
+      "metric": "Cumulative participants in implantable BCI studies (peer-reviewed count)",
+      "value": "67 participants through December 2023",
+      "trend": "The review identified participants receiving implantable BCIs for communication, motor or sensory restoration, including endovascular and ECoG systems as well as intracortical implants. It excludes short-term diagnostic ECoG studies, but includes some dedicated assistive studies lasting one month. This is a historical cohort, not the current active installed base. Data collection ended in December 2023. This single cumulative observation does not establish current enrollment velocity or acceleration; comparable annual additions are not yet wired.",
+      "window": "Through December 2023",
+      "measuredAt": "2023-12-31",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "label": "Patrick-Krueger et al. (2024), Nature Reviews Bioengineering",
+          "url": "https://doi.org/10.1038/s44222-024-00239-5"
+        }
+      ]
+    },
+    {
+      "instrument": "markets",
+      "state": "unwired",
+      "candidateMetric": "Implied arrival dates across the mapped BCI and whole-brain-emulation questions (Metaculus, Polymarket, Kalshi)",
+      "blocker": "The term-structure aggregation is not built; the live crowd forecasts are shown per market below."
+    }
+  ],
+  "measurementSeries": [
+    {
+      "id": "tissue-mapped",
+      "title": "Neural tissue mapped — selected datasets",
+      "instrument": "performance_curves",
+      "lens": "capability",
+      "unit": "mm³",
+      "description": "Physical volume checkpoints in selected synapse-resolution imaging and reconstruction datasets, with species and volume basis kept distinct.",
+      "coverage": "Selected global evidence across human, mouse, and fruit fly datasets; not an exhaustive inventory or worldwide cumulative volume.",
+      "caveat": "Sample bounds, imaged volume, and neuropil volume are not interchangeable. Reconstruction completeness varies; no cross-dataset lines, sums, or global growth rate.",
+      "checkedAt": "2026-09-09",
+      "chartKind": "scatter",
+      "scale": "log",
+      "tracks": [
+        {
+          "id": "bock-mouse-imaged",
+          "label": "Bock mouse cortex · imaged bounds",
+          "definition": "Mouse V1 serial-EM imaged tissue extent; not a saturated connectome.",
+          "points": [
+            {
+              "date": "2011-01-01",
+              "datePrecision": "year",
+              "dateBasis": "publication",
+              "value": 0.00819,
+              "label": "Bock mouse V1",
+              "sourceUrl": "https://cellimagelibrary.org/images/40263",
+              "sourceLabel": "Bock mouse V1 — primary source",
+              "note": "Source: “Reconstruction encompasses 450 X 350 X 52 um volume of tissue.” Derived geometric volume: 450 × 350 × 52 / 10⁹ = 0.00819 mm³. Publication-year checkpoint; first release date not established. Dense reconstruction of every neurite is not asserted.",
+              "qualifier": "approximate"
+            }
+          ]
+        },
+        {
+          "id": "hemibrain-fly-bounds",
+          "label": "Hemibrain fly · sample bounds",
+          "definition": "Adult female fly central-brain sample bounding volume; segmented, synapse annotated, extensively proofread.",
+          "points": [
+            {
+              "date": "2020-01-01",
+              "datePrecision": "year",
+              "dateBasis": "publication",
+              "value": 0.0156,
+              "label": "Hemibrain",
+              "sourceUrl": "https://elifesciences.org/articles/57443",
+              "sourceLabel": "Hemibrain — primary source",
+              "note": "Source: “The hemibrain sample is roughly 250 × 250 × 250 μm.” Geometric product 0.015625 mm³, displayed approximately 0.0156; not acquired voxel-mask volume. Publication year, not exact release date.",
+              "qualifier": "approximate"
+            }
+          ]
+        },
+        {
+          "id": "h01-human-imaged",
+          "label": "H01 human cortex · imaged tissue",
+          "definition": "Human temporal-cortex EM sample, automatically reconstructed with selected cells proofread.",
+          "points": [
+            {
+              "date": "2021-06-01",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 1,
+              "label": "H01 first public release",
+              "sourceUrl": "https://research.google/blog/a-browsable-petascale-reconstruction-of-the-human-cortex/",
+              "sourceLabel": "H01 first public release — primary source",
+              "note": "Source: “roughly one cubic millimeter of brain tissue.” Announcement dated June 1, 2021. Automated segmentation and annotated synapses; only selected cells proofread. Later 1.05-mm³ compression-corrected paper estimate is not new tissue.",
+              "qualifier": "approximate"
+            }
+          ]
+        },
+        {
+          "id": "microns-mouse-imaged",
+          "label": "MICrONS mouse cortex · imaged tissue",
+          "definition": "Mouse visual-cortex cubic-millimeter-class EM resource; dense automated reconstruction, selective proofreading.",
+          "points": [
+            {
+              "date": "2021-07-01",
+              "datePrecision": "month",
+              "dateBasis": "release",
+              "value": 1,
+              "label": "MICrONS v117",
+              "sourceUrl": "https://microns-explorer.org/manifests/mm3-v117",
+              "sourceLabel": "MICrONS v117 — primary source",
+              "note": "Source: “first public data released on the cubic millimeter dataset in July 2021.” Approximate nominal sample scale, not an exact valid segmentation mask. July precision; 2025 paper is later analysis of this specimen.",
+              "qualifier": "approximate"
+            }
+          ]
+        },
+        {
+          "id": "flywire-fly-neuropil",
+          "label": "FlyWire fly · neuropil volume",
+          "definition": "Adult female fly whole-brain neuropil volume; not whole-specimen image volume.",
+          "points": [
+            {
+              "date": "2024-01-01",
+              "datePrecision": "year",
+              "dateBasis": "publication",
+              "value": 0.0175,
+              "label": "FlyWire whole-brain neuropil",
+              "sourceUrl": "https://www.nature.com/articles/s41586-024-07558-y",
+              "sourceLabel": "FlyWire whole-brain neuropil — primary source",
+              "note": "Source: “The whole brain contains 0.0175 mm³ of neuropil volume.” Publication-year checkpoint for this reported value; the reconstruction reuses FAFB imagery and is not new tissue acquired in 2024."
+            }
+          ]
+        },
+        {
+          "id": "liconn-mouse-native",
+          "label": "LICONN mouse cortex · native tissue",
+          "definition": "Light-microscopy reconstruction of mouse somatosensory cortex, measured before hydrogel expansion.",
+          "points": [
+            {
+              "date": "2025-01-01",
+              "datePrecision": "year",
+              "dateBasis": "publication",
+              "value": 0.00095,
+              "label": "LICONN native tissue",
+              "sourceUrl": "https://www.nature.com/articles/s41586-025-08985-1",
+              "sourceLabel": "LICONN native tissue — primary source",
+              "note": "Figure 1: “0.95 × 10⁶ µm³ before” expansion, equivalent to 0.00095 mm³. Native volume, not expanded hydrogel; automated dense reconstruction with synaptic molecular predictions and selected traced validation regions. Publication-year checkpoint, first final-dataset release not established.",
+              "qualifier": "approximate"
+            }
+          ]
+        },
+        {
+          "id": "malecns-fly-imaged",
+          "label": "MaleCNS fly · imaged volume",
+          "definition": "Adult male fly brain and ventral nerve cord EM image volume; segmented and extensively proofread.",
+          "points": [
+            {
+              "date": "2025-10-03",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 0.082,
+              "label": "MaleCNS v0.9",
+              "sourceUrl": "https://biorxiv.org/content/10.1101/2025.10.09.680999v2.full",
+              "sourceLabel": "MaleCNS v0.9 — primary source",
+              "note": "Preprint: “0.082 mm3 total volume” (160 teravoxels at 8-nm isotropic resolution). Release date independently verified at https://male-cns.janelia.org/ : “2025-10-03 - MaleCNS v0.9 released”. Later v1.0 and 2026 publication reuse this specimen; not all synapses have proofread partners.",
+              "qualifier": "approximate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bci-implants",
+      "title": "Implanted BCI participants — selected cohorts",
+      "instrument": "revealed_commitments",
+      "lens": "adoption",
+      "unit": "participants",
+      "description": "Publicly identified human recipients in assistive implanted-BCI research, including intracortical, surface, endovascular, and brain-to-spine interfaces.",
+      "coverage": "Selected global evidence: historical literature/disclosure cohort plus separate company/program checkpoints. Incomplete coverage, not a current worldwide total.",
+      "caveat": "Cohorts overlap: do not add the review to company counts or suppliers to programs. Ever implanted is not active users. Lines join only Neuralink’s compatible cumulative checkpoints.",
+      "checkedAt": "2026-09-09",
+      "chartKind": "line",
+      "scale": "linear",
+      "tracks": [
+        {
+          "id": "identified-literature-cohort",
+          "label": "Identified global review cohort",
+          "definition": "Authors’ discoverable 1998–December 2023 assistive-iBCI cohort; not an audited census.",
+          "points": [
+            {
+              "date": "2023-12-01",
+              "datePrecision": "month",
+              "dateBasis": "observation",
+              "value": 67,
+              "label": "Review cohort through Dec 2023",
+              "sourceUrl": "https://www.nature.com/articles/s44222-024-00239-5",
+              "sourceLabel": "Patrick-Krueger et al., Nature Reviews Bioengineering",
+              "note": "Source: “These groups have implanted a total of 67 participants”; data collection ended December 2023 and later implants are excluded. Includes ECoG and endovascular systems, not only intracortical. Only 31 were active at cutoff. Supplement Table 2 identifies participants but does not supply implantation-year columns; no annual points invented."
+            }
+          ]
+        },
+        {
+          "id": "neuralink-cumulative",
+          "label": "Neuralink · cumulative recipients",
+          "definition": "One company’s disclosed cumulative implanted trial participants; observation months early, disclosure dates later.",
+          "points": [
+            {
+              "date": "2024-01-01",
+              "datePrecision": "month",
+              "dateBasis": "observation",
+              "value": 1,
+              "label": "Neuralink first participant",
+              "sourceUrl": "https://neuralink.com/updates/prime-study-progress-update/",
+              "sourceLabel": "Neuralink first participant — primary source",
+              "note": "April 12, 2024 disclosure: “In January, we conducted the first human implantation.” January is the implantation month, not an exact surgery day."
+            },
+            {
+              "date": "2024-07-01",
+              "datePrecision": "month",
+              "dateBasis": "observation",
+              "value": 2,
+              "label": "Neuralink second participant",
+              "sourceUrl": "https://neuralink.com/updates/prime-study-progress-update-second-participant/",
+              "sourceLabel": "Neuralink second participant — primary source",
+              "note": "August 21, 2024 disclosure: “Last month, Alex ... the second participant ... received his Neuralink implant.” July implantation month; cumulative two recipients."
+            },
+            {
+              "date": "2025-02-05",
+              "datePrecision": "day",
+              "dateBasis": "disclosure",
+              "value": 3,
+              "label": "Neuralink three participants",
+              "sourceUrl": "https://neuralink.com/updates/a-year-of-telepathy/",
+              "sourceLabel": "Neuralink three participants — primary source",
+              "note": "Source: “Today, there are three people with Telepathy: Noland, Alex, and Brad.” Disclosure date, not all three surgery dates."
+            },
+            {
+              "date": "2025-06-02",
+              "datePrecision": "day",
+              "dateBasis": "disclosure",
+              "value": 5,
+              "label": "Neuralink five participants",
+              "sourceUrl": "https://neuralink.com/updates/neuralink-raises-650m-series-e/",
+              "sourceLabel": "Neuralink five participants — primary source",
+              "note": "Source: “Five individuals with severe paralysis are now using Neuralink to control digital and physical devices with their thoughts.” Post-implant use supports receipt, not mere enrollment."
+            },
+            {
+              "date": "2026-01-28",
+              "datePrecision": "day",
+              "dateBasis": "disclosure",
+              "value": 21,
+              "label": "Neuralink 21 participants",
+              "sourceUrl": "https://neuralink.com/updates/two-years-of-telepathy/",
+              "sourceLabel": "Neuralink 21 participants — primary source",
+              "note": "Company headline says “21 Neuralnauts enrolled”; implantation interpretation also requires body: “higher signal quality across 18 of the subsequent 20 participants” after the first recipient. Company-reported cumulative checkpoint, not independently audited current active users. Page release date Jan 28; last modification Feb 2 is not the checkpoint."
+            }
+          ]
+        },
+        {
+          "id": "synchron-cumulative",
+          "label": "Synchron · US and Australia",
+          "definition": "Company-reported Stentrode recipients across SWITCH and COMMAND; overlaps historical review.",
+          "points": [
+            {
+              "date": "2025-11-06",
+              "datePrecision": "day",
+              "dateBasis": "disclosure",
+              "value": 10,
+              "label": "Synchron ten recipients",
+              "sourceUrl": "https://www.businesswire.com/news/home/20251106150841/en/Synchron-Raises-%24200-Million-Series-D-to-Advance-Brain-Computer-Interface-Technology",
+              "sourceLabel": "Synchron ten recipients — primary source",
+              "note": "Issuer: “Stentrode BCIs have been placed in 10 patients with paralysis to date, across clinical trials in the U.S. and Australia.” Includes four Australian and six US recipients; do not add those subsets or add this to review baseline."
+            }
+          ]
+        },
+        {
+          "id": "onward-arc-bci",
+          "label": "ONWARD ARC-BCI · brain–spine",
+          "definition": "Participants receiving cortical recording implant paired with spinal stimulation; count people, not hardware.",
+          "points": [
+            {
+              "date": "2026-01-22",
+              "datePrecision": "day",
+              "dateBasis": "disclosure",
+              "value": 7,
+              "label": "ONWARD seven participants",
+              "sourceUrl": "https://kommunikasjon.ntb.no/pressemelding/18780443/onward-medical-completes-two-additional-brain-computer-interface-implants-paired-with-spinal-cord-stimulation-technology-to-restore-thought-driven-movement?lang=en&publisherId=4954260",
+              "sourceLabel": "ONWARD seven participants — primary source",
+              "note": "Source: “Seven study participants have now received ARC-BCI Therapy.” Two additional people bring total to seven. Some historical CEA/WIMAGINE participants overlap the review; exact crosswalk unresolved."
+            }
+          ]
+        },
+        {
+          "id": "paradromics-connect-one",
+          "label": "Paradromics · long-term study",
+          "definition": "At least one long-term Connexus Connect-One recipient; excludes temporary 2025 epilepsy recording.",
+          "points": [
+            {
+              "date": "2026-06-17",
+              "datePrecision": "day",
+              "dateBasis": "disclosure",
+              "value": 1,
+              "label": "Paradromics first long-term participant",
+              "sourceUrl": "https://paradromics.com/news/paradromics-completes-first-human-brain-computer-interface-bci-implantation",
+              "sourceLabel": "Paradromics — first Connexus Connect-One implantation",
+              "note": "June 17, 2026 issuer release: “The first participant ... was enrolled and implanted ... and will be followed and evaluated over the next six years.” Exact disclosure date, not surgery date. At least one long-term participant; earlier temporary 2025 epilepsy implantation is excluded.",
+              "qualifier": "at-least"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neural-recording-hours",
+      "title": "Neural recording hours — selected datasets",
+      "instrument": "performance_curves",
+      "lens": "data-supply",
+      "unit": "hours",
+      "description": "Reported recording duration in named datasets and releases, separated by modality and access; a model-training corpus is explicitly distinct.",
+      "coverage": "Selected globally scoped evidence from US and Japanese human datasets and a multi-source nonhuman-primate corpus; not a harmonized worldwide archive total.",
+      "caveat": "No sums across datasets, releases, modalities, or model reuse. TUSZ includes held-out evaluation data; POYO is reused training-corpus scale. These are reported hours, not independently recomputed QC-valid subject-hours.",
+      "checkedAt": "2026-09-09",
+      "chartKind": "scatter",
+      "scale": "linear",
+      "tracks": [
+        {
+          "id": "tusz-scalp-eeg",
+          "label": "TUSZ · human scalp EEG, controlled access",
+          "definition": "Maintainer-reported full seizure-corpus release sizes, including held-out evaluation; a subset of TUEG.",
+          "points": [
+            {
+              "date": "2017-04-17",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 170,
+              "label": "TUSZ v1.0.0",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.0.0, 2017-04-17, Total Duration (Hours): 170. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            },
+            {
+              "date": "2017-08-04",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 425,
+              "label": "TUSZ v1.1.0",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.1.0, 2017-08-04, Total Duration (Hours): 425. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            },
+            {
+              "date": "2018-04-15",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 504,
+              "label": "TUSZ v1.2.0",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.2.0, 2018-04-15, Total Duration (Hours): 504. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            },
+            {
+              "date": "2018-08-16",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 651,
+              "label": "TUSZ v1.3.0",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.3.0, 2018-08-16, Total Duration (Hours): 651. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            },
+            {
+              "date": "2018-11-14",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 651,
+              "label": "TUSZ v1.4.0",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.4.0, 2018-11-14, Total Duration (Hours): 651. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            },
+            {
+              "date": "2019-07-22",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 1074,
+              "label": "TUSZ v1.5.0",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.5.0, 2019-07-22, Total Duration (Hours): 1,074. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            },
+            {
+              "date": "2020-04-23",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 1074,
+              "label": "TUSZ v1.5.1",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.5.1, 2020-04-23, Total Duration (Hours): 1,074. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            },
+            {
+              "date": "2020-05-09",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 1074,
+              "label": "TUSZ v1.5.2",
+              "sourceUrl": "https://isip.piconepress.com/conferences/ieee_spmb/2020/papers/p01_10.pdf",
+              "sourceLabel": "Rahman et al., TUSZ release history, Table 1",
+              "note": "Table 1 reports v1.5.2, 2020-05-09, Total Duration (Hours): 1,074. Full corpus size, not seizure-event duration or channel-hours. Registration-controlled data; evaluation partition withheld in accompanying poster. Versions overlap and must not be summed; unchanged totals can accompany annotation revisions."
+            }
+          ]
+        },
+        {
+          "id": "ajile12-intracranial",
+          "label": "AJILE12 · human intracranial, open",
+          "definition": "Frozen DANDI 000055/0.220127.0436; 12 participants; open CC-BY-4.0 ECoG/depth recordings.",
+          "points": [
+            {
+              "date": "2022-01-27",
+              "datePrecision": "day",
+              "dateBasis": "release",
+              "value": 1280,
+              "label": "AJILE12 frozen release",
+              "sourceUrl": "https://api.dandiarchive.org/api/dandisets/000055/versions/0.220127.0436/",
+              "sourceLabel": "DANDI AJILE12 frozen release 0.220127.0436",
+              "note": "Release metadata: “Neural recordings are available at 500 Hz from at least 64 electrodes per participant, for a total of 1280 hours.” datePublished January 27, 2022. Reported duration, not electrode-multiplied time; gaps/preprocessing mean nominal and QC-valid hours differ."
+            }
+          ]
+        },
+        {
+          "id": "poyo-primate-training",
+          "label": "POYO-1 · primate spikes, training corpus",
+          "definition": "Reported model-training corpus spanning seven nonhuman primates and constituent datasets with varying access; not a new unique-data release.",
+          "points": [
+            {
+              "date": "2023-10-24",
+              "datePrecision": "day",
+              "dateBasis": "publication",
+              "value": 100,
+              "label": "POYO-1 training corpus",
+              "sourceUrl": "https://arxiv.org/abs/2310.16046",
+              "sourceLabel": "POYO-1 training corpus — primary source",
+              "note": "Abstract: “over 100 hours of recordings” from seven nonhuman primates and over 158 sessions. Strict lower-bound marker, not exactly 100. Existing datasets reused for training; no new-data or wholly open-corpus claim.",
+              "qualifier": "greater-than"
+            }
+          ]
+        },
+        {
+          "id": "japaneeg-scalp-eeg",
+          "label": "JapanEEG · human scalp EEG, open release claim",
+          "definition": "Japanese speech dataset, three participants; simultaneous EEG/EMG/audio counted once for EEG duration; author-reported CC0 OpenNeuro release.",
+          "points": [
+            {
+              "date": "2026-05-31",
+              "datePrecision": "day",
+              "dateBasis": "publication",
+              "value": 1020,
+              "label": "JapanEEG descriptor",
+              "sourceUrl": "https://arxiv.org/abs/2606.01264",
+              "sourceLabel": "JapanEEG descriptor — primary source",
+              "note": "Abstract: “1020 hours of simultaneously recorded scalp electroencephalography (EEG), facial electromyography (EMG), and speech audio”; authors say released through OpenNeuro under CC0. Descriptor submission date, not verified archive upload date. Count once, not three modalities; full manifest not enumerated."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "inflectionPoints": [
+    {
+      "area": "neurotech",
+      "opportunitySpace": "Neural Augmentation (BCI)",
+      "title": "The BCI app store",
+      "signal": "A regulator clears a standardized software / API layer for a commercial BCI (with medical guardrails), and the first third-party app launches and is adopted.",
+      "cascade": "BCI value compounds after surgery; a developer ecosystem forms; demand shifts toward elective use.",
+      "contribution": {
+        "inputs": "PL Neuro standards work for a BCI component ecosystem; convening capacity across regulators, device makers, and developers.",
+        "activities": "Defining the BCI component-ecosystem standard and convening regulators, makers, and developers.",
+        "outputs": "A draft BCI component / API standard and the regulator–maker–developer convenings around it."
+      },
+      "roles": [
+        "connection",
+        "permission"
+      ],
+      "interventions": [
+        {
+          "role": "permission",
+          "label": "Draft BCI component / API standard"
+        },
+        {
+          "role": "connection",
+          "label": "BCI Founders Retreat",
+          "href": "https://www.plneuro.xyz/events/bci-founders-retreat/"
+        },
+        {
+          "role": "legibility",
+          "label": "PL Neuro roadmap & insights",
+          "href": "/insights/?area=neurotech"
+        }
+      ]
+    },
+    {
+      "area": "neurotech",
+      "opportunitySpace": "Biologically Inspired Intelligence (NeuroAI)",
+      "title": "Neural distillation",
+      "signal": "A major lab matches frontier reasoning by training on human neural data at a fraction of the parameters / energy, or venture funding surges into consumer EEG to harvest cognitive data for AI.",
+      "cascade": "High-fidelity neural data becomes as valuable to AI as text; comp-neuro talent flow reverses.",
+      "contribution": {
+        "inputs": "The PL Neuro talent network bridging AI labs and comp neuro; investment in neural-data infrastructure and norms.",
+        "activities": "Bridging AI-lab and comp-neuro talent and building neural-data infrastructure and norms.",
+        "outputs": "The PL Neuro talent network and the neural-data infrastructure and norms it seeds."
+      },
+      "roles": [
+        "infrastructure",
+        "connection",
+        "capital"
+      ],
+      "interventions": [
+        {
+          "role": "connection",
+          "label": "PL Neuro Salon (scaled neural data × AI)",
+          "href": "https://www.plneuro.xyz/events/neuro-ai-workshop/"
+        },
+        {
+          "role": "infrastructure",
+          "label": "Neural-data infrastructure & norms"
+        },
+        {
+          "role": "legibility",
+          "label": "PL Neuro roadmap & insights",
+          "href": "/insights/?area=neurotech"
+        }
+      ]
+    },
+    {
+      "area": "neurotech",
+      "opportunitySpace": "Biologically Inspired Intelligence (NeuroAI)",
+      "title": "The neuromorphic energy pivot",
+      "signal": "A brain-inspired model matches state-of-the-art performance at 3+ orders of magnitude better energy efficiency, and frontier labs begin acquiring neuromorphic startups.",
+      "cascade": "Neurally derived design becomes foundational to commercial AI; AI is tethered to neuroscience.",
+      "contribution": {
+        "inputs": "Funding for NeuroAI / neuromorphic research and demos; benchmark design defining the efficiency target.",
+        "activities": "Funding neuromorphic research and demos and defining the efficiency benchmark.",
+        "outputs": "PL-funded NeuroAI demos and the energy-efficiency benchmarks that frame the target."
+      },
+      "roles": [
+        "legibility",
+        "capital"
+      ],
+      "interventions": [
+        {
+          "role": "capital",
+          "label": "PL-funded NeuroAI / neuromorphic demos"
+        },
+        {
+          "role": "legibility",
+          "label": "Energy-efficiency benchmark & PL Neuro roadmap",
+          "href": "/insights/?area=neurotech"
+        }
+      ]
+    },
+    {
+      "area": "neurotech",
+      "opportunitySpace": "Whole Organism Emulation (WBE)",
+      "title": "Memory retrieval in simulation",
+      "signal": "A reconstructed mouse connectome simulated in silico reproduces a specific behavior the biological mouse learned before its connectome was harvested.",
+      "cascade": "WBE turns from speculation into a benchmarked engineering discipline; serious policy engagement begins.",
+      "contribution": {
+        "inputs": "PL Neuro benchmark definition; connectomics workshops and throughput targets; engineering capacity for a demo.",
+        "activities": "Defining the WBE benchmark, running connectomics workshops, and engineering a reference demo.",
+        "outputs": "The WBE benchmark, connectomics throughput targets, and a PL-engineered demo."
+      },
+      "roles": [
+        "legibility",
+        "connection"
+      ],
+      "interventions": [
+        {
+          "role": "connection",
+          "label": "Connectomics Workshop",
+          "href": "https://www.plneuro.xyz/events/connectomics-workshop/"
+        },
+        {
+          "role": "legibility",
+          "label": "WBE benchmark & PL Neuro roadmap",
+          "href": "/insights/?area=neurotech"
+        }
+      ]
+    }
+  ],
+  "marketSignals": {
+    "The BCI app store": {
+      "match": "proxy",
+      "platform": "polymarket",
+      "prob": 0.405,
+      "volume": 10204.500688000002,
+      "resolutionDate": "2027-01-01",
+      "question": "Will Neuralink's valuation hit $75B by Dec 31?",
+      "url": "https://polymarket.com/event/will-neuralinks-valuation-hit-by-december-31",
+      "viaFallback": true,
+      "note": "Implant-count (Kalshi) is the best adoption/scaling proxy for a commercial BCI ecosystem; Polymarket valuation is the liquidity fallback."
+    },
+    "Neural distillation": {
+      "match": "proxy",
+      "platform": "metaculus",
+      "prob": null,
+      "volume": null,
+      "question": "Will brain emulation be the first successful route to human-level AI?",
+      "url": "https://www.metaculus.com/questions/372/brain-emulation-produces-first-human-ai/",
+      "viaFallback": false,
+      "note": "The closest live forecast: Metaculus’ long-running question on whether brain emulation is the first route to human-level AI — a reputation-weighted proxy for how seriously the crowd takes neural-data-driven paths to frontier AI. No money at stake, and the crowd prices it in the low single digits."
+    },
+    "The neuromorphic energy pivot": {
+      "match": "gap",
+      "platform": null,
+      "prob": null,
+      "volume": null,
+      "question": null,
+      "url": null,
+      "viaFallback": false,
+      "note": "No market prices a neuromorphic model matching SOTA at 1000× efficiency — pure white space."
+    },
+    "Memory retrieval in simulation": {
+      "match": "proxy",
+      "platform": "metaculus",
+      "prob": null,
+      "volume": null,
+      "question": "When will the first human whole-brain emulation happen?",
+      "url": "https://www.metaculus.com/questions/2813/date-of-first-human-whole-brain-emulation/",
+      "viaFallback": false,
+      "note": "The closest live forecast: Metaculus’ community estimate for the date of the first human whole-brain emulation — the crowd currently places it decades out. A reputation-weighted forecast, no money at stake."
+    }
+  },
+  "toolkit": [
+    {
+      "id": "legibility",
+      "title": "Legibility",
+      "subtitle": "field-building communications",
+      "oneLiner": "Maps, roadmaps, benchmarks, and tutorials that make a field navigable.",
+      "examples": [
+        {
+          "label": "Insights",
+          "href": "/insights/",
+          "blurb": "Roadmaps, essays, and field maps from PL R&D."
+        }
+      ],
+      "description": "Many early fields are blocked by illegibility, to both internal and external audiences. The progress is real, but the map is missing. Researchers cannot easily find adjacent teams. Founders cannot tell which problems are ready for company formation. Funders cannot distinguish noise from signal. Policymakers cannot see which interventions would help rather than slow progress. Written artifacts like a field map, taxonomy, roadmap, whitepaper, benchmark, policy brief, or public research agenda can turn a loose collection of teams, researchers, and funders into a field with sustained momentum. Legibility also has a second audience: working builders. A field is fully legible only when a competent outsider can build in it, so tutorials, reference builds, teardowns, and partnerships with hands-on educators count as field-building communications alongside the papers."
+    },
+    {
+      "id": "connection",
+      "title": "Connection",
+      "subtitle": "convenings & sustained cohorts",
+      "oneLiner": "Rooms that keep the right people in contact over time.",
+      "examples": [
+        {
+          "label": "PL Neuro events",
+          "href": "https://www.plneuro.xyz/events/",
+          "blurb": "PL Neuro’s convenings and event series."
+        },
+        {
+          "label": "Funding the Commons",
+          "href": "https://www.fundingthecommons.io/",
+          "blurb": "A convening series on funding public goods."
+        }
+      ],
+      "description": "Some bottlenecks are social instead of technical. The right talent may already exist to unlock a breakthrough, but the field has not yet connected them. PL R&D runs and supports convenings, retreats, workshops, residencies, hackathons, and advisory networks that bring high-context people together around specific bottlenecks. Two design rules do most of the work. Mix kinds, not just seniority: the productive rooms pair researchers with builders and operators, because that pairing is where research turns into working systems. And sustain the contact: innovation spreads person to person, so recurring cohorts, alumni networks, and apprenticeship-style pairings matter more than one-off events. The goal is not to host events, but to forge new collaborations, companies, grants, pilots, and enable shared roadmaps to emerge."
+    },
+    {
+      "id": "funding",
+      "title": "Funding",
+      "subtitle": "grants, prizes & fellowships",
+      "oneLiner": "Early money and prizes where small amounts unlock outsized effort.",
+      "examples": [
+        {
+          "label": "FIL-PropGF",
+          "href": "https://www.filecoin.io/blog/introducing-fil-propgf-a-new-era-in-community-led-public-goods-funding-for-the-filecoin-ecosystem",
+          "blurb": "Community-led public goods funding for the Filecoin ecosystem."
+        }
+      ],
+      "description": "Many important ideas are too early for venture capital and too applied for traditional academic funding. Some need small grants to test whether a primitive works. Others need prizes, RFPs, fellowships, or retroactive funding to pull effort into an underbuilt area. A well-designed prize does more than pay out: it defines what counts as \"first\" in a field and sets the ambition bar for everyone watching. Where breakthrough variance is the goal, we prefer funding people over projects, with longer horizons and tolerance for early failure. Some of the highest-return grants buy entry rather than output: fellowships, residencies with equipment access, and support for the educators who give newcomers their first hands-on contact with a field. PL R&D deploys and helps coordinate early funding where a field-level bottleneck is clear and where small early funding can unlock much larger downstream effort."
+    },
+    {
+      "id": "policy",
+      "title": "Policy",
+      "subtitle": "standards & experimentation rights",
+      "oneLiner": "Adoption paths for working tech, and room to experiment.",
+      "examples": [
+        {
+          "label": "SAFT",
+          "href": "https://saft-project.org/",
+          "blurb": "A framework for safe, legal experimentation."
+        }
+      ],
+      "description": "Frontier technologies often reach a point where the rules do not yet recognize what is possible. That can block adoption even when the technology works. In those cases, progress may require standards bodies, regulatory sandboxes, procurement pathways, model frameworks, or partnerships with public institutions. Adoption is half the job. Fields also need legal room to experiment at small scale: sandbox access for individuals and not only companies, hardware that may be repaired and modified, and workable pathways for citizen science in regulated domains. Many of the people a field will depend on in 10 years are amateurs today, and rules written only for incumbents quietly price them out. PL R&D engages in research, thought leadership, and participation in policy and standards-setting discussions with the goal of creating better rules, which, in turn, help responsible technologies reach users faster."
+    },
+    {
+      "id": "infrastructure",
+      "title": "Infrastructure",
+      "subtitle": "primitives, rails & cheap tools",
+      "oneLiner": "Open protocols and cheap tools that collapse the cost of trying things.",
+      "examples": [
+        {
+          "label": "atproto",
+          "href": "https://atproto.com/",
+          "blurb": "The open protocol behind Bluesky."
+        },
+        {
+          "label": "IPFS",
+          "href": "https://ipfs.tech/",
+          "blurb": "The content-addressed storage protocol."
+        }
+      ],
+      "description": "Sometimes the missing piece is open protocols, public-good infrastructure, or neutral rails that no single company has sufficient incentive to build alone. When a missing primitive or shared infrastructure layer is blocking a field, PL R&D may help build it directly, support the teams building it, or coordinate an ecosystem capable of maintaining it over time. Two kinds of rails get special attention. Tool-cost infrastructure: open reference designs, shared facilities, and instrument cost-down programs that collapse the price of trying things, especially in hardware fields where a single experiment can cost a career. And attribution infrastructure: content-addressed, timestamped records of who built what, and when, so that priority and credit work for protocols, designs, datasets, and negative results the way they already work for papers."
+    },
+    {
+      "id": "translation",
+      "title": "Translation",
+      "subtitle": "venture conversion & visibility",
+      "oneLiner": "Routing validated work to pilots, production, and capital.",
+      "examples": [
+        {
+          "label": "Simocracy",
+          "href": "https://www.simocracy.org/",
+          "blurb": "Routing validated work toward deployment."
+        }
+      ],
+      "description": "Some work reaches the point where the bottleneck is no longer research but translation into pilot, production, and scale. PL R&D connects projects within the broader Protocol Labs network, including venture, capital, platform, and ecosystem support, to help promising work find the right deployment path, talent, and resources to succeed. Translation also has a scouting side: much of the most promising invention happens outside institutions and stays invisible until someone surfaces it. Part of this tool is finding independent builders before the market can see them and lending them the network’s visibility, alongside converting the projects we already know."
+    },
+    {
+      "id": "culture",
+      "title": "Culture",
+      "subtitle": "celebrating the improving mentality",
+      "oneLiner": "Open-ended creative bets that recruit people into building.",
+      "examples": [
+        {
+          "label": "Film",
+          "href": "https://www.youtube.com/watch?v=l44z35vabvA",
+          "blurb": "A creative bet that recruits people into building."
+        }
+      ],
+      "description": "Every sustained acceleration of invention has run on a culture that treats improvement as a personal calling, spread from person to person. That culture is the hardest condition to engineer, so we treat this tool as our wildcard: deliberately open-ended creative bets that recruit people into building. That might mean backing a film or a book, a photography prize that rewards human ingenuity, or a worldbuilding competition that makes a field’s future concrete enough to want. Ask inventors where they started and they often name an artifact: a book, a film, a kit. Most of these bets will miss. The hits compound for decades, and we will track them on the same scoreboard as everything else we fund."
+    }
+  ],
+  "methodology": {
+    "intro": "We document the interventions PL R&D runs, then observe how each field changes. The toolkit describes our work; field velocity and inflection points describe the field, not a causal score for PL.",
+    "attribution": "Fields move with or without PL. We do not claim these interventions directly cause a field to accelerate: field-level attribution is not cleanly identifiable. We name what we run and watch whether the field moves; making that link clearer remains research work.",
+    "observedVelocity": "Field velocity is the rate a field is moving. We read it through five instrument categories, each able to hold multiple field-specific measures, plus dated, falsifiable markers. Not every measure fits every field. Having no single gating cost does not mean there is no capability curve: comparable cost, scale, quality or capability measures can still be tracked. An unpriced milestone has no market signal; missing data is not evidence of no progress.",
+    "stocksAndFlows": "Stocks are not velocity. Compare annual additions or changes using comparable units, definitions and observation windows; acceleration requires a change in that rate, not just a larger total. Mapped-volume frontiers can measure capability; available data-hours are a data resource stock; cumulative implants are an adoption and commitment stock. They are not all pure performance curves. Keep coverage, quality, access and the observation cutoff explicit before comparing them."
+  }
+}

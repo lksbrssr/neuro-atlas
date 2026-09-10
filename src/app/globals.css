@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../components/performance-curves.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

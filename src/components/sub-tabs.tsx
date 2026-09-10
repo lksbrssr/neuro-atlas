@@ -8,10 +8,15 @@ import { useState, type ReactNode } from "react";
 
 export function SubTabs({
   tabs,
+  selectedKey,
+  onSelect,
 }: {
   tabs: { key: string; label: string; node: ReactNode }[];
+  selectedKey?: string;
+  onSelect?: (key: string) => void;
 }) {
-  const [active, setActive] = useState(tabs[0].key);
+  const [localActive, setActive] = useState(tabs[0].key);
+  const active = selectedKey ?? localActive;
   return (
     <>
       <div className="mb-6 inline-flex rounded-full border border-border bg-nav p-0.5">
@@ -19,7 +24,7 @@ export function SubTabs({
           <button
             key={t.key}
             type="button"
-            onClick={() => setActive(t.key)}
+            onClick={() => onSelect ? onSelect(t.key) : setActive(t.key)}
             aria-current={active === t.key ? "true" : undefined}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               active === t.key
