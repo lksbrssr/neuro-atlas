@@ -18,13 +18,13 @@ No CC-BY or blanket ownership claim is copied from PL R&D: third-party data righ
 
 - `npm ci`; `npm test` (83 passing); `npm run typecheck`; production `npm run build`.
 - Changed-file ESLint passes. Full-project lint still reports the three pre-existing errors in `milestone-timeline.tsx` and `theme-toggle.tsx`. The unchanged dependency lock retains two high and one critical audit advisory; framework upgrades are outside this change.
-- `scripts/qa/footer-browser.py`, executed through the headed browser harness against a local production build, checks one footer outside `main` on all six content routes, seven destinations, no document overflow, 44px minimum link targets, and text contrast >= 4.5:1 at 1440px, 390px, and 320px in light/dark mode.
+- `scripts/qa/footer-browser.py`, executed through the headed browser harness against a local production build, checks one footer outside `main` on all six content routes, seven destinations, no document overflow, compact 28px desktop link rows, preserved 44px minimum targets for coarse/touch pointers (including wide touch screens), and text contrast >= 4.5:1 at 1440px, 390px, and 320px in light/dark mode. The column gap is 24px above the small breakpoint and 16px below it.
 - Light-theme small text was darkened after a 4.39:1 contrast failure. Final browser-composited text passes in both themes.
-- Independent candidate review found the same contrast issue; the bounded final review passed application revision `00c6d49` (runtime code unchanged by the evidence commit).
+- The initial independent review caught the contrast issue. For the compact-spacing follow-up, the browser regression failed on baseline (40px columns / 44px desktop rows), then passed application revision `6451801` (24px columns / 28px desktop rows). Fresh-skeptical visual/code review passed: only spacing changes, no clipped or overlapping links, unchanged copy and focus styles. The mobile check also preserves wrapped legal links and touch targets.
 
 ### Screenshot provenance
 
-Screenshots in `footer/` show `/milestones` served from an isolated local production build of application revision `00c6d49`. Its only application difference is the established uncommitted local-only auth fixture, bound to loopback. The actual PR leaves hosted Basic Auth unchanged. These are local browser screenshots, not proof of authenticated hosted access. Final QA waits for the existing 150ms link-color transition before measuring contrast.
+Screenshots in `footer/` show `/milestones` served from an isolated local production build of application revision `6451801`. Its only application difference is the established uncommitted local-only auth fixture, bound to loopback. The actual PR leaves hosted Basic Auth unchanged. These are local browser screenshots, not proof of authenticated hosted access. Final QA waits for the existing 150ms link-color transition before measuring contrast.
 
 Replay (against an isolated local fixture, never a production auth change):
 
