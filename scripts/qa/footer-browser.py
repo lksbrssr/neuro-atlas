@@ -1,4 +1,4 @@
-import json, os
+import json, os, time
 from pathlib import Path
 base = os.environ.get('ATLAS_QA_URL', 'http://127.0.0.1:3417').rstrip('/')
 out = Path(os.environ.get('ATLAS_QA_OUT', '.qa/footer'))
@@ -22,6 +22,8 @@ for width, height in [(1440,1000), (390,1000), (320,1000)]:
     cdp('Emulation.setDeviceMetricsOverride', width=width, height=height, deviceScaleFactor=1, mobile=False)
     for theme in ['light','dark']:
         js(f"(() => {{ document.documentElement.classList.remove('light','dark'); document.documentElement.classList.add('{theme}'); document.documentElement.style.colorScheme='{theme}'; }})()")
+        # Existing link colors transition for 150ms; measure the settled theme.
+        time.sleep(0.3)
         js("(() => {document.querySelector('footer').scrollIntoView({behavior:'instant',block:'end'});})()")
         report = js("""(() => {
           const f=document.querySelector('footer');
