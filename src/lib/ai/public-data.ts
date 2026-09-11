@@ -38,6 +38,11 @@ export function visible(value: unknown): boolean {
   if (row.status !== undefined && !["public", "published", "reading", "unwired", "not_applicable"].includes(String(row.status))) return false;
   return !JSON.stringify(row.robots ?? "").toLowerCase().includes("noindex");
 }
+export function hasHiddenConstituent(value: unknown): boolean {
+  if (Array.isArray(value)) return value.some(hasHiddenConstituent);
+  if (!value || typeof value !== "object") return false;
+  return !visible(value) || Object.values(value).some(hasHiddenConstituent);
+}
 function safeScalar(value: unknown): unknown {
   if (value === null || typeof value === "number" || typeof value === "boolean") return value;
   if (typeof value !== "string") return undefined;
@@ -96,8 +101,10 @@ export function publicRecord(row: ContextRecord): ContextRecord {
   suppressUnwired(data);
   const unwired = data.state && data.state !== "reading";
   const dates = unwired ? { measuredAt: null, checkedAt: data.checkedAt ?? null, window: null } : row.dates;
-  return { ...row, data, dates,
-    title: unwired ? String(data.candidateMetric ?? data.reason ?? data.instrument) : row.title,
+  return { ...row, data, dates: publicFields(dates, Object.keys(dates).join(" ")),
+    title: String(safeScalar(unwired ? String(data.candidateMetric ?? data.reason ?? data.instrument) : row.title) ?? "Source title withheld"),
+    coverage: String(safeScalar(row.coverage) ?? "Coverage text withheld because it contains a non-public reference."),
+    unit: safeScalar(row.unit) as string | null | undefined ?? null,
     sourceUrls: [...new Set(row.type === "investor" || row.type === "memo-capital" ? row.sourceUrls.filter(u => safeScalar(u) !== undefined) : sourceUrls(data))],
   };
 }

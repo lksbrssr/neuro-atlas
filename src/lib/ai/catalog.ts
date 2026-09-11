@@ -11,7 +11,7 @@ import markets from "@/data/velocity/neurotech_market_signals.json";
 import glossary from "@/data/acronyms.json";
 import { parseFeed } from "@/lib/field-velocity/schema";
 import { selectPerformance, selectPace } from "@/lib/field-velocity/performance";
-import { visible, publicFields, publicDefinition, publicMethodology, publicRecord } from "./public-data";
+import { visible, hasHiddenConstituent, publicFields, publicDefinition, publicMethodology, publicRecord } from "./public-data";
 
 export type JsonObject = Record<string, unknown>;
 export type ContextRecord = {
@@ -76,7 +76,7 @@ export function buildCatalog(sources: AtlasSources = atlasSources) {
   const timeline: ContextSection = {
     id: "milestones", title: "Neuro-wide milestone timeline", canonicalUrl: "/milestones", markdownUrl: "/ai/sections/milestones.md",
     coverage: "Selected BCI and broader neurotechnology events, not a census. Overlaps the Funding Index but also includes partnerships, clinical and commercial events outside its screen. Timeline amountUsdM is event-specific: acquisition enterprise value is not a financing round. Notes retain conditional proceeds, philanthropic commitments, conversions and rounding. Do not sum this lane with the sourced rounds or treat announced agreements as completed transactions.",
-    dates: { first: sources.milestones.map(m => m.date).filter(Boolean).sort().at(0) ?? null, last: sources.milestones.map(m => m.date).filter(Boolean).sort().at(-1) ?? null, meaning: "Source announcement dates with per-event precision; an unknown date remains null, not today." },
+    dates: { first: sources.milestones.filter(visible).map(m => m.date).filter(Boolean).sort().at(0) ?? null, last: sources.milestones.filter(visible).map(m => m.date).filter(Boolean).sort().at(-1) ?? null, meaning: "Source announcement dates with per-event precision; an unknown date remains null, not today." },
     metadata: { attribution: "Q1+ 2026 BCI Market Memo — Neurotech Futures & PL Neuro, enriched with primary sources; 2024–2025 regulatory digests and Funding Index reconciliation." },
   };
   for (const m of sources.milestones) records.push(record(timeline, "event", identity("event", [m.slug, m.date, m.stage, m.sourceUrl]), `${m.company} — ${m.activity} — ${m.date ?? "date TBD"}`, m, {
@@ -149,6 +149,7 @@ export function buildCatalog(sources: AtlasSources = atlasSources) {
   // Aggregate values cannot safely outlive a hidden constituent.
   if (fundingHasHidden) fundingSection.metadata.summary = { withheld: "Source contains non-public constituents; aggregate omitted." };
   const publicRecords = records.filter(r => visible(r.data))
+    .filter(r => !["reading", "legacy-reading", "measurement"].includes(r.type) || !hasHiddenConstituent(r.data))
     .filter(r => !["round", "regulatory"].includes(r.type) || publicCompanies.has(String(r.data.companySlug)))
     .filter(r => r.type !== "investor" || !fundingHasHidden).map(publicRecord);
   if (new Set(publicRecords.map(r => r.id)).size !== publicRecords.length) throw new Error("Duplicate context record identity");
