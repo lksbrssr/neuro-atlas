@@ -208,6 +208,7 @@ test('hours scenarios expose the old flat tail beside the chart and remove optim
   const dialog=document.querySelector('dialog');await click(dialog.querySelector('[role="switch"]'));
   assert.match(dialog.querySelector('[data-scenario-warning]')?.textContent??'',/last three.*1,074/i);
   const select=dialog.querySelector('[data-scenario-select]');
+  assert.equal(select.selectedOptions[0].textContent,'Expansion resumes');
   await act(async()=>{select.value='plateau';select.dispatchEvent(new Event('change',{bubbles:true}));});
   assert.match(dialog.querySelector('[data-fit-diagnostics]').textContent,/N\/A.*constant values/);
   assert.ok([...dialog.querySelectorAll('[data-crossing-label]')].every(e=>e.textContent.includes('not reached if plateau continues')));

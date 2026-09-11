@@ -123,7 +123,7 @@ function CurvePlot({ data, compact = false, extrapolation }: { data: PlotData; c
       <p className="pc-scenario-warning" data-scenario-warning="true">{scenario.kind === "neurons" ? "Historical records stop in 2014. Neuron-count equivalence is not successful whole-brain live recording." : "TUSZ corpus only — not worldwide human data. The last three releases stay at 1,074 h; the expansion scenario assumes earlier growth resumes indefinitely."}</p>
       <label className="pc-track-select pc-scenario-select">Growth scenario
         <select data-scenario-select="true" aria-label="Growth scenario" value={mode} onChange={e => setMode(e.target.value as ExtrapolationMode)}>
-          <option value="historical">{scenario.kind === "neurons" ? "Full-history fit · 1957–2014" : "Historical expansion resumes · 2017–2020 fit"}</option>
+          <option value="historical">{scenario.kind === "neurons" ? "Full-history fit · 1957–2014" : "Expansion resumes"}</option>
           {scenario.kind === "neurons" ? <><option value="recent">Later-history fit · 1991–2014</option><option value="literature">Literature pace · 7-year doubling</option></> : <option value="plateau">Latest plateau continues · no growth</option>}
         </select>
         <span>Alternative assumptions, not confidence bounds</span>
