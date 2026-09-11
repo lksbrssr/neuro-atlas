@@ -97,6 +97,11 @@ test("a Draft chart link records its exact return focus target", () => {
   }
 });
 
+test("Draft chart status rows wrap before labels spill into card padding", () => {
+  const css = readFileSync("src/components/performance-curves.css", "utf8");
+  assert.match(css, /\.draft-chart-card-header\s*\{[^}]*flex-wrap:\s*wrap/);
+});
+
 test("Draft chart readiness labels are constrained on narrow screens", () => {
   const css = readFileSync("src/components/performance-curves.css", "utf8");
   assert.match(css, /@media \(max-width: 560px\) \{[^}]*\.draft-chart-readiness[^}]*max-width:/);
