@@ -19,14 +19,14 @@ export function SubTabs({
   const active = selectedKey ?? localActive;
   return (
     <>
-      <div className="mb-6 inline-flex rounded-full border border-border bg-nav p-0.5">
+      <div className="mb-6 inline-flex max-w-full overflow-x-auto rounded-full border border-border bg-nav p-0.5">
         {tabs.map((t) => (
           <button
             key={t.key}
             type="button"
             onClick={() => onSelect ? onSelect(t.key) : setActive(t.key)}
             aria-current={active === t.key ? "true" : undefined}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               active === t.key
                 ? "bg-foreground text-background"
                 : "text-muted hover:text-foreground"

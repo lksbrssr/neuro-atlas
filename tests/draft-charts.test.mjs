@@ -87,3 +87,9 @@ test("Draft chart readiness labels are constrained on narrow screens", () => {
   const css = readFileSync("src/components/performance-curves.css", "utf8");
   assert.match(css, /@media \(max-width: 560px\) \{[^}]*\.draft-chart-readiness[^}]*max-width:/);
 });
+
+test("The three-position Field velocity rail contains overflow on narrow screens", () => {
+  const source = readFileSync("src/components/sub-tabs.tsx", "utf8");
+  assert.match(source, /max-w-full overflow-x-auto/);
+  assert.match(source, /shrink-0/);
+});
