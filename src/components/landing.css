@@ -1,0 +1,83 @@
+/* Scoped landing page: the same ink-black header as the Atlas plates. */
+.landing { container-type: inline-size; }
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+  margin: -1.25rem -1.25rem 0;
+  padding: 2.25rem 1.25rem 2.5rem;
+  border-radius: 1rem 1rem 0 0;
+  background: #101217;
+  color: #fff;
+  overflow: hidden;
+}
+.landing-hero::before {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  inset: 0;
+  background: radial-gradient(ellipse at 100% 0%, #6d5bff26, transparent 65%);
+  pointer-events: none;
+}
+.landing-eyebrow {
+  margin-bottom: 1.5rem;
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #b8afff;
+}
+.landing-title {
+  font-size: clamp(2.35rem, 5.5cqi, 4.5rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -.055em;
+}
+.landing-intro { margin-top: 1rem; color: #c8c9d0; font-size: 1rem; line-height: 1.6; }
+.landing-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.5rem; }
+.landing-explore, .landing-contribute { display: inline-flex; min-height: 2.875rem; align-items: center; justify-content: center; gap: 1.5rem; padding: .75rem 1rem; border-radius: .5rem; font-size: .8125rem; font-weight: 600; }
+.landing-explore { background: #b8afff; color: #101217; border: 1px solid #b8afff; }
+.landing-explore:hover { background: #d0caff; }
+.landing-contribute { border: 1px solid #ffffff40; color: #fff; }
+.landing-contribute:hover { background: #ffffff12; border-color: #ffffff80; }
+.landing-feedback { margin-top: 1rem; color: #a8a9b3; font-size: .75rem; line-height: 1.6; }
+.landing-directory { padding-top: 1.75rem; scroll-margin-top: 1rem; }
+.landing-directory:focus-visible { outline: 2px solid var(--accent); outline-offset: .5rem; }
+.landing-section-title { margin-bottom: 1rem; font-size: .6875rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.landing-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.landing-tile {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  border-radius: .875rem;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.landing-tile-header { overflow: hidden; border-radius: .8125rem .8125rem 0 0; background: #171920; color: #fff; }
+.landing-tile-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.125rem 1.25rem 0; }
+.landing-tile-heading h3 { font-size: 1.25rem; font-weight: 550; line-height: 1.2; letter-spacing: -.035em; }
+.landing-tile-arrow { display: grid; place-items: center; width: 1.875rem; height: 1.875rem; flex-shrink: 0; border: 1px solid #ffffff30; border-radius: 50%; color: #c7bfff; transition: background .2s ease, color .2s ease; }
+.landing-visual { display: block; width: 100%; height: 7.25rem; margin: .25rem 0 .5rem; }
+.landing-tile-description { flex: 1; padding: 1rem 1.25rem; color: var(--muted); font-size: .8125rem; line-height: 1.55; }
+.landing-tile:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 12px 24px -16px #6d5bff66; }
+.landing-tile:hover .landing-tile-arrow { background: #b8afff; color: #101217; }
+.landing :is(a, button):focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.landing-methodology { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; margin-top: .75rem; font-size: .75rem; color: var(--muted); }
+.landing-methodology:hover { color: var(--foreground); text-decoration: underline; text-underline-offset: 4px; }
+@media (min-width: 640px) {
+  .landing-hero { margin: -1.75rem -1.75rem 0; padding: 2.5rem 1.75rem 2.75rem; }
+  .landing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+}
+@media (min-width: 1024px) {
+  .landing-hero { margin: -2.25rem -2.25rem 0; padding: 2.75rem 2.25rem 3rem; }
+  .landing-intro { font-size: 1.125rem; }
+  .landing-tile-heading { padding: 1.25rem 1.5rem 0; }
+  .landing-tile-heading h3 { font-size: 1.5rem; }
+  .landing-tile-description { padding: 1rem 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing *, .landing *::before, .landing *::after { transition: none; scroll-behavior: auto; }
+  .landing-tile:hover { transform: none; }
+}

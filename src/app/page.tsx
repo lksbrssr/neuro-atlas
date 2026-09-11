@@ -1,88 +1,49 @@
 import Link from "next/link";
-import { StatCard } from "@/components/stat-card";
+import { LandingVisual } from "@/components/landing-visual";
 
-const PLATES: {
-  href: string;
-  title: string;
-  status: "live" | "partial" | "planned";
-  blurb: string;
-}[] = [
-  { href: "/milestones", title: "Milestones", status: "live", blurb: "The milestone timeline — capital / clinical / commercial lanes across 2024–2026, a drag-to-summarize window." },
-  { href: "/ecosystem", title: "Ecosystem", status: "live", blurb: "363 neurotech companies as logo bubbles — group by category, country (on a world map), modality, or stage." },
-  { href: "/funding", title: "BCI Funding Index", status: "partial", blurb: "A screened 25-company BCI capital index — financing timeline, stage view, investor participation, and regulatory markers." },
-  { href: "/field-velocity", title: "Field velocity", status: "live", blurb: "Is the field speeding up? Instruments that read its underlying pace, read honestly, plus forecast-market expectations." },
-];
+const PLATES = [
+  { href: "/milestones", title: "Milestones", view: "milestones", blurb: "Follow the scientific, clinical, and commercial breakthroughs." },
+  { href: "/ecosystem", title: "Ecosystem", view: "ecosystem", blurb: "Meet the companies building neurotechnology around the world." },
+  { href: "/funding", title: "BCI Funding Index", view: "funding", blurb: "Explore funding rounds and investors in brain-computer interfaces." },
+  { href: "/field-velocity", title: "Field velocity", view: "velocity", blurb: "See how capabilities are advancing — and what could come next." },
+] as const;
 
 export default function Home() {
   return (
-    <>
-      {/* Hero */}
-      <section className="mb-10">
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-accent">
-          Neuro Atlas · live field tracker
+    <div className="landing">
+      <section className="landing-hero" aria-labelledby="landing-title">
+        <p className="landing-eyebrow">Neuro Atlas</p>
+        <h1 id="landing-title" className="landing-title">Neurotechnology, mapped.</h1>
+        <p className="landing-intro">
+          Explore the breakthroughs, companies, and capital shaping the field.
         </p>
-        <h1 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-          The brain-computer interface field, mapped
-        </h1>
-        <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
-          An atlas of the BCI field — milestones, capital, velocity, and the
-          people building it. Every number carries a date and a source; where a
-          reading isn&apos;t live yet, it says so.
-        </p>
+        <div className="landing-actions">
+          <a href="#explore" className="landing-explore">Explore the atlas <span aria-hidden="true">↓</span></a>
+          <a href="https://github.com/lksbrssr/neuro-atlas/compare" target="_blank" rel="noreferrer" className="landing-contribute">
+            Contribute via PR <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <p className="landing-feedback">Feedback, corrections, or new data? Help improve the atlas.</p>
       </section>
 
-      {/* Headline stats */}
-      <section className="mb-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard
-          label="People implanted"
-          value="67"
-          footnote="Cumulative iBCI, peer-reviewed count 1998–2024"
-        />
-        <StatCard
-          label="Capital raised"
-          value="$653m"
-          delta="102%"
-          deltaDirection="up"
-          footnote="Memo new capital raised, Jan–Apr 2026 vs. same period 2025 — not valuations"
-        />
-        <StatCard
-          label="Companies tracked"
-          value="363"
-          footnote="Global neurotech landscape"
-        />
-        <StatCard
-          label="Market approvals"
-          value="1"
-          footnote="First invasive BCI approval (NMPA, Mar 2026)"
-        />
-      </section>
-
-      {/* Plate directory */}
-      <section>
-        <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted">
-          Neuro Atlas Content
-        </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {PLATES.map((p) => (
-            <Link
-              key={p.href}
-              href={p.href}
-              className="card group flex flex-col p-5 transition-transform hover:-translate-y-0.5"
-            >
-              <div className="mb-2 flex items-center gap-2">
-                <span className="text-sm font-semibold tracking-tight">{p.title}</span>
-                <span className="ml-auto text-faint transition-transform group-hover:translate-x-0.5">→</span>
+      <section id="explore" tabIndex={-1} className="landing-directory" aria-labelledby="explore-heading">
+        <h2 id="explore-heading" className="landing-section-title">Explore the atlas</h2>
+        <div className="landing-grid">
+          {PLATES.map((plate) => (
+            <Link key={plate.href} href={plate.href} className="landing-tile" aria-labelledby={`tile-${plate.view}`}>
+              <div className="landing-tile-header">
+                <div className="landing-tile-heading">
+                  <h3 id={`tile-${plate.view}`}>{plate.title}</h3>
+                  <span className="landing-tile-arrow" aria-hidden="true">↗</span>
+                </div>
+                <LandingVisual view={plate.view} />
               </div>
-              <p className="text-xs leading-relaxed text-muted">{p.blurb}</p>
+              <p className="landing-tile-description">{plate.blurb}</p>
             </Link>
           ))}
         </div>
-        <p className="mt-4 text-xs text-faint">
-          <Link href="/methodology" className="font-medium text-accent hover:underline">
-            Methodology &amp; how to contribute →
-          </Link>
-        </p>
+        <Link href="/methodology" className="landing-methodology">Sources and methodology <span aria-hidden="true">→</span></Link>
       </section>
-    </>
+    </div>
   );
 }
