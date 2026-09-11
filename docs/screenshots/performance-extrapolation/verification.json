@@ -1,0 +1,98 @@
+{
+  "runtimeCommit": "e454a70a5394c8a7b96b596e6cc7755d77fbf3ee",
+  "baselineCommit": "58dd8c2090630dcf3bc402a88cc026c413c4a283",
+  "evidenceType": "Local headed Chrome; disposable loopback-only auth fixture, not hosted authentication",
+  "tests": {
+    "pass": 106,
+    "fail": 0
+  },
+  "typecheck": "pass",
+  "changedFileLint": "pass",
+  "fullProjectLint": "3 unchanged baseline errors in milestone-timeline.tsx and theme-toggle.tsx",
+  "productionBuild": "pass",
+  "independentFinalReview": "PASS; no findings",
+  "browserCases": [
+    {
+      "chart": "simultaneously-recorded-neurons",
+      "width": 1440,
+      "baseline_exact": true,
+      "on_off_restores": true,
+      "target_source_counts": 7,
+      "svg_bounds": true,
+      "no_page_overflow": true
+    },
+    {
+      "chart": "neural-recording-hours",
+      "width": 1440,
+      "baseline_exact": true,
+      "on_off_restores": true,
+      "target_source_counts": 11,
+      "svg_bounds": true,
+      "no_page_overflow": true
+    },
+    {
+      "chart": "tissue-mapped",
+      "width": 1440,
+      "unchanged": true
+    },
+    {
+      "chart": "simultaneously-recorded-neurons",
+      "width": 390,
+      "baseline_exact": true,
+      "on_off_restores": true,
+      "target_source_counts": 7,
+      "svg_bounds": true,
+      "no_page_overflow": true
+    },
+    {
+      "chart": "neural-recording-hours",
+      "width": 390,
+      "baseline_exact": true,
+      "on_off_restores": true,
+      "target_source_counts": 11,
+      "svg_bounds": true,
+      "no_page_overflow": true
+    },
+    {
+      "chart": "tissue-mapped",
+      "width": 390,
+      "unchanged": true
+    },
+    {
+      "chart": "simultaneously-recorded-neurons",
+      "width": 320,
+      "baseline_exact": true,
+      "on_off_restores": true,
+      "target_source_counts": 7,
+      "svg_bounds": true,
+      "no_page_overflow": true
+    },
+    {
+      "chart": "neural-recording-hours",
+      "width": 320,
+      "baseline_exact": true,
+      "on_off_restores": true,
+      "target_source_counts": 11,
+      "svg_bounds": true,
+      "no_page_overflow": true
+    },
+    {
+      "chart": "tissue-mapped",
+      "width": 320,
+      "unchanged": true
+    }
+  ],
+  "keyboard": {
+    "nativeSwitch": true,
+    "nativeFitDisclosure": true,
+    "escapeFocusRestoration": true
+  },
+  "screenshots": [
+    "before-simultaneously-recorded-neurons-1440.png",
+    "on-simultaneously-recorded-neurons-1440.png",
+    "on-neural-recording-hours-1440.png",
+    "fit-details-1440.png",
+    "summary-simultaneously-recorded-neurons-390.png",
+    "on-neural-recording-hours-320.png"
+  ]
+}
