@@ -33,10 +33,16 @@ export function SubTabs({
   const railRef = useRef<HTMLDivElement>(null);
   const activeTabRef = useRef<HTMLButtonElement>(null);
   useLayoutEffect(() => {
-    if (railRef.current && activeTabRef.current) {
-      revealActiveTab(railRef.current, activeTabRef.current);
-      scheduleActiveTabReveal(railRef.current, activeTabRef.current);
-    }
+    const rail = railRef.current, tab = activeTabRef.current;
+    if (!rail || !tab) return;
+    const reveal = () => {
+      revealActiveTab(rail, tab);
+      scheduleActiveTabReveal(rail, tab);
+    };
+    reveal();
+    const view = rail.ownerDocument.defaultView;
+    view?.addEventListener("resize", reveal);
+    return () => view?.removeEventListener("resize", reveal);
   }, [active]);
   return (
     <>
