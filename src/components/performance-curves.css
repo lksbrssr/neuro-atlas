@@ -79,6 +79,7 @@
 .draft-chart-link:hover { text-decoration: underline; }
 @media (max-width: 900px) { .draft-chart-grid { grid-template-columns: 1fr; } .pc-grid { grid-template-columns: 1fr; } .pc-trigger { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .25rem 1rem; } .pc-trigger > :not(.pc-preview) { grid-column: 1; } .pc-preview { grid-column: 2; grid-row: 1 / 5; align-self: center; margin: 0; } .pc-coverage, .pc-card-title { display: block; min-height: 0; } }
 @media (max-width: 560px) { .pc-trigger { display: block; padding: 1rem; } .pc-preview { margin: .9rem -.2rem; } .pc-detail { padding: 0 1rem 1rem; } .pc-methodology dl { grid-template-columns: 1fr; } .pc-section-header { gap: .65rem; } }
+@media (max-width: 560px) { .draft-chart-readiness { max-width: 8.5rem; } }
 .pc-trigger { display: block; width: 100%; text-align: left; color: inherit; background: none; }
 .pc-card-share { padding: 0 1.25rem; }
 .pc-extrapolation-control { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem 1rem; margin: .25rem 0 1rem; }

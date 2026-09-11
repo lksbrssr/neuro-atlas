@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { JSDOM } from "jsdom";
@@ -80,4 +81,9 @@ test("Draft charts renders definition-only cards without invented observations a
 test("Draft charts is a stable non-modal tab location", () => {
   assert.ok(performanceAnchors.includes("draft-charts"));
   assert.equal(performanceUrl("https://atlas.example/field-velocity?review=1#old", "draft-charts"), "https://atlas.example/field-velocity?review=1#draft-charts");
+});
+
+test("Draft chart readiness labels are constrained on narrow screens", () => {
+  const css = readFileSync("src/components/performance-curves.css", "utf8");
+  assert.match(css, /@media \(max-width: 560px\) \{[^}]*\.draft-chart-readiness[^}]*max-width:/);
 });
