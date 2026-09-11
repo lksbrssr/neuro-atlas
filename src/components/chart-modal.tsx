@@ -8,7 +8,11 @@ import { closePerformance, takePerformanceFocusReturn } from "@/lib/field-veloci
 export function restoreFocusAfterPaneReveal(target: HTMLElement | null) {
   const document = target?.ownerDocument;
   const view = document?.defaultView;
-  if (!target || !document || !view) return;
+  if (!target || !document || !view || !target.isConnected || document.querySelector("dialog[open]")) return;
+  if (!target.closest("[hidden]")) {
+    target.focus({ preventScroll: true });
+    return;
+  }
   const focusWhenVisible = (remainingFrames: number) => {
     view.requestAnimationFrame(() => {
       if (!target.isConnected || document.querySelector("dialog[open]")) return;

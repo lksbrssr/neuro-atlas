@@ -108,6 +108,17 @@ test("The three-position Field velocity rail contains overflow on narrow screens
   assert.match(source, /shrink-0/);
 });
 
+test("a visible Metrics trigger regains focus synchronously on close", () => {
+  const dom = new JSDOM('<button>Open metric</button>', { pretendToBeVisual: true });
+  try {
+    const trigger = dom.window.document.querySelector("button");
+    restoreFocusAfterPaneReveal(trigger);
+    assert.equal(dom.window.document.activeElement === trigger, true);
+  } finally {
+    dom.window.close();
+  }
+});
+
 test("a Draft chart metric link regains focus only after its hidden pane is visible", () => {
   const dom = new JSDOM('<div hidden><a href="#tissue-mapped">Open metric</a></div>', { pretendToBeVisual: true });
   try {
