@@ -1,7 +1,7 @@
 "use client";
 
 import { DRAFT_CHARTS, DRAFT_CHART_CATEGORIES } from "@/data/draft-charts";
-import { navigatePerformance } from "@/lib/field-velocity/navigation";
+import { setPerformanceFocusReturn, navigatePerformance } from "@/lib/field-velocity/navigation";
 
 function MetricsChartLink({ anchor, note }: { anchor: "tissue-mapped" | "neural-recording-hours"; note: string }) {
   return <a
@@ -10,6 +10,7 @@ function MetricsChartLink({ anchor, note }: { anchor: "tissue-mapped" | "neural-
     onClick={event => {
       if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
         event.preventDefault();
+        setPerformanceFocusReturn(event.currentTarget);
         navigatePerformance(anchor);
       }
     }}

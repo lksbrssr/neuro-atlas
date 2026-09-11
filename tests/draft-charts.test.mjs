@@ -7,7 +7,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { JSDOM } from "jsdom";
 import { DRAFT_CHARTS, DRAFT_CHART_CATEGORIES } from "../src/data/draft-charts.ts";
 import { DraftChartsSection } from "../src/components/sections/draft-charts-section.tsx";
-import { performanceAnchors, performanceUrl } from "../src/lib/field-velocity/navigation.ts";
+import { restoreFocusAfterPaneReveal } from "../src/components/chart-modal.tsx";
+import { revealActiveTab, scheduleActiveTabReveal } from "../src/components/sub-tabs.tsx";
+import { performanceAnchors, performanceUrl, setPerformanceFocusReturn, takePerformanceFocusReturn } from "../src/lib/field-velocity/navigation.ts";
 
 const manifest = [
   "Brain tissue mapped over time",
@@ -83,6 +85,18 @@ test("Draft charts is a stable non-modal tab location", () => {
   assert.equal(performanceUrl("https://atlas.example/field-velocity?review=1#old", "draft-charts"), "https://atlas.example/field-velocity?review=1#draft-charts");
 });
 
+test("a Draft chart link records its exact return focus target", () => {
+  const dom = new JSDOM('<a href="#tissue-mapped">Open metric</a>');
+  try {
+    const link = dom.window.document.querySelector("a");
+    setPerformanceFocusReturn(link);
+    assert.equal(takePerformanceFocusReturn(), link);
+    assert.equal(takePerformanceFocusReturn(), null);
+  } finally {
+    dom.window.close();
+  }
+});
+
 test("Draft chart readiness labels are constrained on narrow screens", () => {
   const css = readFileSync("src/components/performance-curves.css", "utf8");
   assert.match(css, /@media \(max-width: 560px\) \{[^}]*\.draft-chart-readiness[^}]*max-width:/);
@@ -92,4 +106,60 @@ test("The three-position Field velocity rail contains overflow on narrow screens
   const source = readFileSync("src/components/sub-tabs.tsx", "utf8");
   assert.match(source, /max-w-full overflow-x-auto/);
   assert.match(source, /shrink-0/);
+});
+
+test("a Draft chart metric link regains focus only after its hidden pane is visible", () => {
+  const dom = new JSDOM('<div hidden><a href="#tissue-mapped">Open metric</a></div>', { pretendToBeVisual: true });
+  try {
+    const pane = dom.window.document.querySelector("div");
+    const link = dom.window.document.querySelector("a");
+    const frames = [];
+    dom.window.requestAnimationFrame = callback => { frames.push(callback); return frames.length; };
+    restoreFocusAfterPaneReveal(link);
+    assert.equal(dom.window.document.activeElement, dom.window.document.body);
+    assert.equal(frames.length, 1);
+    frames.shift()(0);
+    assert.equal(dom.window.document.activeElement, dom.window.document.body);
+    assert.equal(frames.length, 1);
+    pane.hidden = false;
+    frames.shift()(0);
+    assert.equal(dom.window.document.activeElement, link);
+  } finally {
+    dom.window.close();
+  }
+});
+
+test("the active narrow rail tab is revealed by scrolling only the rail", () => {
+  const dom = new JSDOM('<div><button>Draft charts</button></div>');
+  try {
+    const rail = dom.window.document.querySelector("div");
+    const active = dom.window.document.querySelector("button");
+    rail.getBoundingClientRect = () => ({ left: 33, right: 272 });
+    active.getBoundingClientRect = () => ({ left: 250, right: 314 });
+    rail.scrollLeft = 0;
+    revealActiveTab(rail, active);
+    assert.equal(rail.scrollLeft, 42);
+    assert.equal(dom.window.document.documentElement.scrollLeft, 0);
+  } finally {
+    dom.window.close();
+  }
+});
+
+test("the active narrow rail tab is revealed again after the final layout frame", () => {
+  const dom = new JSDOM('<div><button>Draft charts</button></div>', { pretendToBeVisual: true });
+  try {
+    const rail = dom.window.document.querySelector("div");
+    const active = dom.window.document.querySelector("button");
+    rail.getBoundingClientRect = () => ({ left: 33, right: 272 });
+    active.getBoundingClientRect = () => ({ left: 250, right: 314 });
+    let frame;
+    dom.window.requestAnimationFrame = callback => { frame = callback; return 1; };
+    scheduleActiveTabReveal(rail, active);
+    assert.equal(rail.scrollLeft, 0);
+    frame(0);
+    assert.equal(rail.scrollLeft, 42);
+    assert.equal(dom.window.document.documentElement.scrollLeft, 0);
+  } finally {
+    dom.window.close();
+  }
 });
