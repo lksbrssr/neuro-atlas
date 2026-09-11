@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { NEUROFOUNDERS_MAP_URL } from "@/lib/ecosystem";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const TABS: { href: string; label: string }[] = [
   { href: "/milestones", label: "Milestones" },
-  { href: "/ecosystem", label: "Ecosystem" },
+  { href: NEUROFOUNDERS_MAP_URL, label: "Ecosystem ↗" },
   { href: "/funding", label: "BCI Funding Index" },
   { href: "/field-velocity", label: "Field velocity" },
 ];
@@ -42,6 +43,10 @@ function VItem({ tab, active }: { tab: { href: string; label: string }; active: 
   return (
     <Link
       href={tab.href}
+      target={tab.href === NEUROFOUNDERS_MAP_URL ? "_blank" : undefined}
+      rel={tab.href === NEUROFOUNDERS_MAP_URL ? "noopener noreferrer" : undefined}
+      aria-label={tab.href === NEUROFOUNDERS_MAP_URL ? "Ecosystem on Neurofounders (opens in a new tab)" : undefined}
+      title={tab.href === NEUROFOUNDERS_MAP_URL ? "Neurofounders startup map" : undefined}
       aria-current={active ? "page" : undefined}
       className={`relative flex items-center rounded-lg px-3 py-2 text-[15px] font-medium transition-colors ${
         active
@@ -61,6 +66,10 @@ function HItem({ tab, active }: { tab: { href: string; label: string }; active: 
   return (
     <Link
       href={tab.href}
+      target={tab.href === NEUROFOUNDERS_MAP_URL ? "_blank" : undefined}
+      rel={tab.href === NEUROFOUNDERS_MAP_URL ? "noopener noreferrer" : undefined}
+      aria-label={tab.href === NEUROFOUNDERS_MAP_URL ? "Ecosystem on Neurofounders (opens in a new tab)" : undefined}
+      title={tab.href === NEUROFOUNDERS_MAP_URL ? "Neurofounders startup map" : undefined}
       aria-current={active ? "page" : undefined}
       className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
         active ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"

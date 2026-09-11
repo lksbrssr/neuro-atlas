@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NEUROFOUNDERS_MAP_URL } from "@/lib/ecosystem";
 import { PlateHero } from "@/components/plate-header";
 import { Abbr } from "@/components/abbr";
 
@@ -7,9 +8,9 @@ export const metadata: Metadata = { title: "Methodology — Neuro Atlas" };
 const SOURCES = [
   {
     name: "Neurofounders start-up map",
-    what: "363 neurotech companies: category, stage, country, modality, interface depth, regulatory stage.",
-    cadence: "Scraped 2026-08-24 · re-scrape on demand",
-    url: "https://www.neurofounders.co/resources/start-up-map",
+    what: "External directory maintained by Neurofounders. Ecosystem links to their original startup map; Atlas does not host a copy of the directory.",
+    cadence: "External resource · maintained by Neurofounders",
+    url: NEUROFOUNDERS_MAP_URL,
   },
   {
     name: "Q1+ 2026 BCI Market Memo",
@@ -19,7 +20,7 @@ const SOURCES = [
   },
   {
     name: "BCI Funding Index",
-    what: "A screened 25-company capital plate: sourced financings of $2m+, investor participation, and selected regulatory markers. Additive to the 363-company ecosystem, not a replacement census.",
+    what: "A screened 25-company capital plate: sourced financings of $2m+, investor participation, and selected regulatory markers. Independently sourced, not a replacement ecosystem census.",
     cadence: "Source review through 2026-09-07",
     url: "/funding",
   },
@@ -157,6 +158,9 @@ export default function MethodologyPage() {
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">Changelog</h2>
         <div className="card p-5">
           <ul className="space-y-2 text-xs leading-relaxed text-muted">
+            <li>
+              <span className="tnum font-medium text-foreground">2026-09-11</span> — Ecosystem now links directly to the Neurofounders startup map. Removed the copied directory, derived dataset, and Neurofounders-sourced logos from the current source tree. The independently sourced funding and milestone records remain unchanged.
+            </li>
             <li>
               <span className="tnum font-medium text-foreground">2026-09-10</span> — Reconciled Milestones with the BCI Funding Index: added NeuCyber ($29m government backing), Neurosoft Bioelectronics ($7.5m seed), and Science Corp PRIMA CE mark. Added an interactive &apos;BCI only&apos; vs &apos;All neurotech&apos; scope filter to the Milestone timeline and updated header copy to accurately reflect neural interfaces and broader neurotechnology. Added community GitHub Pull Request contribution buttons across plates and navigation.
             </li>

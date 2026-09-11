@@ -17,7 +17,7 @@ test("left-edge tooltip stays fully on screen", () => {
   assert.equal(clampCenteredTooltipX(1270, 256, 1280), 1140);
 });
 
-test("timeline, funding index, glossary, and ecosystem clamp centered tooltips", async () => {
+test("timeline, funding index, and glossary clamp centered tooltips", async () => {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const root = path.join(here, "..");
   const files = [
@@ -25,7 +25,6 @@ test("timeline, funding index, glossary, and ecosystem clamp centered tooltips",
     "src/components/milestone-timeline.tsx",
     "src/components/funding-index-dashboard.tsx",
     "src/components/abbr.tsx",
-    "src/components/ecosystem-explorer.tsx",
   ];
   for (const rel of files) {
     const src = await readFile(path.join(root, rel), "utf8");

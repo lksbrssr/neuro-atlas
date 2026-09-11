@@ -71,7 +71,7 @@ test("aggregates investor participation across financing rounds", async () => {
 });
 
 
-test("derived-data generation emits the funding index without shrinking the ecosystem", async () => {
+test("derived-data generation emits the funding index without a copied ecosystem", async () => {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const root = path.join(here, "..");
   const output = path.join(root, "src", "data", "funding-index.json");
@@ -80,9 +80,11 @@ test("derived-data generation emits the funding index without shrinking the ecos
   assert.equal(result.status, 0, result.stderr);
 
   const funding = JSON.parse(await readFile(output, "utf8"));
-  const landscape = JSON.parse(await readFile(path.join(root, "src", "data", "landscape.json"), "utf8"));
   assert.equal(funding.companies.length, 25);
-  assert.equal(landscape.length, 363);
+  await assert.rejects(readFile(path.join(root, "src", "data", "landscape.json")), { code: "ENOENT" });
+  for (const company of funding.companies) {
+    assert.ok(!company.logo || company.logo.startsWith("/logos/"), "Only independently sourced local logos");
+  }
 });
 
 

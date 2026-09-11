@@ -63,7 +63,7 @@ const milestones = msRows.map((r) => {
 });
 fs.writeFileSync(path.join(OUT, "milestones.json"), JSON.stringify(milestones, null, 2));
 
-// copy only the logos we reference (milestones now; landscape uses remote CDN urls)
+// Copy only independently sourced logos referenced by milestones.
 for (const f of usedLogos) {
   const src = path.join(DATA, "logos", f);
   if (fs.existsSync(src)) fs.copyFileSync(src, path.join(PUB_LOGOS, f));
@@ -75,31 +75,6 @@ fs.writeFileSync(
   path.join(OUT, "acronyms.json"),
   JSON.stringify(Object.fromEntries(acr.map((a) => [a.acronym, { expansion: a.expansion, definition: a.definition }])), null, 2),
 );
-
-// ── Landscape (slim company records + facet metadata) ────────────────────────
-const companies = JSON.parse(fs.readFileSync(path.join(DATA, "neurofounders", "companies.json"), "utf8"));
-const normCountry = (c) => {
-  const m = { "United States": "USA", "United Kingdom": "UK", US: "USA" };
-  return m[c] ?? c;
-};
-const slim = companies.map((c) => ({
-  slug: c.slug,
-  name: c.name,
-  country: normCountry(c.country),
-  category: c.category,
-  tags: c.tags ? c.tags.split("; ").filter(Boolean) : [],
-  founded: c.founded ? Number(c.founded) : null,
-  fundingStage: c.funding_stage || "Unknown",
-  modality: c.modality || "Other",
-  formFactor: c.form_factor || "",
-  interfaceDepth: c.interface_depth || "",
-  indication: c.indication || "",
-  targetUser: c.target_user || "",
-  regulatoryStage: c.regulatory_stage || "",
-  website: c.website || null,
-  logoUrl: c.logo_url || null,
-}));
-fs.writeFileSync(path.join(OUT, "landscape.json"), JSON.stringify(slim));
 
 // ── Field velocity (copy through) ─────────────────────────────────────────────
 const velDir = path.join(OUT, "velocity");
@@ -122,10 +97,12 @@ const fundingLogoAliases = {
   "neuracle-technology": "neuracle",
   "neucyber-neurotech": "neu-cyber-technology",
 };
-const landscapeBySlug = new Map(slim.map((company) => [company.slug, company]));
 fundingIndex.companies = fundingIndex.companies.map((company) => {
-  const landscapeCompany = landscapeBySlug.get(fundingLogoAliases[company.slug] ?? company.slug);
-  return { ...company, logo: landscapeCompany?.logoUrl ?? "" };
+  const logoFile = logoBySlug[fundingLogoAliases[company.slug] ?? company.slug];
+  if (logoFile) {
+    fs.copyFileSync(path.join(DATA, "logos", logoFile), path.join(PUB_LOGOS, logoFile));
+  }
+  return { ...company, logo: logoFile ? `/logos/${logoFile}` : "" };
 });
 const observedCapitalUsdM = fundingIndex.rounds.reduce((total, round) => total + round.amountUsdM, 0);
 const years = fundingIndex.rounds.map((round) => Number(round.announcedOn.slice(0, 4)));
@@ -146,4 +123,4 @@ fundingIndex.methodology = {
 };
 fs.writeFileSync(path.join(OUT, "funding-index.json"), JSON.stringify(fundingIndex));
 
-console.log(`milestones: ${milestones.length} | companies: ${slim.length} | acronyms: ${acr.length} | logos copied: ${usedLogos.size}`);
+console.log(`milestones: ${milestones.length} | acronyms: ${acr.length} | logos copied: ${usedLogos.size}`);

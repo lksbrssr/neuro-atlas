@@ -10,7 +10,7 @@ A company is included when it fits at least one of these categories:
 - minimally invasive interface, including endovascular systems;
 - implant-adjacent platform with a direct BCI or neuromodulation thesis.
 
-The v1 list was seeded from the project's BCI company tracker, then screened and source-checked. The larger 363-company Neurofounders ecosystem remains the source for the ecosystem plate and is not filtered or replaced by this index.
+The v1 list was seeded from the project's BCI company tracker, then screened and source-checked. The Ecosystem entry links to the original Neurofounders startup map. This index does not import or depend on their directory.
 
 ## Financing rules
 
