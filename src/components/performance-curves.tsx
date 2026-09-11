@@ -5,6 +5,7 @@ import { ChartModal } from "@/components/chart-modal";
 import type { PerformanceData } from "@/lib/field-velocity/performance";
 import type { MeasurementPoint, MeasurementSeries } from "@/lib/field-velocity/schema";
 import { usePerformanceHash, navigatePerformance, performanceUrl } from "@/lib/field-velocity/navigation";
+import { decimalYear, extrapolationScenario, type Crossing, type ExtrapolationKind, type ExtrapolationScenario } from "@/lib/extrapolation";
 
 const number = (value: number) => new Intl.NumberFormat("en", { maximumSignificantDigits: 7 }).format(value);
 const colors = ["var(--accent)", "#087f8c", "#c16b0b", "#cc507b", "#438537", "#8a62bc", "#447dc4"];
@@ -36,20 +37,79 @@ export function chartGeometry(data: PlotData) {
   return { width, height, left, right, minTime, maxTime, ticks, x, y };
 }
 
-function CurvePlot({ data, compact = false }: { data: PlotData; compact?: boolean }) {
+/** Opt-in geometry only; the original geometry above remains the off-state path. */
+function extrapolationGeometry(data: PlotData, scenario: ExtrapolationScenario) {
+  const width = 720, height = 380, left = 100, right = 22, top = 56, bottom = 50;
+  const years = data.points.map(p => decimalYear(p.date)).filter(Number.isFinite);
+  const minYear = years.length ? Math.min(...years) : scenario.horizon - 10;
+  const maxYear = Math.max(minYear + 1, scenario.horizon);
+  const padding = Math.max((maxYear - minYear) * .035, 1 / 12);
+  const values = data.points.flatMap(p => [p.value, p.lo, p.hi]).filter((v): v is number => v != null && Number.isFinite(v) && v > 0);
+  const low = Math.floor(Math.log10(Math.min(...values, ...scenario.targets.map(t => t.value))));
+  const high = Math.max(low + 1, Math.ceil(Math.log10(Math.max(...values, ...scenario.targets.map(t => t.value)))));
+  const tickStep = high - low > 8 ? 2 : 1;
+  const ticks = Array.from({ length: Math.floor((high - low) / tickStep) + 1 }, (_, i) => 10 ** (low + i * tickStep));
+  const xYear = (year: number) => left + (year - minYear + padding) / (maxYear - minYear + 2 * padding) * (width - left - right);
+  const y = (value: number) => top + (1 - (Math.log10(value) - low) / (high - low)) * (height - top - bottom);
+  const yearStep = maxYear - minYear > 100 ? 20 : 10;
+  const firstTick = Math.ceil(minYear / yearStep) * yearStep;
+  const yearTicks = Array.from({ length: Math.floor((maxYear - firstTick) / yearStep) + 1 }, (_, i) => firstTick + i * yearStep);
+  return { width, height, left, right, ticks, x: (date: string) => xYear(decimalYear(date)), xYear, y, yearTicks, minTime: Date.UTC(Math.floor(minYear), 0, 1), maxTime: Date.UTC(maxYear, 0, 1) };
+}
+
+function crossingLabel(crossing: Crossing, kind: ExtrapolationKind) {
+  const scope = kind === "hours" ? "TUSZ corpus-only · " : "Historical continuation · ";
+  switch (crossing.status) {
+    case "in-range": return `${scope}≈${Math.round(crossing.year)}`;
+    case "beyond-range": return `${scope}beyond 2200 display range`;
+    case "already-reached": return `${scope}at or below last source value`;
+    case "unavailable": return "No crossing estimate available";
+  }
+}
+
+function ExtrapolationNotes({ scenario }: { scenario: ExtrapolationScenario }) {
+  return <section className="pc-extrapolation-notes" data-extrapolation-summary="true" aria-label="Extrapolation methodology and limitations">
+    <h4>{scenario.kind === "neurons" ? "Historical exponential continuation" : "TUSZ corpus-only scenario — not worldwide human data"}</h4>
+    <p>Conditional scenario, not a current forecast or a deadline. Dashed lines are model output, not new observations.</p>
+    {scenario.fit ? <p>Doubling time ≈{scenario.fit.doublingYears.toFixed(1)} years, fitted to {scenario.fit.observationCount} selected points. The fit uses the natural log of each value against decimal year, then starts at the last actual value rather than the regression intercept.</p> : <p>No fit: insufficient comparable history or invalid/non-growing data. At least three distinct dates, positive finite values and a positive growth rate are required.</p>}
+    {scenario.kind === "neurons" ? <p>These mixed-species historical electrical records end in 2014 and are not human-specific. This selected-point fit is not the 7-year literature estimate. Matching a neuron count does not establish the spatial or temporal coverage needed for successful whole-brain live simultaneous recording, or its feasibility.</p> : <>
+      <p>Only the 8 full TUSZ release totals from 2017–2020 supply comparable history here. They are overlapping corpus snapshots, not summed; unchanged plateaus remain in the fit. Other datasets and the nonhuman-primate POYO training corpus are never fitted or pooled.</p>
+      <p>Worldwide human-data ETA unavailable. These milestones describe human-data scale, not a worldwide total established by these selected datasets. The article goal is 100 million hours, distinct from the 100,000-hour milestone.</p>
+    </>}
+    <ul className="pc-target-summary">{scenario.targets.map(target => <li key={target.id}>
+      <span>{target.label}</span><strong data-crossing-label={target.id}>{crossingLabel(target.crossing, scenario.kind)}</strong>
+      {target.sourceUrl && <a href={target.sourceUrl} target="_blank" rel="noreferrer">{target.sourceLabel} ↗</a>}
+    </li>)}</ul>
+    <p>{scenario.kind === "neurons" ? "Target counts are approximate reference assumptions, not recorded achievements. " : "Corpus growth does not establish worldwide data availability, quality, access or unique subject-hours. "}Long extrapolations are highly sensitive to the selected historical window; no confidence interval is claimed. Display capped at 2200.</p>
+  </section>;
+}
+
+function CurvePlot({ data, compact = false, extrapolation }: { data: PlotData; compact?: boolean; extrapolation?: ExtrapolationKind }) {
   const [track, setTrack] = useState("");
+  const [extrapolate, setExtrapolate] = useState(false);
   const [hovered, setHovered] = useState<PlotPoint | null>(null);
   const [focused, setFocused] = useState<PlotPoint | null>(null);
   const active = focused ?? hovered;
   const readoutId = useId();
-  const g = chartGeometry(data);
+  const extrapolationHint = useId();
+  const scenario = !compact && extrapolate && extrapolation ? extrapolationScenario(extrapolation, data.points, track) : null;
+  // Filtering suppresses unsupported model output, but never moves source markers.
+  const future = scenario && extrapolation ? extrapolationGeometry(data, extrapolationScenario(extrapolation, data.points)) : null;
+  const g = future ?? chartGeometry(data);
+  const scale = scenario ? "log" : data.scale;
   const points = data.points.filter(p => !track || p.track === track);
   const clusters: PlotPoint[][] = [];
   for (const point of points) {
     const group = clusters.find(c => Math.abs(g.x(c[0].date) - g.x(point.date)) < 12 && Math.abs(g.y(c[0].value) - g.y(point.value)) < 12);
     if (group) group.push(point); else clusters.push([point]);
   }
-  return <div className={compact ? "pc-preview" : "pc-plot"}>
+  return <div className={compact ? "pc-preview" : "pc-plot"} data-extrapolation={scenario ? "on" : undefined}>
+    {!compact && extrapolation && <div className="pc-extrapolation-control">
+      <button type="button" role="switch" aria-checked={extrapolate} aria-describedby={extrapolationHint} onClick={() => setExtrapolate(on => !on)}>
+        <span className="pc-switch-track" aria-hidden="true" /><span>Extrapolation</span><span className="pc-switch-state" aria-hidden="true">{extrapolate ? "On" : "Off"}</span>
+      </button>
+      <span id={extrapolationHint}>{extrapolate ? (extrapolation === "hours" ? "Axis switched from linear to log · targets span 100 million hours" : "Conditional model · expanded time range") : "Off by default · original observations and axes"}</span>
+    </div>}
     {!compact && data.tracks.length > 1 && <label className="pc-track-select">Dataset / track
       <select value={track} onChange={e => setTrack(e.target.value)}>
         <option value="">All tracks</option>
@@ -58,26 +118,39 @@ function CurvePlot({ data, compact = false }: { data: PlotData; compact?: boolea
       <span>Isolate a track · axes stay fixed</span>
     </label>}
     <div className="pc-chart-scroll" role={compact ? undefined : "region"} aria-label={compact ? undefined : `${data.title} chart`} tabIndex={compact ? undefined : 0}>
-      <svg viewBox={`0 0 ${g.width} ${g.height}`} aria-hidden={compact || undefined} role={compact ? undefined : "img"} aria-label={compact ? undefined : `${data.title}. ${data.scale} ${data.unit} axis. ${data.line ? "Historical frontier checkpoints." : "Separate observations; no connecting growth line."}`}>
-        <text x={g.left} y={16}>{data.unit} · {data.scale} scale</text>
+      <svg viewBox={`0 0 ${g.width} ${g.height}`} aria-hidden={compact || undefined} role={compact ? undefined : "img"} aria-label={compact ? undefined : `${data.title}. ${scale} ${data.unit} axis. ${data.line ? "Historical frontier checkpoints." : "Separate observations; no connecting growth line."}${scenario ? " Dashed conditional extrapolation and reference targets; not a forecast." : ""}`}>
+        <text x={g.left} y={16}>{data.unit} · {scale} scale</text>
         {g.ticks.map(tick => <g key={tick}>
           <line x1={g.left} x2={g.width - g.right} y1={g.y(tick)} y2={g.y(tick)} stroke="var(--border-strong)" strokeDasharray="3 5" />
-          <text x={g.left - 9} y={g.y(tick) + 4} textAnchor="end">{number(tick)}</text>
+          <text x={g.left - 9} y={g.y(tick) + 4} textAnchor="end">{scenario ? new Intl.NumberFormat("en", { notation: "compact", maximumSignificantDigits: 3 }).format(tick) : number(tick)}</text>
         </g>)}
         {data.line && <polyline data-frontier-line="true" points={points.map(p => `${g.x(p.date)},${g.y(p.value)}`).join(" ")} fill="none" stroke="var(--accent)" strokeWidth={2.5} />}
+        {scenario && future && <g className="pc-extrapolation-overlay">
+          {scenario.targets.map(target => <g key={target.id}>
+            <line data-target-line={target.id} x1={g.left} x2={g.width - g.right} y1={g.y(target.value)} y2={g.y(target.value)} stroke="var(--muted)" strokeDasharray="4 4" />
+            <text className="pc-target-label" x={g.left + 8} y={g.y(target.value) - 25}>
+              <tspan x={g.left + 8}>{target.label}</tspan>
+              <tspan x={g.left + 8} dy={15}>{crossingLabel(target.crossing, scenario.kind)}</tspan>
+            </text>
+          </g>)}
+          {scenario.samples.length > 0 && <polyline data-extrapolation-line={scenario.kind} points={scenario.samples.map(p => `${future.xYear(p.year)},${g.y(p.value)}`).join(" ")} fill="none" stroke="var(--accent)" strokeWidth={2.5} strokeDasharray="8 5" />}
+        </g>}
         {points.filter(p => p.lo != null && p.hi != null).map(p => <line key={`interval:${p.date}`} data-confidence={compact ? undefined : p.date} x1={g.x(p.date)} x2={g.x(p.date)} y1={g.y(p.lo!)} y2={g.y(p.hi!)} stroke="var(--accent)" strokeWidth={compact ? 2 : 3} opacity={.4} />)}
         {points.map((p, i) => <circle key={`${p.track}:${p.date}:${i}`} data-curve-point={compact ? undefined : `${p.track}:${p.date}`} data-value={compact ? undefined : p.value} cx={g.x(p.date)} cy={g.y(p.value)} r={active === p ? 7 : 5} data-under-indexed={p.reliable === false || undefined} fill={p.reliable === false ? "var(--surface)" : colors[p.trackIndex % colors.length]} stroke={p.reliable === false ? colors[p.trackIndex % colors.length] : "var(--surface)"} strokeWidth={1.5}
           tabIndex={compact ? undefined : 0} role={compact ? undefined : "img"} aria-label={compact ? undefined : p.label} aria-describedby={!compact && active === p ? readoutId : undefined}
           onFocus={compact ? undefined : () => setFocused(p)} onBlur={compact ? undefined : () => setFocused(null)} onMouseEnter={compact ? undefined : () => setHovered(p)} onMouseLeave={compact ? undefined : () => setHovered(null)} />)}
         {!compact && clusters.filter(c => c.length > 1).map(c => <text key={`${c[0].track}:${c[0].date}`} x={Math.min(g.width - 100, g.x(c[0].date))} y={g.y(c[0].value) + 20}>{c.length} checkpoints</text>)}
-        <text x={g.left} y={g.height - 20}>{new Date(g.minTime).getUTCFullYear()}</text>
-        <text x={g.width - g.right} y={g.height - 20} textAnchor="end">{new Date(g.maxTime).getUTCFullYear()}</text>
-        <text x={(g.width + g.left - g.right) / 2} y={g.height - 3} textAnchor="middle">{data.xLabel ?? (data.line ? "Year · historical frontier" : "Date · source basis varies")}</text>
+        {future ? future.yearTicks.map(year => <text key={year} x={future.xYear(year)} y={g.height - 20} textAnchor="middle">{year}</text>) : <>
+          <text x={g.left} y={g.height - 20}>{new Date(g.minTime).getUTCFullYear()}</text>
+          <text x={g.width - g.right} y={g.height - 20} textAnchor="end">{new Date(g.maxTime).getUTCFullYear()}</text>
+        </>}
+        <text x={(g.width + g.left - g.right) / 2} y={g.height - 3} textAnchor="middle">{scenario ? "Year · historical observations + conditional continuation" : (data.xLabel ?? (data.line ? "Year · historical frontier" : "Date · source basis varies"))}</text>
       </svg>
     </div>
     {!compact && <p className="pc-point-readout" id={readoutId} role="status">{active?.label ?? "Hover or tab to any marker for its value, date and source. All observations also appear in the source table below."}</p>}
     {!compact && <p className="pc-chart-note">{data.line ? "Lines connect selected frontier checkpoints, not annual observations." : "Source checkpoints · no pooled growth curve. Nearby markers are counted, never moved."}</p>}
     {!compact && <ul className="pc-legend">{data.tracks.map((t, i) => <li key={t.id}><span style={{ background: colors[i % colors.length] }} />{t.label}</li>)}</ul>}
+    {scenario && <ExtrapolationNotes scenario={scenario} />}
   </div>;
 }
 
@@ -109,7 +182,7 @@ export function CurveCard({ id, title, eyebrow, coverage, plot, children }: { id
     <div className="pc-card-share">{share}</div>
     {open && <ChartModal id={id} title={title} returnFocus={ref}>
       {share}
-      {plot && <CurvePlot data={plot} />}
+      {plot && <CurvePlot data={plot} extrapolation={id === "simultaneously-recorded-neurons" ? "neurons" : id === "neural-recording-hours" ? "hours" : undefined} />}
       {children}
     </ChartModal>}
   </article>;
