@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { NEUROFOUNDERS_MAP_URL } from "@/lib/ecosystem";
 import { LandingVisual } from "@/components/landing-visual";
 
 const PLATES = [
   { href: "/milestones", title: "Milestones", view: "milestones", blurb: "Follow the scientific, clinical, and commercial breakthroughs." },
-  { href: "/ecosystem", title: "Ecosystem", view: "ecosystem", blurb: "Meet the companies building neurotechnology around the world." },
+  { href: NEUROFOUNDERS_MAP_URL, title: "Ecosystem", view: "ecosystem", blurb: "Explore the startup map on Neurofounders. Opens in a new tab." },
   { href: "/funding", title: "BCI Funding Index", view: "funding", blurb: "Explore funding rounds and investors in brain-computer interfaces." },
   { href: "/field-velocity", title: "Field velocity", view: "velocity", blurb: "See how capabilities are advancing — and what could come next." },
 ] as const;
@@ -30,7 +31,15 @@ export default function Home() {
         <h2 id="explore-heading" className="landing-section-title">Explore the atlas</h2>
         <div className="landing-grid">
           {PLATES.map((plate) => (
-            <Link key={plate.href} href={plate.href} className="landing-tile" aria-labelledby={`tile-${plate.view}`}>
+            <Link
+              key={plate.href}
+              href={plate.href}
+              target={plate.view === "ecosystem" ? "_blank" : undefined}
+              rel={plate.view === "ecosystem" ? "noopener noreferrer" : undefined}
+              className="landing-tile"
+              aria-labelledby={`tile-${plate.view}`}
+              aria-describedby={`tile-description-${plate.view}`}
+            >
               <div className="landing-tile-header">
                 <div className="landing-tile-heading">
                   <h3 id={`tile-${plate.view}`}>{plate.title}</h3>
@@ -38,7 +47,7 @@ export default function Home() {
                 </div>
                 <LandingVisual view={plate.view} />
               </div>
-              <p className="landing-tile-description">{plate.blurb}</p>
+              <p id={`tile-description-${plate.view}`} className="landing-tile-description">{plate.blurb}</p>
             </Link>
           ))}
         </div>

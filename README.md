@@ -2,7 +2,7 @@
 
 An interactive atlas of the brain-computer interface field — milestones, capital, velocity, landscape, and the people building it. Neobank-grade UI, light and dark mode.
 
-**Status:** taking shape. The atlas is organized as **plates** — tabs that each open their own dashboard: Milestones (2026 timeline), Landscape (faceted 363-company explorer), Velocity (field instruments with drag-to-measure sparklines), Capital, Pipeline, Geopolitics, Expectations, People, Access, and Methodology. Canonical data lives in `data/` (CSV/JSON with provenance); `scripts/generate-derived.mjs` builds the slim `src/data/*.json` the app consumes.
+**Status:** taking shape. The atlas includes Milestones, the BCI Funding Index, Field velocity, and Methodology. Ecosystem links to the [Neurofounders startup map](https://www.neurofounders.co/resources/start-up-map), rather than hosting a copy of their directory. Canonical Atlas data lives in `data/` (CSV/JSON with provenance); `scripts/generate-derived.mjs` builds the `src/data/*.json` the app consumes.
 
 ## Stack
 

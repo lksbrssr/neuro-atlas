@@ -21,7 +21,7 @@ test("four visual tiles keep all destinations and accessible names", () => {
   const document = render();
   const tiles = [...document.querySelectorAll(".landing-tile")];
   assert.equal(tiles.length, 4);
-  assert.deepEqual(tiles.map((a) => a.getAttribute("href")), ["/milestones", "/ecosystem", "/funding", "/field-velocity"]);
+  assert.deepEqual(tiles.map((a) => a.getAttribute("href")), ["/milestones", "https://www.neurofounders.co/resources/start-up-map", "/funding", "/field-velocity"]);
   for (const tile of tiles) {
     assert.ok(tile.querySelector("h3"));
     assert.equal(tile.getAttribute("aria-labelledby"), tile.querySelector("h3").id);

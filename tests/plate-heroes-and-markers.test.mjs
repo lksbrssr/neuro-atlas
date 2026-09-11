@@ -10,7 +10,6 @@ const root = path.join(here, "..");
 test("every content plate uses the shared dark PlateHero", async () => {
   const pages = [
     "src/app/milestones/page.tsx",
-    "src/app/ecosystem/page.tsx",
     "src/app/funding/page.tsx",
     "src/app/field-velocity/page.tsx",
     "src/app/methodology/page.tsx",
