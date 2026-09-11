@@ -30,10 +30,14 @@ export function restoreFocusAfterPaneReveal(target: HTMLElement | null) {
 export function ChartModal({ id, title, children, returnFocus }: { id: string; title: string; children: React.ReactNode; returnFocus: React.RefObject<HTMLButtonElement | null> }) {
   const ref = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const originRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const dialog = ref.current!;
     const previous = document.activeElement;
     const trigger = returnFocus.current;
+    const crossTabOrigin = takePerformanceFocusReturn();
+    // Capture before showModal and retain through StrictMode effect replay.
+    originRef.current ??= crossTabOrigin ?? (previous instanceof HTMLElement && previous !== document.body && previous.isConnected ? previous : trigger);
     const releaseScroll = lockModalScroll(document);
     dialog.showModal();
     closeRef.current?.focus({ preventScroll: true });
@@ -41,8 +45,7 @@ export function ChartModal({ id, title, children, returnFocus }: { id: string; t
       dialog.close();
       releaseScroll();
       if (!document.querySelector("dialog[open]")) {
-        const target = takePerformanceFocusReturn() ?? (previous instanceof HTMLElement && previous !== document.body && previous.isConnected ? previous : trigger);
-        restoreFocusAfterPaneReveal(target);
+        restoreFocusAfterPaneReveal(originRef.current);
       }
     };
   }, [returnFocus]);

@@ -54,9 +54,15 @@ test("Draft charts preserves all 19 authorized technical definitions exactly onc
   }
 });
 
+test("Reconstruction accuracy uses time on x with a fixed benchmark version", () => {
+  const chart = DRAFT_CHARTS.find(c => c.title === "Automated reconstruction accuracy over time");
+  assert.match(chart.axes, /x-axis: evaluation year/);
+  assert.match(chart.definition, /fixed.*dataset.*benchmark.*metric version/i);
+});
+
 test("Draft chart manifest is a stable, sanitized technical definition set", () => {
   const digest = createHash("sha256").update(JSON.stringify(DRAFT_CHARTS)).digest("hex");
-  assert.equal(digest, "65192236b6be5b3d5266bba16fed28d8f0bf2fa0b28e6b1255988e3969a0e0ef");
+  assert.equal(digest, "813bcba8a01af1b150ae9dde1fe2938b7b9886327f46219dc37a445a5dff2cf4");
   const serialized = JSON.stringify(DRAFT_CHARTS);
   assert.doesNotMatch(serialized, /https?:\/\//i);
   assert.doesNotMatch(serialized, /\b(?:meeting|discussion|participant|comment|private URL)\b/i);

@@ -60,8 +60,8 @@ export const DRAFT_CHARTS: readonly DraftChart[] = [
   {
     category: "Cost and automation",
     title: "Automated reconstruction accuracy over time",
-    axes: "x-axis: benchmark version · y-axis: segmentation accuracy or error-free tracing length",
-    definition: "Measure reconstruction quality on fixed reference datasets, separate from throughput.",
+    axes: "x-axis: evaluation year · y-axis: segmentation accuracy or error-free tracing length",
+    definition: "Measure reconstruction quality over time with a fixed reference dataset, benchmark, and metric version, separate from throughput.",
     constraint: "Do not combine leaderboard scores from different datasets, ground truth, metric versions, or completeness targets.",
     readiness: "No observations assembled",
   },
