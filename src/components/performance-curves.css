@@ -84,6 +84,13 @@
 .pc-target-summary li { display: grid; align-content: start; gap: .35rem; min-width: 0; padding: .8rem; background: var(--accent-soft); border-radius: .5rem; }
 .pc-target-summary strong { color: var(--foreground); font-weight: 650; }
 .pc-target-summary a { font-size: .7rem; }
+.pc-scenario-warning { color: var(--muted); font-size: .75rem; line-height: 1.6; margin: .8rem 0; }
+.pc-fit-diagnostics { display: flex; flex-wrap: wrap; gap: .45rem 1.2rem; padding: .8rem; margin: .7rem 0; border-radius: .5rem; background: var(--accent-soft); font-size: .75rem; line-height: 1.6; }
+.pc-fit-diagnostics strong { font-weight: 600; }
+.pc-fit-diagnostics > span { color: var(--muted); }
+.pc-fit-diagnostics details { flex-basis: 100%; min-width: 0; }
+.pc-fit-diagnostics summary { cursor: pointer; }
+.pc-fit-diagnostics p { margin-top: .5rem; color: var(--muted); }
 @media (max-width: 560px) { .pc-target-summary { grid-template-columns: 1fr; } }
 .pc-modal { position: fixed; inset: 0; margin: auto; width: min(1000px, calc(100% - 2rem)); max-width: none; max-height: calc(100dvh - 2rem); padding: 0; border: 1px solid var(--border-strong); border-radius: 1rem; background: var(--surface); color: var(--foreground); box-shadow: 0 24px 90px #0005; overflow-y: auto; overscroll-behavior: contain; }
 .pc-modal::backdrop { background: #0b1525a8; }

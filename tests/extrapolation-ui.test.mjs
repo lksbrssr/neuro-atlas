@@ -177,3 +177,42 @@ test('neuron modal opt-in adds a connected dashed continuation and restores exac
     assert.equal(document.querySelector('[role="switch"]').getAttribute('aria-checked'), 'false', 'New modal opens opt-out');
   } finally { await cleanup(); }
 });
+
+test('scenario controls expose log R², real alternative dates and count-equivalent references', async () => {
+ const cleanup=await mount(React.createElement(PerformanceCurves,{data,provenance}),'#simultaneously-recorded-neurons');
+ try {
+  const dialog=document.querySelector('dialog');
+  assert.equal(dialog.querySelector('[data-scenario-select]'),null);
+  await click(dialog.querySelector('[role="switch"]'));
+  const select=dialog.querySelector('[data-scenario-select]');
+  assert.ok(select,'Scenario selector is visible only when enabled');
+  assert.match(dialog.querySelector('[data-fit-diagnostics]').textContent,/0\.929/);
+  assert.match(dialog.textContent,/not.*probability|not.*forecast confidence/i);
+  assert.match(dialog.querySelector('svg').textContent,/Mouse brain neuron-count equivalent/);
+  assert.doesNotMatch(dialog.querySelector('svg').textContent,/whole-brain live target/);
+  const before=dialog.querySelector('[data-extrapolation-line]').getAttribute('points');
+  for(const [mode,year,n] of [['recent','2085','4'],['literature','2115','7']]) {
+   await act(async()=>{select.value=mode;select.dispatchEvent(new Event('change',{bubbles:true}));});
+   assert.match(dialog.querySelector('[data-extrapolation-summary]').textContent,new RegExp(year));
+   assert.match(dialog.querySelector('[data-fit-diagnostics]').textContent,new RegExp(`${n} observations`));
+   assert.notEqual(dialog.querySelector('[data-extrapolation-line]').getAttribute('points'),before);
+  }
+  assert.match(dialog.textContent,/No post-2014 observations have been added/);
+  await click(dialog.querySelector('[role="switch"]'));
+  assert.equal(sha(dialog.querySelector('svg').outerHTML),baseline['simultaneously-recorded-neurons']);
+ } finally {await cleanup();}
+});
+test('hours scenarios expose the old flat tail beside the chart and remove optimistic dates under plateau',async()=>{
+ const cleanup=await mount(React.createElement(PerformanceCurves,{data,provenance}),'#neural-recording-hours');
+ try{
+  const dialog=document.querySelector('dialog');await click(dialog.querySelector('[role="switch"]'));
+  assert.match(dialog.querySelector('[data-scenario-warning]')?.textContent??'',/last three.*1,074/i);
+  const select=dialog.querySelector('[data-scenario-select]');
+  await act(async()=>{select.value='plateau';select.dispatchEvent(new Event('change',{bubbles:true}));});
+  assert.match(dialog.querySelector('[data-fit-diagnostics]').textContent,/N\/A.*constant values/);
+  assert.ok([...dialog.querySelectorAll('[data-crossing-label]')].every(e=>e.textContent.includes('not reached if plateau continues')));
+  assert.doesNotMatch(dialog.querySelector('[data-extrapolation-summary]').textContent,/≈2029|≈2043|Infinity/);
+  await click(dialog.querySelector('[role="switch"]'));
+  assert.equal(sha(dialog.querySelector('svg').outerHTML),baseline['neural-recording-hours']);
+ }finally{await cleanup();}
+});
