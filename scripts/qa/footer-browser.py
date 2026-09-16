@@ -56,12 +56,12 @@ for width, height, touch in [(1440,1000,False), (390,1000,True), (320,1000,True)
         suffix = '-touch' if touch and width == 1440 else ''
         capture_screenshot(path=str(out/f'footer-{width}-{theme}{suffix}.png'))
         reports.append(report)
-# Each real plate inherits one footer, with no extra copy nested inside its content.
-for route in ['/', '/milestones', '/ecosystem', '/funding', '/field-velocity', '/methodology']:
+# Ecosystem redirects to Neurofounders; only Atlas content pages retain this footer.
+for route in ['/', '/milestones', '/funding', '/field-velocity', '/methodology']:
     goto_url(base+route)
     wait_for_load()
     report=js("(() => ({url:location.href,footerCount:document.querySelectorAll('footer').length,outsideMain:!document.querySelector('footer').closest('main'),links:document.querySelectorAll('footer a').length}))()")
     assert report['footerCount']==1 and report['outsideMain'] and report['links']==7, report
     reports.append(report)
 (out/'report.json').write_text(json.dumps(reports, indent=2))
-print(json.dumps({'verdict':'PASS','screenshots':8,'routeChecks':6,'report':str(out/'report.json')}))
+print(json.dumps({'verdict':'PASS','screenshots':8,'routeChecks':5,'report':str(out/'report.json')}))
