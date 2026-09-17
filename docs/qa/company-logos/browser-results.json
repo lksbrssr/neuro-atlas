@@ -1,0 +1,134 @@
+{
+  "views": [
+    {
+      "route": "milestones",
+      "width": 1440,
+      "visibleLogos": 28,
+      "allVisibleLoaded": true
+    },
+    {
+      "route": "funding",
+      "width": 1440,
+      "visibleLogos": 7,
+      "allVisibleLoaded": true
+    },
+    {
+      "route": "milestones",
+      "width": 390,
+      "visibleLogos": 11,
+      "allVisibleLoaded": true
+    },
+    {
+      "route": "funding",
+      "width": 390,
+      "visibleLogos": 6,
+      "allVisibleLoaded": true
+    },
+    {
+      "route": "milestones",
+      "width": 320,
+      "visibleLogos": 4,
+      "allVisibleLoaded": true
+    },
+    {
+      "route": "funding",
+      "width": 320,
+      "visibleLogos": 6,
+      "allVisibleLoaded": true
+    }
+  ],
+  "servedAssets": [
+    {
+      "slug": "axoft",
+      "ok": true
+    },
+    {
+      "slug": "blackrock-neurotech",
+      "ok": true
+    },
+    {
+      "slug": "cortec",
+      "ok": true
+    },
+    {
+      "slug": "enspire-dbs",
+      "ok": true
+    },
+    {
+      "slug": "gestala",
+      "ok": true
+    },
+    {
+      "slug": "inbrain-neuroelectronics",
+      "ok": true
+    },
+    {
+      "slug": "merge-labs",
+      "ok": true
+    },
+    {
+      "slug": "motif-neurotech",
+      "ok": true
+    },
+    {
+      "slug": "neuracle",
+      "ok": true
+    },
+    {
+      "slug": "neuralink",
+      "ok": true
+    },
+    {
+      "slug": "neurosoft-bioelectronics",
+      "ok": true
+    },
+    {
+      "slug": "neuroxess",
+      "ok": true
+    },
+    {
+      "slug": "newronika",
+      "ok": true
+    },
+    {
+      "slug": "nia-therapeutics",
+      "ok": true
+    },
+    {
+      "slug": "onward-medical",
+      "ok": true
+    },
+    {
+      "slug": "paradromics",
+      "ok": true
+    },
+    {
+      "slug": "phantom-neuro",
+      "ok": true
+    },
+    {
+      "slug": "precision-neuroscience",
+      "ok": true
+    },
+    {
+      "slug": "revision-implant",
+      "ok": true
+    },
+    {
+      "slug": "ruten-neuro",
+      "ok": true
+    },
+    {
+      "slug": "science-corp",
+      "ok": true
+    },
+    {
+      "slug": "stairmed",
+      "ok": true
+    },
+    {
+      "slug": "synchron",
+      "ok": true
+    }
+  ]
+}

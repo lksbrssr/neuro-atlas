@@ -1,28 +1,28 @@
 slug,name,file,source,source_url,status
 penumbra,Penumbra,penumbra.png,google_favicon,https://www.google.com/s2/favicons?domain=penumbrainc.com&sz=256,ok
-merge-labs,Merge Labs,,,,not_found
-science-corp,Science Corp,,,,not_found
-neurosoft-bioelectronics,Neurosoft Bioelectronics,,,,not_found
+merge-labs,Merge Labs,merge-labs.png,official_site,https://merge.io/blog,ok
+science-corp,Science Corp,science-corp.png,official_site,https://science.xyz/images/meta/apple-touch-icon.png,ok
+neurosoft-bioelectronics,Neurosoft Bioelectronics,neurosoft-bioelectronics.png,official_site,https://images.squarespace-cdn.com/content/v1/669690d893801507d5523af4/255d6cd6-9010-4d47-9a96-5f678ca593d1/favicon.ico?format=100w,ok
 envoy-medical,Envoy Medical,,,,not_found
-stairmed,StairMed,,,,not_found
-axoft,Axoft,,,,not_found
-onward-medical,Onward Medical,,,,not_found
-precision-neuroscience,Precision Neuroscience,,,,not_found
-neuracle,Neuracle,,,,not_found
-synchron,Synchron,,,,not_found
-gestala,Gestala,,,,not_found
-enspire-dbs,Enspire DBS,,,,not_found
+stairmed,StairMed,stairmed.png,official_site,https://www.stairmed.com/Uploads/image/20240814/17236213586045.png,ok
+axoft,Axoft,axoft.png,official_site,https://axoft.us/apple-touch-icon.png,ok
+onward-medical,Onward Medical,onward-medical.png,official_site,https://www.onwd.com/wp-content/uploads/2023/10/onward-favicon.svg,ok
+precision-neuroscience,Precision Neuroscience,precision-neuroscience.png,official_site,https://www.precisionneuro.io/images/favicon.png,ok
+neuracle,Neuracle,neuracle.png,favicon_service,https://www.google.com/s2/favicons?domain=www.neuracle.cn&sz=128,ok
+synchron,Synchron,synchron.png,official_site,https://synchron.com/icon.svg?icon.094vzp82rkpp6.svg,ok
+gestala,Gestala,gestala.png,official_site,https://gestala.com/favicon.png,ok
+enspire-dbs,Enspire DBS,enspire-dbs.png,official_site,https://enspiredbs.com/img/enspire-favicon.ico,ok
 epianeura,EpiAneura,,,,not_found
 blue-arbor-technologies,Blue Arbor Technologies,blue-arbor-technologies.jpg,google_favicon,https://www.google.com/s2/favicons?domain=bluearbortech.com&sz=256,ok
-ruten-neuro,Ruten Neuro,,,,not_found
-motif-neurotech,Motif Neurotech,,,,not_found
-cortec,CorTec,,,,not_found
-inbrain-neuroelectronics,INBRAIN Neuroelectronics,,,,not_found
-phantom-neuro,Phantom Neuro,,,,not_found
-neuroxess,NeuroXess,,,,not_found
-paradromics,Paradromics,,,,not_found
-nia-therapeutics,Nia Therapeutics,,,,not_found
-revision-implant,ReVision Implant,,,,not_found
+ruten-neuro,Ruten Neuro,ruten-neuro.png,official_site,https://www.ruten-neuro.com/assets/images/brain-favicon.svg,ok
+motif-neurotech,Motif Neurotech,motif-neurotech.png,official_site,https://cdn.prod.website-files.com/6666d5373e90bd561c0c5d8c/669a260cf52a6c754a8bc3bf_webclip.png,ok
+cortec,CorTec,cortec.png,official_site,https://cortec-neuro.com/media/site/21175c01e0-1788529150/cortec-logo-signet-rgb-196x-crop.png,ok
+inbrain-neuroelectronics,INBRAIN Neuroelectronics,inbrain-neuroelectronics.png,official_site,https://inbrain-neuroelectronics.com/wp-content/themes/igeneve_starter/images/favicon/android-icon-192x192.png,ok
+phantom-neuro,Phantom Neuro,phantom-neuro.png,official_site,https://framerusercontent.com/images/Fx1HpsXkONsiXDTnr259CMPfGRk.png,ok
+neuroxess,NeuroXess,neuroxess.png,official_site,https://www.neuroxess.com/wp-content/uploads/2026/04/cropped-favicon-192x192.png,ok
+paradromics,Paradromics,paradromics.png,official_site,https://paradromics.com/wp-content/uploads/2026/06/Paradromics-Site-Icons-300x300.png,ok
+nia-therapeutics,Nia Therapeutics,nia-therapeutics.png,official_site,https://cdn.prod.website-files.com/687e0b863e8ddbc3657ec354/689cac408fea89732c703681_Nia%20TX%20Webclip.png,ok
+revision-implant,ReVision Implant,revision-implant.png,official_site,https://cdn.prod.website-files.com/68a5757781fb2b9625ecc0e2/68e3b55dddc9e8df49d88c9f_Logo%20256.png,ok
 boston-scientific,Boston Scientific,boston-scientific.jpg,google_favicon,https://www.google.com/s2/favicons?domain=bostonscientific.com&sz=256,ok
 openai,OpenAI,openai.png,google_favicon,https://www.google.com/s2/favicons?domain=openai.com&sz=256,ok
 khosla-ventures,Khosla Ventures,khosla-ventures.png,google_favicon,https://www.google.com/s2/favicons?domain=khoslaventures.com&sz=256,ok
@@ -76,6 +76,6 @@ liepin,Liepin,liepin.png,google_favicon,https://www.google.com/s2/favicons?domai
 seas-capital,SEAS Capital,,,,not_found
 fourier-intelligence,Fourier Intelligence,fourier-intelligence.png,favicon_fallback,https://www.google.com/s2/favicons?domain=fourierintelligence.com&sz=128,ok
 huashan-hospital-fudan-university,Huashan Hospital Fudan University,huashan-hospital-fudan-university.ico,site_icon,https://www.huashan.org.cn/images/favicon.ico,ok
-neuralink,Neuralink,,,,not_found
-newronika,Newronika,,,,not_found
-blackrock-neurotech,Blackrock Neurotech,,,,not_found
+neuralink,Neuralink,neuralink.png,official_site,https://neuralink.com/favicon.png,ok
+newronika,Newronika,newronika.png,official_site,https://cdn.prod.website-files.com/69b082860e4796dc24a245b0/69b082860e4796dc24a245bd_Webclip.png,ok
+blackrock-neurotech,Blackrock Neurotech,blackrock-neurotech.png,favicon_service,https://www.google.com/s2/favicons?domain=blackrockneurotech.com&sz=128,ok
