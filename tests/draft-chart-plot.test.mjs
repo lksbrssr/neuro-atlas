@@ -158,6 +158,21 @@ test('applications use a date-positioned categorical event timeline with full so
   } finally { dom.window.close(); }
 });
 
+test('numeric axis ticks discard floating-point noise without changing source values', async () => {
+  const DraftChartPlot = await renderer();
+  const numeric = { ...plot, xKind: 'number', scale: 'linear', points: [
+    { ...plot.points[0], x: 1.13, y: 72.28 },
+    { ...plot.points[1], x: 41.77, y: 80.8 },
+  ] };
+  const dom = new JSDOM(renderToStaticMarkup(React.createElement(DraftChartPlot, { plot: numeric })));
+  try {
+    const ticks = [...dom.window.document.querySelectorAll('.draft-plot-tick')].map(e => e.textContent);
+    assert.ok(ticks.includes('21.45'), JSON.stringify(ticks));
+    assert.ok(ticks.every(label => label.length <= 12));
+    assert.match(dom.window.document.querySelector('table').textContent, /41\.77/);
+  } finally { dom.window.close(); }
+});
+
 async function renderer() {
   const module = await import('../src/components/draft-chart-plot.tsx').catch(() => null);
   assert.equal(typeof module?.DraftChartPlot, 'function', 'Source-backed DraftChartPlot renderer exists');

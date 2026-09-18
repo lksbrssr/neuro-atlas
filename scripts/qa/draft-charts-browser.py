@@ -23,7 +23,11 @@ def bounds(width):
 report=[]
 for width in [1440,390,320]:
  cdp('Emulation.setDeviceMetricsOverride',width=width,height=1000,deviceScaleFactor=1,mobile=False)
- goto_url(BASE+'#draft-charts');wait_for_load();cdp('Page.bringToFront');time.sleep(.2)
+ goto_url(BASE+'#draft-charts');wait_for_load();cdp('Page.reload',ignoreCache=True);wait_for_load();cdp('Page.bringToFront');time.sleep(.2)
+ for attempt in range(50):
+  if val('document.querySelector("main button[aria-current=true]")?.textContent')=='Draft charts':break
+  time.sleep(.1)
+ assert val('getComputedStyle(document.querySelector(".draft-plot-tick")).fontSize')=='11px'
  assert val('document.querySelector("main button[aria-current=true]")?.textContent')=='Draft charts'
  assert val('document.querySelectorAll("[data-draft-chart-card]").length')==len(DATA)
  assert val('document.querySelectorAll("[data-draft-chart-status=plotted]").length')==sum(v['status']=='plotted' for v in DATA.values())

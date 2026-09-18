@@ -6,8 +6,10 @@ import type { DraftChartEvidence, DraftObservation, DraftPlot } from "@/lib/draf
 const GROUP_COLORS = ["var(--accent)", "#cd732f", "#9275ca", "#238e91", "#cb6285", "#647d3d"];
 const exactNumber = (value: number) => value.toLocaleString("en-US", { maximumFractionDigits: 20 });
 const tickLabel = (value: number) => {
-  const exact = exactNumber(value);
-  return exact.length <= 10 ? exact : value.toExponential().replace("e+", "e");
+  // Axis labels are display ticks, not source values: suppress binary arithmetic noise.
+  const rounded = Number(value.toPrecision(6));
+  const label = exactNumber(rounded);
+  return label.length <= 10 ? label : rounded.toExponential(2).replace("e+", "e");
 };
 
 function wrapLabel(label: string, width: number) {
