@@ -70,4 +70,3 @@ for width in [1440,390,320]:
  report.append(dict(width=width,candidates=len(DATA),points=len(actual),svg_text_unclipped=True,native_point_and_keyboard=True,source_table=True,existing_modals_and_focus=True,explicit_gaps=True,bounds=dimensions))
 (OUT/'actual-charts-browser-report.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))
-

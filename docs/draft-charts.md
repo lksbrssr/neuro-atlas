@@ -6,7 +6,7 @@ These are not 19 completed historical series. Several views are explicitly a one
 
 ## Source contract
 
-`src/data/draft-chart-evidence.json` is the exact UI dataset. Every observation retains its public primary-source URL/title, supporting excerpt, date basis, numeric qualifier and comparability note. `src/data/draft-charts.ts` retains the proposed definitions separately. The source table on each plot exposes all observations; pointer, touch activation and keyboard focus inspect individual points. Private deliberations are not included.
+`src/data/draft-chart-evidence.json` is the exact UI dataset. Every observation retains its public primary-source URL/title, supporting excerpt, date basis, numeric qualifier and comparability note. `src/data/draft-charts.ts` retains the proposed definitions separately. The source table on each plot exposes all observations; pointer activation and keyboard focus inspect individual points. Private deliberations are not included.
 
 Sources were retrieved September 18, 2026. Publication years are not evaluation or release dates unless specifically established. Existing tissue and recording checkpoints are carried from the pinned shared snapshot after rechecking their cited sources; tissue is converted from mm³ to cm³ by division by 1,000. Existing Metrics and extrapolation records are unchanged.
 
@@ -48,4 +48,15 @@ Sources were retrieved September 18, 2026. Publication years are not evaluation 
 
 ## Verification
 
-Pending final runtime tests, production build and native desktop/mobile inspection. Evidence will be pinned to the tested revision before PR handoff. Existing hosted authentication stays intact; local UI checks use only an isolated loopback fixture.
+Verified runtime: `533eb5bdbdd78e245bd3ecc44d63d1d8da390dfc` (September 18, 2026). Later evidence-only commits do not change runtime, tests or dependencies.
+
+- 138 tests pass, including provenance, coordinates, qualifiers, numeric tick precision and prior navigation behavior.
+- Typecheck, changed-source ESLint, and production builds pass. The source build preserves the original authentication middleware.
+- Real headed Chrome at 1440 / 390 / 320 px verifies all 19 candidates, 20 numeric plots, all 57 numerical marks, source-table/point/keyboard interactions, uncut SVG text and no document overflow. Local pointer activation is not a physical-phone test.
+- All 15 existing graph/viewport modal cases pass: exact source counts, fresh links, real clipboard readback, history, focus wrap/restoration, dismissal and stable page geometry. Additional cross-group/history/filter cases pass.
+- Independent bounded scientific-data review and exact-runtime code review passed. Visual inspection found and fixed floating-point noise in a numeric axis tick; the final native replay uses the corrected runtime.
+- Native reports are in `docs/qa/actual-draft-charts/`; captioned final captures are in `docs/screenshots/actual-draft-*.png`.
+
+**Boundary:** Screenshots are actual local production-build UI, not a mocked chart. The disposable QA checkout alone uses an explicit loopback-only auth fixture. No authentication change is committed or deployed, and this is not authenticated hosted QA. Some approximate/lower-bound markers share circle shapes: the exact qualifier is retained in their accessible labels, inspector and source tables; do not strip those qualifications from exports.
+
+Reproduce with `npm ci`, `npm test`, `npm run typecheck`, `npm run build`. Through the owned browser-harness window, run `scripts/qa/draft-charts-browser.py` with `ATLAS_QA_URL` (loopback `/field-velocity`), `ATLAS_QA_OUTPUT`, and `ATLAS_QA_DATA` (absolute evidence JSON path). Then run `scripts/qa/modal-browser.py` with the first two variables. The probes wait for hydrated UI and reload without cache to avoid stale bundles from a prior local build.
