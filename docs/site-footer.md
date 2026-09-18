@@ -10,7 +10,7 @@ Checked September 10, 2026 against the live HTML:
 - [PL R&D blog disclaimer](https://www.plrd.org/blog/better-economies-governance-systems/): informational-only; no offer, solicitation, or recommendation; no guarantee of future performance or outcomes.
 - [Protocol Labs policies](https://www.protocol.ai/legal/): verified `#privacy-policy` and `#terms-conditions` anchors. Links reuse the published policies rather than inventing Atlas-specific terms.
 
-The Atlas version explicitly says “not investment advice,” adds that company/project inclusion does not imply endorsement, and cautions about incomplete or changing information. This is adapted website copy, not a representation of legal approval or compliance review.
+The disclaimer was replaced verbatim with owner-supplied wording on September 16, 2026. It covers investment, legal, and medical advice; offers and future outcomes; inclusion without endorsement; third-party data limitations and no warranty; primary-source review and due diligence; and potential financial interests held by Protocol Labs, Inc. and PL Capital. The exact rendered paragraph is pinned by `tests/site-footer.test.mjs`. Implementing supplied copy is not a representation of legal approval or compliance review.
 
 No CC-BY or blanket ownership claim is copied from PL R&D: third-party data rights are not established by this footer. No nonfunctional cookie-settings button or new tracker is added.
 

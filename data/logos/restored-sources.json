@@ -1,0 +1,503 @@
+{
+  "retrievedOn": "2026-09-17",
+  "purpose": "Independently sourced replacements for company logos removed with the copied ecosystem directory. No retired directory or its CDN assets reused.",
+  "logos": [
+    {
+      "slug": "axoft",
+      "name": "Axoft",
+      "file": "axoft.png",
+      "source": "Official website favicon",
+      "source_url": "https://axoft.us/apple-touch-icon.png",
+      "official_url": "https://axoft.us/",
+      "notes": "Original raster dimensions (180, 180); aspect ratio preserved on 256x256 white PNG canvas.",
+      "original_dimensions": [
+        180,
+        180
+      ],
+      "sha256": "c285237e93a6357d538b94caea21d292911598f1b6a41acac6e660cf1c30344d",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "blackrock-neurotech",
+      "name": "Blackrock Neurotech",
+      "file": "blackrock-neurotech.png",
+      "source": "Google favicon service for verified official domain",
+      "source_url": "https://www.google.com/s2/favicons?domain=blackrockneurotech.com&sz=128",
+      "official_url": "https://blackrockneurotech.com",
+      "notes": "Native 16x14. Proportionally upscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Dark geometric split-circle favicon; non-generic brand icon from verified company domain. Extremely low native resolution. Direct official HTTP fetches returned 406. Google and DuckDuckGo favicon services both returned the same native 16x14 mark. Suitable only as a tiny-chip fallback; prefer higher-resolution official art if later accessible.",
+      "original_dimensions": [
+        16,
+        14
+      ],
+      "identity_evidence": {
+        "url": "https://blackrockneurotech.com",
+        "title": "Blackrock Neurotech | Empowered by Thought",
+        "basis": "Public search result and official homepage content"
+      },
+      "quality": "low-resolution-fallback",
+      "retrieved_at": "2026-09-17T15:24:57.825449+00:00",
+      "sha256": "b641e5f9ea9f1873843194ba4ec5840891ffe37f6299ff6f66f74c73f87f3db0",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "cortec",
+      "name": "CorTec",
+      "file": "cortec.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://cortec-neuro.com/media/site/21175c01e0-1788529150/cortec-logo-signet-rgb-196x-crop.png",
+      "official_url": "https://cortec-neuro.com",
+      "notes": "Native 196x196. Proportionally upscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Gold brain-and-circuit signet.",
+      "original_dimensions": [
+        196,
+        196
+      ],
+      "identity_evidence": {
+        "url": "https://cortec-neuro.com",
+        "title": "CorTec | Implantable Neurotechnology & Brain-Computer Interfaces",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.751777+00:00",
+      "sha256": "fc0a0b8d15f478cfde9e03cc82755d8f390224d240b1230815f4951b5c5ec061",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "enspire-dbs",
+      "name": "Enspire DBS",
+      "file": "enspire-dbs.png",
+      "source": "Official website favicon",
+      "source_url": "https://enspiredbs.com/img/enspire-favicon.ico",
+      "official_url": "https://enspiredbs.com/",
+      "notes": "Original raster dimensions (32, 32); aspect ratio preserved on 256x256 white PNG canvas. Native 32px brand icon verified against official header logo; suitable for small chips, not large display. Higher-resolution official header was investigated but white-only (Gestala) or low-height wordmark (Enspire).",
+      "original_dimensions": [
+        32,
+        32
+      ],
+      "sha256": "11606b59920074e227ec20ab32690a3d9b65a8e7f84291fd2578c32fbbb7c319",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "gestala",
+      "name": "Gestala",
+      "file": "gestala.png",
+      "source": "Official website favicon",
+      "source_url": "https://gestala.com/favicon.png",
+      "official_url": "https://gestala.com/",
+      "notes": "Original raster dimensions (32, 32); aspect ratio preserved on 256x256 white PNG canvas. Native 32px brand icon verified against official header logo; suitable for small chips, not large display. Higher-resolution official header was investigated but white-only (Gestala) or low-height wordmark (Enspire).",
+      "original_dimensions": [
+        32,
+        32
+      ],
+      "sha256": "158c9c380c8aedae188b6c5a2f97fee6b5c2cd845a0160af58262fe746a26d6a",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "inbrain-neuroelectronics",
+      "name": "INBRAIN Neuroelectronics",
+      "file": "inbrain-neuroelectronics.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://inbrain-neuroelectronics.com/wp-content/themes/igeneve_starter/images/favicon/android-icon-192x192.png",
+      "official_url": "https://inbrain-neuroelectronics.com",
+      "notes": "Native 192x192. Proportionally upscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Gray geometric IN monogram.",
+      "original_dimensions": [
+        192,
+        192
+      ],
+      "identity_evidence": {
+        "url": "https://inbrain-neuroelectronics.com",
+        "title": "Home - inbrain-neuroelectronics",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.756972+00:00",
+      "sha256": "087cc8e172a28464539f734a11d861eeddee7373ab68952a3519354476d740a0",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "merge-labs",
+      "name": "Merge Labs",
+      "file": "merge-labs.png",
+      "source": "Official website inline SVG brand emblem",
+      "source_url": "https://merge.io/blog",
+      "official_url": "https://merge.io",
+      "notes": "Standalone 17x17 viewBox brand emblem extracted unchanged from official page inline SVG, with currentColor resolved to black, rasterized to 256px and normalized onto white canvas. Replaces lower-resolution official 32px favicon. Funding CSV domain merge.xyz fails hostname certificate verification; verified current merge.io domain from company site and Butterfly Network partnership release.",
+      "original_dimensions": [
+        17,
+        17
+      ],
+      "source_format": "SVG",
+      "identity_evidence_url": "https://www.butterflynetwork.com/press-releases/merge-labs-bci-partnership",
+      "sha256": "b96d4ca5eced6ea1272d0369d040a346935295a04d67b4e8e06a5816a4ead36c",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "motif-neurotech",
+      "name": "Motif Neurotech",
+      "file": "motif-neurotech.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://cdn.prod.website-files.com/6666d5373e90bd561c0c5d8c/669a260cf52a6c754a8bc3bf_webclip.png",
+      "official_url": "https://motifneuro.tech",
+      "notes": "Native 256x256. Proportionally downscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. White overlapping angular M mark on charcoal rounded square.",
+      "original_dimensions": [
+        256,
+        256
+      ],
+      "identity_evidence": {
+        "url": "https://motifneuro.tech",
+        "title": "Motif Neurotech — Therapeutic Brain Computer Interface For Mental Health",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.743198+00:00",
+      "sha256": "7b4e94709e9128a0adac4a61303d798bcbf068f53086ff52d9d9c6838f4bb100",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "neuracle",
+      "name": "Neuracle",
+      "file": "neuracle.png",
+      "source": "Google S2 favicon service for verified official domain",
+      "source_url": "https://www.google.com/s2/favicons?domain=www.neuracle.cn&sz=128",
+      "official_url": "https://www.neuracle.cn/",
+      "notes": "Original raster dimensions (32, 32); aspect ratio preserved on 256x256 white PNG canvas. Official homepage returned HTTP 429; retrieved distinctive blue network-brain brand favicon via Google S2, not a generic globe. Native resolution is only 32px; suitable for small chips, not large display.",
+      "original_dimensions": [
+        32,
+        32
+      ],
+      "identity_evidence_url": "https://insidebci.com/directory/neuracle",
+      "sha256": "8ed46d7e7ee7a86b44e9eb876573a7fb57f1b5078c66ada54d75a28f2fa70040",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "neuralink",
+      "name": "Neuralink",
+      "file": "neuralink.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://neuralink.com/favicon.png",
+      "official_url": "https://neuralink.com",
+      "notes": "Native 96x96. Proportionally upscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. White angular N mark on black.",
+      "original_dimensions": [
+        96,
+        96
+      ],
+      "identity_evidence": {
+        "url": "https://neuralink.com",
+        "title": "Neuralink â Pioneering Brain Computer Interfaces",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.810654+00:00",
+      "sha256": "27644caa898a5be33ad2e9fc1e755a46d462998a4863e34f5ffa0a58d17d15bf",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "neurosoft-bioelectronics",
+      "name": "Neurosoft Bioelectronics",
+      "file": "neurosoft-bioelectronics.png",
+      "source": "Official website favicon",
+      "source_url": "https://images.squarespace-cdn.com/content/v1/669690d893801507d5523af4/255d6cd6-9010-4d47-9a96-5f678ca593d1/favicon.ico?format=100w",
+      "official_url": "https://www.neurosoft-bio.com/",
+      "notes": "Original raster dimensions (100, 100); aspect ratio preserved on 256x256 white PNG canvas.",
+      "original_dimensions": [
+        100,
+        100
+      ],
+      "sha256": "a3b134ac63ad9b466178ca28762f134e32c9f56d28d58e6c4e1796ec6a170b8b",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "neuroxess",
+      "name": "NeuroXess",
+      "file": "neuroxess.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://www.neuroxess.com/wp-content/uploads/2026/04/cropped-favicon-192x192.png",
+      "official_url": "https://neuroxess.com",
+      "notes": "Native 192x192. Proportionally upscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Blue-to-teal overlapping loop mark.",
+      "original_dimensions": [
+        192,
+        192
+      ],
+      "identity_evidence": {
+        "url": "https://neuroxess.com",
+        "title": "NeuroXess 脑虎科技",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.781097+00:00",
+      "sha256": "53f1a630e866e72835b7bcc04033b6b7eebfbb6e9b728aa312e4de18fe38ac7c",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "newronika",
+      "name": "Newronika",
+      "file": "newronika.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://cdn.prod.website-files.com/69b082860e4796dc24a245b0/69b082860e4796dc24a245bd_Webclip.png",
+      "official_url": "https://newronika.com",
+      "notes": "Native 256x256. Proportionally downscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Orange concentric semicircle mark, corroborated against official Newronika header SVG.",
+      "original_dimensions": [
+        256,
+        256
+      ],
+      "identity_evidence": {
+        "url": "https://newronika.com",
+        "title": "Newronika | Adaptive Deep Brain Stimulation Technology",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.817027+00:00",
+      "sha256": "ce8c1c2fee61ba8299b15651e15c0a591e0da90ac60322a42a5dac4a93128e3e",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "nia-therapeutics",
+      "name": "Nia Therapeutics",
+      "file": "nia-therapeutics.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://cdn.prod.website-files.com/687e0b863e8ddbc3657ec354/689cac408fea89732c703681_Nia%20TX%20Webclip.png",
+      "official_url": "https://niatherapeutics.com",
+      "notes": "Native 256x256. Proportionally downscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Blue bubble/dot human head profile.",
+      "original_dimensions": [
+        256,
+        256
+      ],
+      "identity_evidence": {
+        "url": "https://niatherapeutics.com",
+        "title": "Nia TX | Smart Neurostimulation System for Memory Recovery",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.798960+00:00",
+      "sha256": "39dc6cd81e193c507086379ac6906e527f90b6c34cedec501f44e48e83f9462f",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "onward-medical",
+      "name": "ONWARD Medical",
+      "file": "onward-medical.png",
+      "source": "Official website favicon",
+      "source_url": "https://www.onwd.com/wp-content/uploads/2023/10/onward-favicon.svg",
+      "official_url": "https://www.onwd.com/",
+      "notes": "Official SVG rasterized at (256, 256); aspect ratio preserved on 256x256 white PNG canvas.",
+      "source_format": "SVG",
+      "sha256": "2bda7d1c7361c28bb8a563ffe464123af41728ad101a9b5e680f2e5c27ab941f",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "paradromics",
+      "name": "Paradromics",
+      "file": "paradromics.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://paradromics.com/wp-content/uploads/2026/06/Paradromics-Site-Icons-300x300.png",
+      "official_url": "https://paradromics.com",
+      "notes": "Native 300x300. Proportionally downscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Black bracketed circular mark.",
+      "original_dimensions": [
+        300,
+        300
+      ],
+      "identity_evidence": {
+        "url": "https://paradromics.com",
+        "title": "Brain-Computer Interface Platform | Paradromics",
+        "basis": "Company website in repo funding-index/companies.csv, and live company homepage"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.786766+00:00",
+      "sha256": "899aba19f1bb9b2c9ba02c2816f645171006a45d8cf3489c2704e82174136113",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "phantom-neuro",
+      "name": "Phantom Neuro",
+      "file": "phantom-neuro.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://framerusercontent.com/images/Fx1HpsXkONsiXDTnr259CMPfGRk.png",
+      "official_url": "https://phantomneuro.com",
+      "notes": "Native 640x640. Proportionally downscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Black horizontal organic waveform brandmark.",
+      "original_dimensions": [
+        640,
+        640
+      ],
+      "identity_evidence": {
+        "url": "https://phantomneuro.com",
+        "title": "Phantom Neuro Â· Redefining Human Capability",
+        "basis": "Public search result and official homepage content"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.770825+00:00",
+      "sha256": "b9d3e0470dc30691974f6c2e1ff06b23fa3c726db4229bdd7aca895a1b97f300",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "precision-neuroscience",
+      "name": "Precision Neuroscience",
+      "file": "precision-neuroscience.png",
+      "source": "Official website favicon",
+      "source_url": "https://www.precisionneuro.io/images/favicon.png",
+      "official_url": "https://www.precisionneuro.io/",
+      "notes": "Original raster dimensions (320, 320); aspect ratio preserved on 256x256 white PNG canvas.",
+      "original_dimensions": [
+        320,
+        320
+      ],
+      "sha256": "c33f2fe0fa3470a6b23f08bc7ecbcf87ac672bd578cd40e6036f531d81592f4d",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "revision-implant",
+      "name": "ReVision Implant",
+      "file": "revision-implant.png",
+      "source": "official-site-linked icon",
+      "source_url": "https://cdn.prod.website-files.com/68a5757781fb2b9625ecc0e2/68e3b55dddc9e8df49d88c9f_Logo%20256.png",
+      "official_url": "https://revision-implant.com",
+      "notes": "Native 256x256. Proportionally downscaled to fit 224px, centered on white 256x256 canvas; no artwork/color modifications. Teal eye containing circuit motif.",
+      "original_dimensions": [
+        256,
+        256
+      ],
+      "identity_evidence": {
+        "url": "https://revision-implant.com",
+        "title": "ReVision Implant",
+        "basis": "Public search result and official homepage content"
+      },
+      "quality": "verified-official-icon",
+      "retrieved_at": "2026-09-17T15:24:57.805915+00:00",
+      "sha256": "28d346afabb38e839880cdedfe0f7e52132dd7f602b29eeaa4ae04aa4249b369",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "ruten-neuro",
+      "name": "Ruten Neuro",
+      "file": "ruten-neuro.png",
+      "source": "Official website favicon",
+      "source_url": "https://www.ruten-neuro.com/assets/images/brain-favicon.svg",
+      "official_url": "https://www.ruten-neuro.com/",
+      "notes": "Official SVG rasterized at (256, 256); aspect ratio preserved on 256x256 white PNG canvas. Correct official domain includes hyphen: ruten-neuro.com, corroborated by Swallow Autopilot, Kazutaka Takahashi and Hayato Nakamura on its live homepage. Use official cyan brain favicon; it differs from the white RUTEN neuro wordmark.",
+      "source_format": "SVG",
+      "sha256": "3c43f4ea34a331a6a2ed740b7a932a473cd4e64038bbcd066b2ee2b5ac305e18",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "science-corp",
+      "name": "Science Corporation",
+      "file": "science-corp.png",
+      "source": "Official website favicon",
+      "source_url": "https://science.xyz/images/meta/apple-touch-icon.png",
+      "official_url": "https://science.xyz/",
+      "notes": "Original raster dimensions (180, 180); aspect ratio preserved on 256x256 white PNG canvas.",
+      "original_dimensions": [
+        180,
+        180
+      ],
+      "sha256": "5fb33874cc52dd430b9771fe19cb31da02a0f012ddd357fec1b361c6537c7381",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "stairmed",
+      "name": "StairMed",
+      "file": "stairmed.png",
+      "source": "Official website header logo",
+      "source_url": "https://www.stairmed.com/Uploads/image/20240814/17236213586045.png",
+      "official_url": "https://www.stairmed.com/",
+      "notes": "Official 112x62 header logo, aspect ratio preserved; white artwork composited on a dark #242830 square canvas for contrast in both themes. No logo artwork changed. Official favicon was unavailable; generic service globe rejected.",
+      "original_dimensions": [
+        112,
+        62
+      ],
+      "sha256": "b3accd0fdebc172d828ece3734a3d9bc238eb38bc62bd056e9574599302d7968",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "slug": "synchron",
+      "name": "Synchron",
+      "file": "synchron.png",
+      "source": "Official website favicon",
+      "source_url": "https://synchron.com/icon.svg?icon.094vzp82rkpp6.svg",
+      "official_url": "https://synchron.com/",
+      "notes": "Official SVG rasterized at (256, 256); aspect ratio preserved on 256x256 white PNG canvas.",
+      "source_format": "SVG",
+      "sha256": "918c2bdd864dc8995b907ffdd328ccb547a347956816c9996d1ac2af829ae7fe",
+      "visual_check": "Inspected rendered image; distinctive official brand mark, not generic globe.",
+      "output_dimensions": [
+        256,
+        256
+      ]
+    }
+  ]
+}

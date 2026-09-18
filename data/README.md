@@ -20,7 +20,7 @@ Caveats: stage colors were read off the infographic; ~half the milestone rows no
 
 ## `logos/` — firm logos
 
-Independently sourced company-site icons, favicon-service images, and Wikipedia logos. **`manifest.csv`** maps `slug, name, file, source, source_url, status`. Neurofounders-sourced images have been removed from both this directory and `public/logos/`; unavailable logos use the UI's existing initials fallback. The generator uses only the remaining local manifest for milestone and funding-company logos.
+Independently sourced company-site icons, favicon-service images, and Wikipedia logos. **`manifest.csv`** maps `slug, name, file, source, source_url, status`. Neurofounders-sourced images have been removed from both this directory and `public/logos/`; unavailable logos use the UI's existing initials fallback. The generator uses only the local manifest for milestone and funding-company logos. On **2026-09-17**, 23 removed company logos were independently re-sourced from official company sites or favicon services for verified company domains. Exact source URLs, normalization notes, native resolution limitations, and output hashes are in [`logos/restored-sources.json`](./logos/restored-sources.json). These are bundled local assets, not runtime hotlinks; no copied ecosystem data or Neurofounders CDN images were restored.
 
 ## `glossary/` — acronym tooltips
 

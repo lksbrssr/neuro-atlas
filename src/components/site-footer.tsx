@@ -58,12 +58,16 @@ export function SiteFooter() {
         </div>
         <div className="border-t border-border-strong pt-5 text-[12px] leading-6 text-foreground/70">
           <p>
-            Neuro Atlas is for informational purposes only and is not investment advice.
-            It is not an offer, solicitation, or recommendation of any security or
-            investment product, and makes no commitment or guarantee of future
-            performance or outcomes. Company and project inclusion does not imply
-            endorsement. Information may be incomplete or change over time; consult
-            the linked sources and conduct your own due diligence.
+            Neuro Atlas is for informational purposes only and is not investment,
+            legal, or medical advice. It is not an offer, solicitation, or
+            recommendation of any security or investment product, and makes no
+            commitment or guarantee of future performance or outcomes. Company and
+            project inclusion does not imply endorsement. Data is compiled from
+            third-party sources and may contain errors, be incomplete, or become
+            outdated, and is provided without warranty. You should review the linked
+            primary sources and do your own due diligence before relying on any data
+            in this site. Protocol Labs, Inc. and PL Capital hold, or may hold,
+            financial interests in companies or funds featured here.
           </p>
         </div>
       </div>
